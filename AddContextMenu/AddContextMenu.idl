@@ -1,0 +1,23 @@
+
+// AddContextMenu.idl
+
+import "unknwn.idl";   // <- para IUnknown
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+    uuid(7f317968-ef7e-4959-83cc-a70490227b48), // seu LIBID (mesmo do .rgs)
+        version(1.0)
+]
+library AddContextMenuLib
+{
+    // coclass com o CLSID do seu objeto (mesmo do .rgs)
+    [
+        uuid(cfc3f07d-f342-4cb2-b3e7-e0d731cbe937)
+    ]
+        coclass ContextMenuObject
+    {
+        // MIDL exige pelo menos uma interface declarada:
+        [default] interface IUnknown;
+    };
+}

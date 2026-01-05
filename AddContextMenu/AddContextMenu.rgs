@@ -1,0 +1,29 @@
+
+HKCR
+{
+    NoRemove CLSID
+    {
+        ForceRemove {cfc3f07d-f342-4cb2-b3e7-e0d731cbe937} = s 'ContextMenuObject class'
+        {
+            ForceRemove Programmable
+            InprocServer32 = s '%MODULE%'
+            {
+                val ThreadingModel = s 'Apartment'
+            }
+            TypeLib = s '{7f317968-ef7e-4959-83cc-a70490227b48}'
+            Version = s '1.0'
+        }
+    }
+
+    // Associa o handler a TODOS os arquivos (*)
+    NoRemove '*'
+    {
+        NoRemove shellex
+        {
+            NoRemove ContextMenuHandlers
+            {
+                ForceRemove PeriTASK = s '{cfc3f07d-f342-4cb2-b3e7-e0d731cbe937}'
+            }
+        }
+    }
+}
