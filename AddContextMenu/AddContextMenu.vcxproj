@@ -111,7 +111,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\AddContextMenu.def</ModuleDefinitionFile>
-      <RegisterOutput>false</RegisterOutput>
+      <RegisterOutput>true</RegisterOutput>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
