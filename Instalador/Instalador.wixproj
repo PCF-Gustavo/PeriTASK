@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>d2f33520-6af5-4185-86fd-85b29f6f9d63</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Instalador</OutputName>
+    <OutputName>PeriTASK_Setup</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -34,6 +34,14 @@
     <ProjectReference Include="..\AddContextMenu\AddContextMenu.vcxproj">
       <Name>AddContextMenu</Name>
       <Project>{48297aae-bb02-4403-99ca-ebe6533cab6a}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\UserInterface\UserInterface.csproj">
+      <Name>UserInterface</Name>
+      <Project>{58915db0-3d7b-421e-8ced-fa2f91f2e400}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>

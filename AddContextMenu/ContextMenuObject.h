@@ -80,20 +80,47 @@ public:
         return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 1); // adicionamos 1 comando
     }
 
-    STDMETHOD(InvokeCommand)(LPCMINVOKECOMMANDINFO pici) override
+    //STDMETHOD(InvokeCommand)(LPCMINVOKECOMMANDINFO pici) override
+    //{
+    //    if (HIWORD(pici->lpVerb) == 0)
+    //    {
+    //        UINT id = LOWORD(pici->lpVerb);
+    //        if (id == 0)
+    //        {
+    //            // “Não faz nada”
+    //            // MessageBox(pici->hwnd, L"Comando TESTE acionado.", L"AddContextMenu", MB_OK);
+    //            return S_OK;
+    //        }
+    //    }
+    //    return E_FAIL;
+    //}
+
+    STDMETHODIMP InvokeCommand(LPCMINVOKECOMMANDINFO pici) override
     {
-        if (HIWORD(pici->lpVerb) == 0)
+        if (HIWORD(pici->lpVerb) != 0)
+            return E_FAIL;
+
+        UINT id = LOWORD(pici->lpVerb);
+
+        if (id == 0) // botão PERITASK
         {
-            UINT id = LOWORD(pici->lpVerb);
-            if (id == 0)
-            {
-                // “Não faz nada”
-                // MessageBox(pici->hwnd, L"Comando TESTE acionado.", L"AddContextMenu", MB_OK);
-                return S_OK;
-            }
+            LPCWSTR exePath = L"C:\\Program Files\\PeriTASK\\UserInterface.exe";
+
+            ShellExecuteW(
+                pici->hwnd,
+                L"open",
+                exePath,
+                nullptr,     // argumentos (depois podemos passar arquivos)
+                nullptr,
+                SW_SHOWNORMAL
+            );
+
+            return S_OK;
         }
+
         return E_FAIL;
     }
+
 
     STDMETHOD(GetCommandString)(UINT_PTR idCmd, UINT uFlags, UINT* /*pRes*/,
         LPSTR pszName, UINT cchMax) override

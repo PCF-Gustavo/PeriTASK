@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-	<Product Id="*" Name="Instalador" Language="1033" Version="1.0.0.0" Manufacturer="PeriTASK" UpgradeCode="7d9dd718-83ca-43e0-99a3-c536e89b2285">
-		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+	<Product Id="*" Name="PeriTASK" Language="1046" Version="1.0.0.0" Manufacturer="PeriTASK" UpgradeCode="{06D866DB-6E03-46C4-BEFC-3CC3A722D32B}">
+		<Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 		<MediaTemplate />
 
-		<Feature Id="ProductFeature" Title="Instalador" Level="1">
+		<Feature Id="ProductFeature" Title="PeriTASK" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
 	</Product>
@@ -14,7 +14,7 @@
 	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFiles64Folder">
-				<Directory Id="INSTALLFOLDER" Name="Instalador" />
+				<Directory Id="INSTALLFOLDER" Name="PeriTASK" />
 			</Directory>
 		</Directory>
 	</Fragment>
@@ -22,7 +22,15 @@
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id="AddContextMenuDll" Guid="{23A66312-1C4B-4EF9-A1E5-692A70A456D8}" Win64="yes">
-				<File Id="AddContextMenuFile" Source="$(var.AddContextMenu.TargetPath)" KeyPath="yes" SelfRegCost="1" />
+				<File Id="AddContextMenuFile" 
+					  Source="$(var.AddContextMenu.TargetPath)" 
+					  KeyPath="yes" 
+					  SelfRegCost="1" />
+			</Component>
+			<Component Id="UserInterfaceComponent" Guid="{8E3C0E94-8C77-48D5-A437-BF2C5E65165C}" Win64="yes">
+				<File Id="UserInterface"
+					  Source="$(var.UserInterface.TargetPath)"
+					  KeyPath="yes" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
