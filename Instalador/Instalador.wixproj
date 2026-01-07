@@ -3,29 +3,37 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>3.10</ProductVersion>
+	<BuildYear>$([System.DateTime]::Now.ToString("yyyy"))</BuildYear>
+	<BuildMonth>$([System.DateTime]::Now.ToString("MM"))</BuildMonth>
+	<BuildDay>$([System.DateTime]::Now.ToString("dd"))</BuildDay>
+	<BuildRevision>$([System.DateTime]::Now.ToString("HHmm"))</BuildRevision>
+	<ProductVersion>1.$(BuildMonth).$(BuildDay).$(BuildRevision)</ProductVersion>
+	<DefineConstants>ProductVersion=$(ProductVersion)</DefineConstants>
     <ProjectGuid>d2f33520-6af5-4185-86fd-85b29f6f9d63</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>PeriTASK_Setup</OutputName>
     <OutputType>Package</OutputType>
+    <Name>Instalador</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
+	<DefineConstants>$(DefineConstants);Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+	 <DefineConstants>$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug</DefineConstants>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+	 <DefineConstants>$(DefineConstants);Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+	 <DefineConstants>$(DefineConstants)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
@@ -34,6 +42,14 @@
     <ProjectReference Include="..\AddContextMenu\AddContextMenu.vcxproj">
       <Name>AddContextMenu</Name>
       <Project>{48297aae-bb02-4403-99ca-ebe6533cab6a}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\PythonScript\PythonScript.pyproj">
+      <Name>PythonScript</Name>
+      <Project>{22286225-b8e5-4d4c-9be2-9dfc39e7bffe}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
