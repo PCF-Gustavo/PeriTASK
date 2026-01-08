@@ -9,15 +9,14 @@ namespace UserInterface
 {
     public partial class MainWindow : Window
     {
-        private List<string> arquivos_selecionados;
+        private readonly List<string> arquivos_selecionados;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            // pega os argumentos (ignora o exe)
             arquivos_selecionados = Environment.GetCommandLineArgs()
-                                               .Skip(1)
+                                               .Skip(1) //ignora o exe
                                                .ToList();
         }
 
