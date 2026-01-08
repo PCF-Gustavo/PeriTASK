@@ -7,12 +7,11 @@ def main():
 
     arquivos_selecionados = sys.argv[1].split("|")
 
-    pasta = os.path.dirname(arquivos_selecionados[0])
-    caminho_txt = os.path.join(pasta, "arquivos_selecionados.txt")
-
-    with open(caminho_txt, "w", encoding="utf-8") as f:
-        for caminho in arquivos_selecionados:
-            f.write(caminho + "\n")
+    with open(os.path.join(os.path.dirname(arquivos_selecionados[0]), 
+                            "caminho_dos_arquivos_selecionados.txt"),
+                            "w", encoding="utf-8") as f:
+        for arquivo in arquivos_selecionados:
+            f.write(arquivo + "\n")
 
 
 if __name__ == "__main__":

@@ -1,16 +1,12 @@
-// ContextMenuObject.cpp
-
 #include "pch.h"
 #include "framework.h"
 #include "resource.h"
 #include "AddContextMenu_i.h"
-
 #include <atlbase.h>
 #include <atlcom.h>
 #include <shlobj.h>
 #include <shellapi.h>
 #include <windows.h>
-
 #include <vector>
 #include <string>
 
@@ -94,7 +90,7 @@ public:
         IDataObject* pDataObj,
         HKEY) override
     {
-        selectedFiles.clear();
+        arquivos_selecionados.clear();
         if (!pDataObj)
             return S_OK;
 
@@ -113,7 +109,7 @@ public:
             for (UINT i = 0; i < count; ++i)
             {
                 if (DragQueryFileW(hDrop, i, path, ARRAYSIZE(path)))
-                    selectedFiles.emplace_back(path);
+                    arquivos_selecionados.emplace_back(path);
             }
             GlobalUnlock(stg.hGlobal);
         }
@@ -198,7 +194,7 @@ public:
         // 🔹 Parâmetros: arquivos selecionados
         // ======================================================
         std::wstring params;
-        for (const auto& f : selectedFiles)
+        for (const auto& f : arquivos_selecionados)
         {
             params += L"\"";
             params += f;
@@ -245,7 +241,7 @@ public:
     }
 
 private:
-    std::vector<std::wstring> selectedFiles;
+    std::vector<std::wstring> arquivos_selecionados;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ContextMenuObject), CContextMenuObject)

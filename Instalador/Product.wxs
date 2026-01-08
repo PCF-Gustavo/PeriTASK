@@ -10,14 +10,14 @@
 				 Compressed="yes" 
 				 InstallScope="perMachine" 
 				 Platform="x64" />
-
+		
 		<MajorUpgrade
     AllowSameVersionUpgrades="yes"
     Schedule="afterInstallInitialize"
 	
     DowngradeErrorMessage="Uma versao mais recente do [ProductName] ja esta instalada." />
 
-		<MediaTemplate />
+		<MediaTemplate EmbedCab="yes" />
 
 		<Feature Id="MainFeature" Title="PeriTASK" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />

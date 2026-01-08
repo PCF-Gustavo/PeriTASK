@@ -1,13 +1,10 @@
 #pragma once
 
-// 🔹 Includes mínimos para declaração COM
 #include "resource.h"
 #include "AddContextMenu_i.h"
-
 #include <atlbase.h>
 #include <atlcom.h>
-#include <shlobj.h>     // IShellExtInit, IContextMenu
-
+#include <shlobj.h>
 #include <vector>
 #include <string>
 
@@ -65,6 +62,5 @@ public:
         UINT cchMax) override;
 
 private:
-    // 🔹 Lista de arquivos selecionados
-    std::vector<std::wstring> selectedFiles;
+    std::vector<std::wstring> arquivos_selecionados;
 };
