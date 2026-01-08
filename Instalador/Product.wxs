@@ -61,7 +61,7 @@
 					   Win64="yes">
 				<File
 				  Id="PythonScriptExe"
-				  Source="$(var.ProjectDir)..\PythonScript\dist\PythonScript.exe"
+				  Source="$(var.ProjectDir)..\Instalador\dist\PythonScript.exe"
 				  KeyPath="yes" />
 			</Component>
 			<Component Id="InstallPathComponent" 
