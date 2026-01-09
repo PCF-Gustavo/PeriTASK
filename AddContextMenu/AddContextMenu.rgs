@@ -26,4 +26,14 @@ HKCR
             }
         }
     }
+        NoRemove Directory
+    {
+        NoRemove shellex
+        {
+            NoRemove ContextMenuHandlers
+            {
+                ForceRemove PeriTASK = s '{cfc3f07d-f342-4cb2-b3e7-e0d731cbe937}'
+            }
+        }
+    }
 }

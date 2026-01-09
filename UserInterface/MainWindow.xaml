@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button x:Name="button_teste" Content="Teste" HorizontalAlignment="Center" Margin="221,217,0,0" VerticalAlignment="Center" Click="Button_Click"/>
+        <Button x:Name="button_teste" Content="Teste" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_teste_Click" Width="60" Height="40"/>
+        <Button x:Name="button_progressbar" Content="ProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center" Width="60" Height="40" Margin="0,100,0,0" Click="Button_progressbar_Click"/>
 
     </Grid>
 </Window>

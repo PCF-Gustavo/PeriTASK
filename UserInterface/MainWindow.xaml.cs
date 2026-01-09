@@ -20,7 +20,7 @@ namespace UserInterface
                                                .ToList();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_teste_Click(object sender, RoutedEventArgs e)
         {
             if (arquivos_selecionados == null || arquivos_selecionados.Count == 0)
             {
@@ -51,6 +51,12 @@ namespace UserInterface
             };
 
             using var process = Process.Start(psi);
+        }
+
+        private void Button_progressbar_Click(object sender, RoutedEventArgs e)
+        {
+            var iProgressBarWindow = new ProgressBarWindow { Owner = this };
+            iProgressBarWindow.Show();
         }
     }
 }
