@@ -62,5 +62,5 @@ public:
         UINT cchMax) override;
 
 private:
-    std::vector<std::wstring> arquivos_selecionados;
+    std::vector<std::wstring> itens_selecionados;
 };

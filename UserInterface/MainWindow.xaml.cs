@@ -9,33 +9,31 @@ namespace UserInterface
 {
     public partial class MainWindow : Window
     {
-        private readonly List<string> arquivos_selecionados;
+        private readonly List<string> itens_selecionados;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            arquivos_selecionados = Environment.GetCommandLineArgs()
+            itens_selecionados = Environment.GetCommandLineArgs()
                                                .Skip(1) //ignora o exe
                                                .ToList();
         }
 
         private void Button_teste_Click(object sender, RoutedEventArgs e)
         {
-            if (arquivos_selecionados == null || arquivos_selecionados.Count == 0)
+            if (itens_selecionados == null || itens_selecionados.Count == 0)
             {
                 MessageBox.Show("Nenhum arquivo recebido.");
                 return;
             }
 
-            ExecutarPython(arquivos_selecionados);
-
-            this.Close();
+            ExecutarPython(itens_selecionados);
         }
+
 
         private void ExecutarPython(List<string> arquivos)
         {
-            // junta no formato esperado pelo Python
             string argumentosPython = string.Join("|", arquivos);
 
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
@@ -47,16 +45,29 @@ namespace UserInterface
                 Arguments = $"\"{argumentosPython}\"",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
+                RedirectStandardError = true,
                 CreateNoWindow = true
             };
 
-            using var process = Process.Start(psi);
+            var process = new Process
+            {
+                StartInfo = psi,
+                EnableRaisingEvents = true
+            };
+
+            process.Start();
+
+            // 🔹 ABRE A JANELA DE PROGRESSO E ENTREGA O PROCESS
+            var progressWindow = new ProgressWindow(process)
+            {
+                Owner = this
+            };
+
+            progressWindow.ShowDialog();
+
+            // 🔹 APÓS O PYTHON TERMINAR E A JANELA FECHAR
+            this.Close();
         }
 
-        private void Button_progressbar_Click(object sender, RoutedEventArgs e)
-        {
-            var iProgressBarWindow = new ProgressBarWindow { Owner = this };
-            iProgressBarWindow.Show();
-        }
     }
 }

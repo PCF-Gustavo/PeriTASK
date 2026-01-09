@@ -90,7 +90,7 @@ public:
         IDataObject* pDataObj,
         HKEY) override
     {
-        arquivos_selecionados.clear();
+        itens_selecionados.clear();
         if (!pDataObj)
             return S_OK;
 
@@ -109,7 +109,7 @@ public:
             for (UINT i = 0; i < count; ++i)
             {
                 if (DragQueryFileW(hDrop, i, path, ARRAYSIZE(path)))
-                    arquivos_selecionados.emplace_back(path);
+                    itens_selecionados.emplace_back(path);
             }
             GlobalUnlock(stg.hGlobal);
         }
@@ -194,7 +194,7 @@ public:
         // 🔹 Parâmetros: arquivos selecionados
         // ======================================================
         std::wstring params;
-        for (const auto& f : arquivos_selecionados)
+        for (const auto& f : itens_selecionados)
         {
             params += L"\"";
             params += f;
@@ -241,7 +241,7 @@ public:
     }
 
 private:
-    std::vector<std::wstring> arquivos_selecionados;
+    std::vector<std::wstring> itens_selecionados;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(ContextMenuObject), CContextMenuObject)
