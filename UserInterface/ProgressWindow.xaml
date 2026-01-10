@@ -9,11 +9,11 @@
         Title="Executanto PeriTASK" 
         Height="150" 
         Width="400"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         WindowStartupLocation="CenterOwner"
         WindowStyle="SingleBorderWindow"
-        ShowInTaskbar="False"
-        
+        ShowInTaskbar="True"
+        Topmost="False"
         >
     <Grid>
         <ProgressBar 

@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 
 def coletar_arquivos_e_pasta_saida(itens):
     arquivos = set()
@@ -77,17 +78,20 @@ def main():
         pasta_saida,
         "caminho_dos_arquivos.txt"
     )
+    
+    caminho_saida_tmp = caminho_saida + ".tmp"
 
     total = len(arquivos)
 
     try:
-        with open(caminho_saida, "w", encoding="utf-8") as f:
+        with open(caminho_saida_tmp, "w", encoding="utf-8") as f:
             for i, arquivo in enumerate(arquivos, start=1):
                 f.write(arquivo + "\n")
-
+                time.sleep(0.001)
                 progresso = int((i / total) * 100)
                 print(f"PROGRESS:{progresso}", flush=True)
 
+        os.replace(caminho_saida_tmp, caminho_saida)
         print("DONE", flush=True)
 
     except PermissionError:

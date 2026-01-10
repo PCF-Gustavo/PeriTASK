@@ -57,17 +57,17 @@ namespace UserInterface
 
             process.Start();
 
-            // 🔹 ABRE A JANELA DE PROGRESSO E ENTREGA O PROCESS
-            var progressWindow = new ProgressWindow(process)
-            {
-                Owner = this
-            };
+            var progressWindow = new ProgressWindow(process);
 
-            progressWindow.ShowDialog();
+            // 🔹 AGORA ela vira a janela principal
+            Application.Current.MainWindow = progressWindow;
 
-            // 🔹 APÓS O PYTHON TERMINAR E A JANELA FECHAR
+            progressWindow.Show();
+
+            // 🔹 Fecha a janela inicial
             this.Close();
         }
+
 
     }
 }
