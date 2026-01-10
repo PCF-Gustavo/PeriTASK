@@ -5,10 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UserInterface"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="PeriTASK" Height="200" Width="400"
+        ResizeMode="NoResize"
         >
-    <Grid>
-        <Button x:Name="button_teste" Content="Teste" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_teste_Click" Width="60" Height="40"/>
-
+    <Grid Margin="20,20,20,20">
+        <Button x:Name="button_ok" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_ok_Click" Width="100" Height="20" Margin="0,104,0,0"/>
+        <ComboBox x:Name="ComboBox1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" IsDropDownOpen="True">
+            <ComboBoxItem Content="Opção 1" />
+            <ComboBoxItem Content="Opção 2" />
+            <ComboBoxItem Content="Opção 3" />
+        </ComboBox>
     </Grid>
 </Window>

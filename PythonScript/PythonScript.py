@@ -63,6 +63,9 @@ def main():
         sys.exit(1)
 
     itens_selecionados  = sys.argv[1].split("|")
+    selecao_ComboBox  = sys.argv[2]
+    
+    print(f"{selecao_ComboBox}", flush=True)
     
     arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
 
@@ -89,11 +92,10 @@ def main():
                 f.write(arquivo + "\n")
                 time.sleep(0.001)
                 progresso = int((i / total) * 100)
+                print(f"STATUS:{'Processando'}", flush=True)
                 print(f"PROGRESS:{progresso}", flush=True)
-
         try:
             os.replace(caminho_tmp, caminho_saida)  # move atômico
-            print("DONE", flush=True)
         except Exception as e:
             print(f"Erro ao mover arquivo final: {e}", flush=True)
 

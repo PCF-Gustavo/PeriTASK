@@ -16,7 +16,6 @@
         Title="{Binding Progress, StringFormat={}{0:F0}% completo}"
         >
     <Grid>
-        <!-- Container da ProgressBar e do texto -->
         <Grid Margin="10" Height="50">
             <!-- ProgressBar -->
             <ProgressBar 
@@ -28,7 +27,7 @@
             Value="{Binding Progress}"
         />
 
-            <!-- Texto centralizado -->
+            <!-- Porcentagem centralizada na ProgressBar -->
             <TextBlock 
             Text="{Binding Progress, StringFormat={}{0:F0}%}" 
             HorizontalAlignment="Center" 
@@ -36,23 +35,28 @@
             Foreground="Black"
         />
         </Grid>
+        <Grid Margin="10,10,10,10">
+            <!-- Label Tempo Restante -->
+            <TextBlock 
+            Text="{Binding TempoRestante, StringFormat=Tempo restante: {0}}" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Top"
+            />
 
-        <!-- Label Tempo Restante -->
-        <TextBlock 
-        Text="{Binding TempoRestante, StringFormat=Tempo restante: {0}}" 
-        HorizontalAlignment="Left" 
-        VerticalAlignment="Top"
-        Margin="10,10,0,0"
-    />
+            <!-- Status do processamento Python -->
+            <TextBlock 
+            Text="{Binding Status_Python}" 
+            HorizontalAlignment="Left" 
+            VerticalAlignment="Bottom" 
+            />
 
-        <!-- Botão Cancelar -->
-        <Button Content="Cancelar"
+            <Button Content="Cancelar"
             Width="80"
             Height="25"
             VerticalAlignment="Bottom"
             HorizontalAlignment="Right"
-            Margin="0,0,10,10"
             Command="{Binding CancelCommand}" />
+        </Grid>
     </Grid>
 
 </Window>
