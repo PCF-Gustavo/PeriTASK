@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:UserInterface"
         mc:Ignorable="d"
         
-        Title="Executanto PeriTASK" 
         Height="150" 
         Width="400"
         ResizeMode="CanMinimize"
@@ -14,28 +13,46 @@
         WindowStyle="SingleBorderWindow"
         ShowInTaskbar="True"
         Topmost="False"
+        Title="{Binding Progress, StringFormat={}{0:F0}% completo}"
         >
     <Grid>
-        <ProgressBar 
-            Grid.Row="1"
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center" 
+        <!-- Container da ProgressBar e do texto -->
+        <Grid Margin="10" Height="50">
+            <!-- ProgressBar -->
+            <ProgressBar 
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
             Height="18"
             Minimum="0"
             Maximum="100"
-            Value="{Binding Progress, FallbackValue=0}" 
-            Width="300" 
-            Margin="0,0,0,30"
-            />
-        <Button Content="Cancelar" 
-                Width="80"
-                Height="25"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Right"
-                Margin="0,0,50,15"
-                Command="{Binding CancelCommand}" 
-                />
-                
+            Value="{Binding Progress}"
+        />
 
+            <!-- Texto centralizado -->
+            <TextBlock 
+            Text="{Binding Progress, StringFormat={}{0:F0}%}" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center"
+            Foreground="Black"
+        />
+        </Grid>
+
+        <!-- Label Tempo Restante -->
+        <TextBlock 
+        Text="{Binding TempoRestante, StringFormat=Tempo restante: {0}}" 
+        HorizontalAlignment="Left" 
+        VerticalAlignment="Top"
+        Margin="10,10,0,0"
+    />
+
+        <!-- Botão Cancelar -->
+        <Button Content="Cancelar"
+            Width="80"
+            Height="25"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Right"
+            Margin="0,0,10,10"
+            Command="{Binding CancelCommand}" />
     </Grid>
+
 </Window>

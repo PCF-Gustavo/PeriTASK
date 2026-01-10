@@ -79,20 +79,23 @@ def main():
         "caminho_dos_arquivos.txt"
     )
     
-    caminho_saida_tmp = caminho_saida + ".tmp"
+    caminho_tmp = os.path.join(os.getenv("TEMP"), "caminho_dos_arquivos.txt.tmp")
 
     total = len(arquivos)
 
     try:
-        with open(caminho_saida_tmp, "w", encoding="utf-8") as f:
+        with open(caminho_tmp, "w", encoding="utf-8") as f:
             for i, arquivo in enumerate(arquivos, start=1):
                 f.write(arquivo + "\n")
                 time.sleep(0.001)
                 progresso = int((i / total) * 100)
                 print(f"PROGRESS:{progresso}", flush=True)
 
-        os.replace(caminho_saida_tmp, caminho_saida)
-        print("DONE", flush=True)
+        try:
+            os.replace(caminho_tmp, caminho_saida)  # move atômico
+            print("DONE", flush=True)
+        except Exception as e:
+            print(f"Erro ao mover arquivo final: {e}", flush=True)
 
     except PermissionError:
         print(
@@ -105,7 +108,6 @@ def main():
             f"Erro ao criar o arquivo:\n{e}"
         )
         sys.exit(1)
-
 
 
 if __name__ == "__main__":
