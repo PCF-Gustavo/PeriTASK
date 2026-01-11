@@ -1,6 +1,5 @@
 import sys
 import os
-import time
 import tempfile
 import csv
 import hashlib
@@ -82,13 +81,23 @@ def imprimir_caminhos_txt(arquivos, pasta_saida):
     caminho_saida = os.path.join(pasta_saida, arquivo_saida)
     caminho_tmp = os.path.join(os.getenv("TEMP"), arquivo_saida + ".tmp")
 
+    print("STATUS:Imprimindo caminhos dos arquivos em .txt", flush=True)
+
     total = len(arquivos)
+    ultimo_progresso = -1
+
+    if total == 0:
+        print("PROGRESS:100", flush=True)
+        return
+
     with open(caminho_tmp, "w", encoding="utf-8") as f:
         for i, arquivo in enumerate(arquivos, start=1):
             f.write(arquivo + "\n")
+
             progresso = int((i / total) * 100)
-            print("STATUS:Imprimindo caminhos dos arquivos em .txt", flush=True)
-            print(f"PROGRESS:{progresso}", flush=True)
+            if progresso != ultimo_progresso:
+                print(f"PROGRESS:{progresso}", flush=True)
+                ultimo_progresso = progresso
 
     os.replace(caminho_tmp, caminho_saida)
 
@@ -126,9 +135,6 @@ def to_int_ms_simples(value):
     return 0
 
 
-# =========================
-# DURAÇÃO - MediaInfo
-# =========================
 def obter_duracao_ms_mediainfo(media):
     tracks = getattr(media, "tracks", [])
 
@@ -146,22 +152,25 @@ def obter_duracao_ms_mediainfo(media):
 
         try:
             if video.frame_count and video.frame_rate:
-                return int((float(video.frame_count) / float(str(video.frame_rate).replace(",", "."))) * 1000)
+                return int(
+                    (float(video.frame_count) /
+                     float(str(video.frame_rate).replace(",", "."))) * 1000
+                )
         except Exception:
             pass
 
         try:
             if video.frame_count and video.frame_rate_nominal:
-                return int((float(video.frame_count) / float(str(video.frame_rate_nominal).replace(",", "."))) * 1000)
+                return int(
+                    (float(video.frame_count) /
+                     float(str(video.frame_rate_nominal).replace(",", "."))) * 1000
+                )
         except Exception:
             pass
 
     return 0
 
 
-# =========================
-# DURAÇÃO - PyAV
-# =========================
 def obter_duracao_ms_pyav(caminho):
     try:
         container = av.open(caminho)
@@ -193,11 +202,7 @@ def obter_duracao_ms_pyav(caminho):
         return 0
 
 
-# =========================
-# FPS (MESMA LÓGICA DA DURAÇÃO)
-# =========================
 def obter_fps(media, caminho):
-    # 1️⃣ MediaInfo
     video = next((t for t in media.tracks if t.track_type == "Video"), None)
 
     if video:
@@ -211,7 +216,6 @@ def obter_fps(media, caminho):
                 except ValueError:
                     pass
 
-    # 2️⃣ PyAV rápido
     try:
         container = av.open(caminho)
         stream = next((s for s in container.streams if s.type == "video"), None)
@@ -223,7 +227,6 @@ def obter_fps(media, caminho):
     except Exception:
         pass
 
-    # 3️⃣ FPS real (scan por PTS)
     try:
         container = av.open(caminho)
         stream = next((s for s in container.streams if s.type == "video"), None)
@@ -273,7 +276,15 @@ def imprimir_infos_csv(arquivos, pasta_saida):
     ]
 
     total = len(arquivos_video)
-    duracao_total_ms = 0  # 🔥 acumulador
+    duracao_total_ms = 0
+
+    print("STATUS:Imprimindo tabelas de informações dos arquivos em .csv", flush=True)
+
+    if total == 0:
+        print("PROGRESS:100", flush=True)
+        return
+
+    ultimo_progresso = -1
 
     with open(caminho_tmp, "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile, delimiter=";")
@@ -290,12 +301,11 @@ def imprimir_infos_csv(arquivos, pasta_saida):
             video_streams = [t for t in media.tracks if t.track_type == "Video"]
             audio_streams = [t for t in media.tracks if t.track_type == "Audio"]
 
-            # duração (MediaInfo → PyAV)
             duracao_ms = obter_duracao_ms_mediainfo(media)
             if duracao_ms == 0:
                 duracao_ms = obter_duracao_ms_pyav(arquivo)
 
-            duracao_total_ms += duracao_ms  # 🔥 soma
+            duracao_total_ms += duracao_ms
 
             fps_valor = obter_fps(media, arquivo)
 
@@ -317,16 +327,11 @@ def imprimir_infos_csv(arquivos, pasta_saida):
                 resolucao
             ])
 
-            progresso = int((i / total) * 100) if total else 100
-            print(
-                "STATUS:Imprimindo tabelas de informações dos arquivos em .csv",
-                flush=True
-            )
-            print(f"PROGRESS:{progresso}", flush=True)
+            progresso = int((i / total) * 100)
+            if progresso != ultimo_progresso:
+                print(f"PROGRESS:{progresso}", flush=True)
+                ultimo_progresso = progresso
 
-        # =========================
-        # LINHA TOTAL
-        # =========================
         writer.writerow([
             "", "", "", "Duracao Total",
             formatar_duracao(duracao_total_ms),
@@ -334,7 +339,6 @@ def imprimir_infos_csv(arquivos, pasta_saida):
         ])
 
     os.replace(caminho_tmp, caminho_saida)
-
 
 
 def main():

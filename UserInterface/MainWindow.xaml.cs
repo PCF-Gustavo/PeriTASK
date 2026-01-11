@@ -73,6 +73,19 @@ namespace UserInterface
                 DataContext = progressViewModel
             };
 
+            // Mostra janela de progresso
+            Application.Current.MainWindow = progressWindow;
+            progressWindow.Show();
+
+            // 🔥 FORÇA RENDER IMEDIATO
+            progressWindow.Dispatcher.Invoke(
+                System.Windows.Threading.DispatcherPriority.Render,
+                new Action(() => { })
+            );
+
+            // Fecha janela principal
+            this.Close();
+
             // Captura saída do Python
             process.OutputDataReceived += (s, e) =>
             {
@@ -125,13 +138,6 @@ namespace UserInterface
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-
-            // Mostra janela de progresso
-            Application.Current.MainWindow = progressWindow;
-            progressWindow.Show();
-
-            // Fecha janela principal
-            this.Close();
         }
     }
 }
