@@ -327,9 +327,8 @@ def imprimir_infos_csv(arquivos, pasta_saida):
         # =========================
         # LINHA TOTAL
         # =========================
-        writer.writerow([])
         writer.writerow([
-            "", "", "Duracao Total", "",
+            "", "", "", "Duracao Total",
             formatar_duracao(duracao_total_ms),
             "", "", "", ""
         ])
