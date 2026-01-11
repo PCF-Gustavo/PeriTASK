@@ -22,7 +22,8 @@ namespace UserInterface
             {
                 if (itens_selecionados == null || itens_selecionados.Count == 0)
                 {
-                    MessageBox.Show("Nenhum arquivo recebido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Nenhum arquivo recebido.", "PeriTASK", 
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                     Application.Current.Shutdown();
                     return;
                 }
@@ -33,23 +34,22 @@ namespace UserInterface
 
         private void Button_ok_Click(object sender, RoutedEventArgs e)
         {
+            //Executa PythonScript
+            string argumento_itens_selecionados = string.Join("|", itens_selecionados);
+
             if (ComboBox1.SelectedItem is not ComboBoxItem item)
             {
-                MessageBox.Show("Selecione uma opção na ComboBox.", "Aviso",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Selecione uma opção na ComboBox.", "PeriTASK",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             string selecao_ComboBox = item.Content.ToString();
-
-            //Executa PythonScript
-            string argumento_itens_selecionados = string.Join("|", itens_selecionados);
+            
             string argumentosPython = $"\"{argumento_itens_selecionados}\" \"{selecao_ComboBox}\"";
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-            string pythonExe = Path.Combine(baseDir, "PythonScript.exe");
 
             var psi = new ProcessStartInfo
             {
-                FileName = pythonExe,
+                FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PythonScript.exe"),
                 Arguments = argumentosPython,
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
@@ -92,12 +92,8 @@ namespace UserInterface
                         else
                         {
                             // 👇 QUALQUER PRINT DO PYTHON
-                            MessageBox.Show(
-                                e.Data,
-                                "PeriTASK",
-                                MessageBoxButton.OK,
-                                MessageBoxImage.Information
-                            );
+                            MessageBox.Show(e.Data, "PeriTASK",
+                                MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     });
                 }

@@ -9,11 +9,16 @@
         ResizeMode="NoResize"
         >
     <Grid Margin="20,20,20,20">
-        <Button x:Name="button_ok" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_ok_Click" Width="100" Height="20" Margin="0,104,0,0"/>
-        <ComboBox x:Name="ComboBox1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" IsDropDownOpen="True">
-            <ComboBoxItem Content="Opção 1" />
-            <ComboBoxItem Content="Opção 2" />
-            <ComboBoxItem Content="Opção 3" />
+        <Button x:Name="button_ok" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="Button_ok_Click" Width="100" Height="20"/>
+        <ComboBox x:Name="ComboBox1" 
+                  HorizontalAlignment="Left" 
+                  VerticalAlignment="Top" 
+                  Width="300" 
+                  IsDropDownOpen="True"
+                  SelectedIndex="0"
+                  >
+            <ComboBoxItem Content="Imprimir caminhos em .txt" />
+            <ComboBoxItem Content="Imprimir tabela de informações em .csv" />
         </ComboBox>
     </Grid>
 </Window>

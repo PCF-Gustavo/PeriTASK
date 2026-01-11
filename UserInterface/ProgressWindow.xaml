@@ -43,19 +43,33 @@
             VerticalAlignment="Top"
             />
 
-            <!-- Status do processamento Python -->
-            <TextBlock 
-            Text="{Binding Status_Python}" 
-            HorizontalAlignment="Left" 
-            VerticalAlignment="Bottom" 
-            />
+            <Grid Margin="0,55,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <!-- Status -->
+                    <ColumnDefinition Width="Auto"/>
+                    <!-- Botão -->
+                </Grid.ColumnDefinitions>
 
-            <Button Content="Cancelar"
-            Width="80"
-            Height="25"
-            VerticalAlignment="Bottom"
-            HorizontalAlignment="Right"
-            Command="{Binding CancelCommand}" />
+                <!-- Status do processamento Python -->
+                <TextBlock
+                Grid.Column="0"
+                Text="{Binding Status_Python}"
+                TextWrapping="Wrap"
+                TextTrimming="CharacterEllipsis"
+                MaxHeight="40"
+                VerticalAlignment="Top"
+                Margin="0,5,5,0"/>
+
+                <!-- Botão Cancelar -->
+                <Button
+                Grid.Column="1"
+                Content="Cancelar"
+                Width="80"
+                Height="25"
+                VerticalAlignment="Bottom"
+                Command="{Binding CancelCommand}" />
+            </Grid>
         </Grid>
     </Grid>
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 
 namespace UserInterface
 {
@@ -7,6 +8,16 @@ namespace UserInterface
         public ProgressWindow()
         {
             InitializeComponent();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            if (DataContext is ProgressViewModel vm)
+            {
+                vm.CancelCommand.Execute(null);
+            }
         }
     }
 }
