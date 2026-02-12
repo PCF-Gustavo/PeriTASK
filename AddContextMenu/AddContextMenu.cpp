@@ -1,4 +1,3 @@
-// AddContextMenu.cpp: implementação das Exportações de DLL.
 
 
 #include "pch.h"

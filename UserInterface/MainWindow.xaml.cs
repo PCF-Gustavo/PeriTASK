@@ -139,5 +139,10 @@ namespace UserInterface
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
         }
+
+        private void ComboBox1_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

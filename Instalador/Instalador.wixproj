@@ -71,10 +71,14 @@
   </Target>
 	<Target Name="BuildPython"
 	BeforeTargets="Compile">
-		<Exec Command="python -m PyInstaller --onefile --noconsole $(SolutionDir)PythonScript\PythonScript.py "/>
+		<Exec Command="&quot;C:\Users\gustavo.gvs\AppData\Local\Programs\Python\Python313\python.exe&quot; -m PyInstaller --onefile --noconsole --distpath &quot;$(SolutionDir)Instalador\dist&quot; --workpath &quot;$(SolutionDir)Instalador\build&quot; &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
 	</Target>
 	<Target Name="AfterBuild">
-		<Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;Start-Process msiexec.exe -ArgumentList '/i &quot;$(SolutionDir)Instalador\bin\x64\Debug\PeriTASK_Setup.msi&quot;' -Wait; Stop-Process -Name explorer -Force&quot;" />
+		<!-- Instala PeriTASK -->
+		<Exec Command='cmd /c "start &quot;&quot; /wait msiexec /i &quot;$(SolutionDir)Instalador\bin\x64\Debug\PeriTASK_Setup.msi&quot;"' />
+		<!-- Mata o Explorer -->
+		<Exec Command='taskkill /F /IM explorer.exe' />
+		<!-- Abre Explorer  -->
+		<Exec Command='powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process explorer.exe"' />
 	</Target>
-
 </Project>

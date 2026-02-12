@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\PythonScript.py'],
+    ['C:\\Users\\gustavo.gvs\\OneDrive - Polícia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\PythonScript.py'],
     pathex=[],
     binaries=[],
     datas=[],

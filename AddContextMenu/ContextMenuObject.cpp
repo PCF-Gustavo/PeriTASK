@@ -131,12 +131,19 @@ public:
         if (uFlags & CMF_DEFAULTONLY)
             return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 0);
 
+        wchar_t ContextMenu_Text[64]{};
+        LoadStringW(
+            _AtlBaseModule.GetResourceInstance(),
+            CONTEXTMENU_TEXT,
+            ContextMenu_Text,
+            ARRAYSIZE(ContextMenu_Text));
+
         InsertMenuW(
             hMenu,
             indexMenu,
             MF_BYPOSITION | MF_STRING,
             idCmdFirst,
-            L"PeriTASK");
+            ContextMenu_Text);
 
         return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 1);
     }

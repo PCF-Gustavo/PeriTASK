@@ -31,6 +31,6 @@
   <Target Name="BeforeBuild">
   </Target>
   <Target Name="AfterBuild">
-	  <Exec Command="pyinstaller --onefile --noconsole PythonScript.py" />
+    <Exec Command="pyinstaller --onefile --noconsole PythonScript.py" />
   </Target>
 </Project>

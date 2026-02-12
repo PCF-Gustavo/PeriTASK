@@ -4,6 +4,8 @@
 //
 #define IDS_PROJNAME                    100
 #define IDR_ADDCONTEXTMENU              101
+#define IDS_MENU_TEXT                   101
+#define CONTEXTMENU_TEXT                101
 #define IDR_CONTEXTMENUOBJECT           106
 
 // Next default values for new objects
