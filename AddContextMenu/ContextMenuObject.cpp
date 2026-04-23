@@ -131,6 +131,9 @@ public:
         if (uFlags & CMF_DEFAULTONLY)
             return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 0);
 
+        if (itens_selecionados.empty())
+            return MAKE_HRESULT(SEVERITY_SUCCESS, 0, 0);
+
         wchar_t ContextMenu_Text[64]{};
         LoadStringW(
             _AtlBaseModule.GetResourceInstance(),
@@ -150,6 +153,9 @@ public:
 
     STDMETHOD(InvokeCommand)(LPCMINVOKECOMMANDINFO pici) override
     {
+        if (!pici)
+            return E_INVALIDARG;
+
         // --- Verificação do comando ---
         const auto pex =
             (pici->cbSize == sizeof(CMINVOKECOMMANDINFOEX))
@@ -157,18 +163,23 @@ public:
             : nullptr;
 
         const bool isUnicode = (pex && (pex->fMask & CMIC_MASK_UNICODE)) != 0;
-        bool isVerbString = false;
 
+        // 🔹 CORREÇÃO CRÍTICA: suporte correto a Unicode
         if (isUnicode)
-            isVerbString = HIWORD(pex->lpVerbW) != 0;
-        else
-            isVerbString = HIWORD(pici->lpVerb) != 0;
-
-        if (!isVerbString)
         {
-            UINT idCmd = isUnicode ? LOWORD(pex->lpVerbW) : LOWORD(pici->lpVerb);
-            if (idCmd != 0)
-                return S_FALSE;
+            if (HIWORD(pex->lpVerbW) != 0)
+                return E_FAIL;
+
+            if (LOWORD(pex->lpVerbW) != 0)
+                return E_FAIL;
+        }
+        else
+        {
+            if (HIWORD(pici->lpVerb) != 0)
+                return E_FAIL;
+
+            if (LOWORD(pici->lpVerb) != 0)
+                return E_FAIL;
         }
 
         // ======================================================

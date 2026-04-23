@@ -134,6 +134,8 @@ namespace UserInterface
                 });
             };
 
+            progressViewModel.Status_Python = "Carregando Python...";
+
             // Inicia o processo
             process.Start();
             process.BeginOutputReadLine();

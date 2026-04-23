@@ -22,7 +22,7 @@ namespace UserInterface
             CancelCommand = new RelayCommand(cancelar);
             _ultimoUpdate = DateTime.Now;
             _temposIteracao = new Queue<double>();
-            Status_Python = "Aguardando início...";
+            Status_Python = "Fazendo configurações iniciais...";
             Progress = 0;
         }
 
