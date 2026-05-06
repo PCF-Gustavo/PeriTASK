@@ -46,7 +46,7 @@ Interface gráfica do usuário.
 ### 🔹 PythonScript
 Camada de processamento.
 
-- Contém scripts Python
+- Contém scripts Python 3.13
 - Executa as rotinas principais (ex: análise, processamento, etc.)
 - Pode utilizar bibliotecas como NumPy, OpenCV, etc.
 
@@ -56,7 +56,7 @@ Camada de processamento.
 Responsável pela distribuição do sistema.
 
 - Utiliza WiX Toolset
-- Empacota todos os componentes
+- Empacotamento dos scripts Python em executáveis standalone (.exe) utilizando PyInstaller
 - Configura ambiente e integrações automaticamente
 
 ---
@@ -68,8 +68,9 @@ Fluxo típico de uso:
 1. Usuário clica com botão direito em um arquivo
 2. Seleciona opção do PeriTASK
 3. Interface é iniciada
-4. Script Python é executado
-5. Resultado é gerado/apresentado
+4. Usuário interage com a interface (configurações, opções, etc.)
+5. Script Python é executado
+6. Resultado é gerado/apresentado
 
 ---
 
