@@ -94,10 +94,10 @@ Testado apenas nos seguintes sistemas operacionais:
 
 ---
 
-## 🖥️ Contribuidores
+## 👥 Contribuidores
 
 - Recomenda-se o uso do Microsoft Visual Studio
-- Compilação depende do [WiX Toolset v3.11 Build Tools](https://wixtoolset.org/releases/v3.11/stable)
+- Compilação depende do [WiX Toolset v3 Build Tools](https://github.com/wixtoolset/wix3/releases/latest)
 
 ---
 ## 📌 Versionamento
