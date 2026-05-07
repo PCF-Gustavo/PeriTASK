@@ -69,16 +69,18 @@
   <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
     <Error Text="The WiX Toolset v3 build tools must be installed to build this project. To download the WiX Toolset, see https://github.com/wixtoolset/wix3/releases/latest" />
   </Target>
-	<Target Name="BuildPython"
-	BeforeTargets="Compile">
-		<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller --onefile --noconsole --distpath &quot;$(SolutionDir)Instalador\dist&quot; --workpath &quot;$(SolutionDir)Instalador\build&quot; &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
-	</Target>
-	<Target Name="AfterBuild">
-		<!-- Instala PeriTASK -->
-		<Exec Command='cmd /c "start &quot;&quot; /wait msiexec /i &quot;$(SolutionDir)Instalador\bin\x64\Debug\PeriTASK_Setup.msi&quot;"' />
-		<!-- Mata o Explorer -->
-		<Exec Command='taskkill /F /IM explorer.exe' />
-		<!-- Abre Explorer  -->
-		<Exec Command='powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process explorer.exe"' />
-	</Target>
+  <Target Name="EnsurePythonEnv" Condition="!Exists('$(SolutionDir)PythonScript\venv\Scripts\python.exe')">
+	<Error Text="Python virtual environment not found in PythonScript\venv." />
+  </Target>
+  <Target Name="BuildPython" BeforeTargets="Compile">
+	<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller --onefile --noconsole --distpath &quot;$(SolutionDir)Instalador\dist&quot; --workpath &quot;$(SolutionDir)Instalador\build&quot; &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
+  </Target>
+  <Target Name="AfterBuild">
+	<!-- Instala PeriTASK -->
+	<Exec Command='cmd /c "start &quot;&quot; /wait msiexec /i &quot;$(SolutionDir)Instalador\bin\x64\Debug\PeriTASK_Setup.msi&quot;"' />
+	<!-- Mata o Explorer -->
+	<Exec Command='taskkill /F /IM explorer.exe' />
+	<!-- Abre Explorer  -->
+	<Exec Command='powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process explorer.exe"' />
+  </Target>
 </Project>
