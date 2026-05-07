@@ -46,7 +46,7 @@ Interface gráfica do usuário.
 ### 🔹 PythonScript
 Camada de processamento.
 
-- Contém scripts Python 3.13
+- Contém scripts Python
 - Executa as rotinas principais (ex: análise, processamento, etc.)
 - Pode utilizar bibliotecas como NumPy, OpenCV, etc.
 
@@ -91,6 +91,13 @@ Testado apenas nos seguintes sistemas operacionais:
 
 - Windows 10
 - Windows 11
+
+---
+
+## 🖥️ Contribuidores
+
+- Recomenda-se o uso do Microsoft Visual Studio
+- Compilação depende do [WiX Toolset v3.11 Build Tools](https://wixtoolset.org/releases/v3.11/stable)
 
 ---
 ## 📌 Versionamento
