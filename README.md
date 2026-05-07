@@ -18,6 +18,28 @@ O projeto combina:
 - Scripts de processamento (Python)
 - Integração com o Windows (menu de contexto)
 - Instalador automatizado
+- 
+---
+
+## ⚙️ Funcionamento
+
+Fluxo típico de uso:
+
+1. Usuário clica com botão direito em um arquivo
+2. Seleciona opção do PeriTASK
+3. Interface é iniciada
+4. Usuário interage com a interface (configurações, opções, etc.)
+5. Script Python é executado
+6. Resultado é gerado/apresentado
+
+---
+
+## 🖥️ Compatibilidade
+
+Testado apenas nos seguintes sistemas operacionais:
+
+- Windows 10
+- Windows 11
 
 ---
 
@@ -61,52 +83,31 @@ Responsável pela distribuição do sistema.
 
 ---
 
-## ⚙️ Funcionamento
-
-Fluxo típico de uso:
-
-1. Usuário clica com botão direito em um arquivo
-2. Seleciona opção do PeriTASK
-3. Interface é iniciada
-4. Usuário interage com a interface (configurações, opções, etc.)
-5. Script Python é executado
-6. Resultado é gerado/apresentado
-
----
-
 ## 🧪 Status do Projeto
 
 🚧 Em desenvolvimento
 
-Versões iniciais podem conter:
-- funcionalidades incompletas
-- instabilidades
-- mudanças frequentes
+- Versões beta lançada.
 
 ---
 
-## 🖥️ Compatibilidade
-
-Testado apenas nos seguintes sistemas operacionais:
-
-- Windows 10
-- Windows 11
-
----
-
-## 👥 Contribuidores
-
-- Recomenda-se o uso do Microsoft Visual Studio
-- Compilação depende de:
-	- [WiX Toolset v3 Build Tools](https://github.com/wixtoolset/wix3/releases/latest)
-	- Python 3.13+ em PythonScript\venv com as bibliotecas listadas em PythonScript\requirements.txt
-
----
 ## 📌 Versionamento
 
 O projeto segue versionamento semântico:
 
 - `v0.x` → versões em desenvolvimento
 - `v1.0.0` → primeira versão estável
+
+---
+
+## 👥 Aos contribuidores
+
+- Recomenda-se o uso do Microsoft Visual Studio
+- Compilação depende de:
+	- [WiX Toolset v3 Build Tools](https://github.com/wixtoolset/wix3/releases/latest)
+	- Python em PythonScript\venv com as bibliotecas listadas em PythonScript\requirements.txt
+- O desenvolvimento foi realizado em:
+	- Visual Studio 2022
+	- Python 3.13
 
 ---
