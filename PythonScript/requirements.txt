@@ -1,0 +1,10 @@
+altgraph==0.17.5
+av==17.0.1
+packaging==26.2
+pefile==2024.8.26
+pip==25.2
+pyinstaller==6.20.0
+pyinstaller-hooks-contrib==2026.5
+pymediainfo==7.0.1
+pywin32-ctypes==0.2.3
+setuptools==82.0.1

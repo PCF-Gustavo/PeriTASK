@@ -97,7 +97,9 @@ Testado apenas nos seguintes sistemas operacionais:
 ## 👥 Contribuidores
 
 - Recomenda-se o uso do Microsoft Visual Studio
-- Compilação depende do [WiX Toolset v3 Build Tools](https://github.com/wixtoolset/wix3/releases/latest)
+- Compilação depende de:
+	- [WiX Toolset v3 Build Tools](https://github.com/wixtoolset/wix3/releases/latest)
+	- Python 3.13+ em PythonScript\venv com as bibliotecas listadas em PythonScript\requirements.txt
 
 ---
 ## 📌 Versionamento
