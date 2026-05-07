@@ -72,7 +72,7 @@
   <Target Name="EnsurePythonEnv" Condition="!Exists('$(SolutionDir)PythonScript\venv\Scripts\python.exe')">
 	<Error Text="Python virtual environment not found in PythonScript\venv." />
   </Target>
-  <Target Name="BuildPython" BeforeTargets="Compile">
+  <Target Name="BuildPython" BeforeTargets="Compile" DependsOnTargets="EnsurePythonEnv">
 	<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller --onefile --noconsole --distpath &quot;$(SolutionDir)Instalador\dist&quot; --workpath &quot;$(SolutionDir)Instalador\build&quot; &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
   </Target>
   <Target Name="AfterBuild">
