@@ -18,7 +18,7 @@ O projeto combina:
 - Scripts de processamento (Python)
 - Integração com o Windows (menu de contexto)
 - Instalador automatizado
-- 
+
 ---
 
 ## ⚙️ Funcionamento
@@ -34,9 +34,22 @@ Fluxo típico de uso:
 
 ---
 
+## 📋 Pré-requisitos
+
+- Windows
+
+---
+
+## 🚀 Instalação
+
+1. Baixe a versão mais recente na aba **Releases**
+2. Execute o instalador
+
+---
+
 ## 🖥️ Compatibilidade
 
-Testado apenas nos seguintes sistemas operacionais:
+Testado apenas em:
 
 - Windows 10
 - Windows 11
@@ -75,7 +88,7 @@ Camada de processamento.
 ---
 
 ### 🔹 Instalador
-Responsável pela distribuição do sistema.
+Responsável pela distribuição do programa.
 
 - Utiliza WiX Toolset
 - Empacotamento dos scripts Python em executáveis standalone (.exe) utilizando PyInstaller
@@ -109,5 +122,6 @@ O projeto segue versionamento semântico:
 - O desenvolvimento foi realizado em:
 	- Visual Studio 2022
 	- Python 3.13
+   	- WiX Toolset v3.14
 
 ---
