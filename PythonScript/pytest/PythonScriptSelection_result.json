@@ -1,0 +1,89 @@
+﻿{
+    "videos": [
+        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\laudo530-2025 [02] - 1.dav",
+        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\MHDX_ch2_Main_20220829060000_20220829063000 Rel\u00f3gio 06h16min19seg.avi",
+        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\video_original.mp4",
+        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\video_whatsapp.mp4"
+    ],
+    "resultados": [
+        [
+            "txt",
+            {
+                "runs_total": 10,
+                "runs_used": 9,
+                "ignored_runs": 1,
+                "statistics": {
+                    "mean": 0.0005459555557333968,
+                    "median": 0.0004894000012427568,
+                    "min": 0.00048099999548867345,
+                    "max": 0.000680800003465265,
+                    "stddev": 8.881383676338523e-05
+                },
+                "runs": [
+                    0.000681,
+                    0.00067,
+                    0.000639,
+                    0.000484,
+                    0.000499,
+                    0.000489,
+                    0.000481,
+                    0.000483,
+                    0.000487
+                ]
+            }
+        ],
+        [
+            "simplificado",
+            {
+                "runs_total": 10,
+                "runs_used": 9,
+                "ignored_runs": 1,
+                "statistics": {
+                    "mean": 0.0004992000006798966,
+                    "median": 0.0004905000023427419,
+                    "min": 0.0004788000005646609,
+                    "max": 0.0005515000011655502,
+                    "stddev": 2.295163326696998e-05
+                },
+                "runs": [
+                    0.000517,
+                    0.000491,
+                    0.000495,
+                    0.000479,
+                    0.000552,
+                    0.000505,
+                    0.000485,
+                    0.000483,
+                    0.000487
+                ]
+            }
+        ],
+        [
+            "completo",
+            {
+                "runs_total": 10,
+                "runs_used": 9,
+                "ignored_runs": 1,
+                "statistics": {
+                    "mean": 0.00041300000076363277,
+                    "median": 0.0003772000054595992,
+                    "min": 0.00031460000172955915,
+                    "max": 0.0005820000005769543,
+                    "stddev": 9.712697749452108e-05
+                },
+                "runs": [
+                    0.000511,
+                    0.000582,
+                    0.000513,
+                    0.000324,
+                    0.000343,
+                    0.000315,
+                    0.000392,
+                    0.000377,
+                    0.000359
+                ]
+            }
+        ]
+    ]
+}

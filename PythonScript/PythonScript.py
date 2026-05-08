@@ -7,6 +7,9 @@ import hashlib
 from pathlib import Path
 from pymediainfo import MediaInfo
 import av  # libav / ffmpeg
+from benchmark import MODO_BENCHMARK, emitir_evento
+
+
 
 
 def tem_permissao_escrita(pasta):
@@ -756,8 +759,9 @@ def obter_videos(arquivos):
 
 
 def main():
+    emitir_evento("PERITASK_READY")
     if len(sys.argv) < 3:
-        # sys.exit(1)
+        sys.exit(1)
         itens_selecionados = r"C:\Users\gustavo.gvs\Desktop\teste.mp4"
         selecao_ComboBox = f"Vídeos -> tabela completa de informações em .csv"
         arquivos = [r"C:\Users\gustavo.gvs\Desktop\teste.mp4"]
@@ -766,6 +770,10 @@ def main():
         itens_selecionados = sys.argv[1].split("|")
         selecao_ComboBox = sys.argv[2]
         arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
+
+    if MODO_BENCHMARK:
+        pasta_saida = Path(os.getenv("TEMP")) / "PeriTASK"
+        pasta_saida.mkdir(parents=True, exist_ok=True)
 
     if selecao_ComboBox == f"Arquivos -> lista de caminhos em .txt":
         imprimir_lista_caminhos_txt(arquivos, pasta_saida)

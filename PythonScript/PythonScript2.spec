@@ -1,12 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+from PyInstaller.utils.hooks import collect_submodules
+
+hiddenimports = []
+hiddenimports += collect_submodules("av")
+hiddenimports += collect_submodules("pymediainfo")
 
 a = Analysis(
-    ['C:\\Users\\gustavo.gvs\\OneDrive - Polícia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\PythonScript.py'],
+    ['PythonScript.py'],
     pathex=[],
     binaries=[],
     datas=[],
-    hiddenimports=[],
+    hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -29,7 +34,7 @@ exe = EXE(
     upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,

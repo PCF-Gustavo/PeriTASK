@@ -73,14 +73,14 @@
 	<Error Text="Python virtual environment not found in PythonScript\venv." />
   </Target>
   <Target Name="BuildPython" BeforeTargets="Compile" DependsOnTargets="EnsurePythonEnv">
-	<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller --onefile --noconsole --distpath &quot;$(SolutionDir)Instalador\dist&quot; --workpath &quot;$(SolutionDir)Instalador\build&quot; &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
+	<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller --onefile --distpath &quot;$(SolutionDir)Instalador\dist&quot; --workpath &quot;$(SolutionDir)Instalador\build&quot; &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
   </Target>
-  <Target Name="AfterBuild">
-	<!-- Instala PeriTASK -->
+  <!--<Target Name="AfterBuild">
+	--><!-- Instala PeriTASK --><!--
 	<Exec Command='cmd /c "start &quot;&quot; /wait msiexec /i &quot;$(SolutionDir)Instalador\bin\x64\Debug\PeriTASK_Setup.msi&quot;"' />
-	<!-- Mata o Explorer -->
+	--><!-- Mata o Explorer --><!--
 	<Exec Command='taskkill /F /IM explorer.exe' />
-	<!-- Abre Explorer  -->
+	--><!-- Abre Explorer  --><!--
 	<Exec Command='powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process explorer.exe"' />
-  </Target>
+  </Target>-->
 </Project>
