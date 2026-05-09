@@ -7,7 +7,7 @@
     <StartupFile>PythonScript.py</StartupFile>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>.</WorkingDirectory>
+    <WorkingDirectory>$(ProjectDir)</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PythonScript</Name>
     <RootNamespace>PythonScript</RootNamespace>

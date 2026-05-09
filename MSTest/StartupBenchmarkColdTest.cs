@@ -43,7 +43,7 @@ namespace MSTest
                 ProcessStartInfo psi = new()
                 {
                     FileName = ExePath,
-                    Arguments = "--benchmark",
+                    Arguments = "--benchmark_MSTest",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
                     CreateNoWindow = true
@@ -125,10 +125,20 @@ namespace MSTest
                 runs = results
             };
 
+            Dictionary<string, string> aliases = new()
+            {
+                ["MA2023127403"] = "notebook",
+            };
+
+            string machineName = Environment.MachineName;
+
+            if (aliases.TryGetValue(machineName, out string alias))
+                machineName = alias;
+
             string file = Path.GetFullPath(
                 Path.Combine(
                     BaseDir,
-                    @"..\..\..\StartupBenchmarkColdTest_result.json"));
+                    $@"..\..\..\StartupBenchmarkColdTest_{machineName}_result.json"));
 
             File.WriteAllText(
                 file,

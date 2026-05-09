@@ -1,10 +1,9 @@
 ﻿{
     "videos": [
-        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
-        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\laudo530-2025 [02] - 1.dav",
-        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\MHDX_ch2_Main_20220829060000_20220829063000 Rel\u00f3gio 06h16min19seg.avi",
-        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\video_original.mp4",
-        "C:\\Users\\gustavo.gvs\\OneDrive - Pol\u00edcia Federal\\PCF Gustavo\\Visual Studio\\PeriTASK\\PythonScript\\pytest\\videos\\video_whatsapp.mp4"
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\laudo530-2025 [02] - 1.dav",
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\video_original.mp4",
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\video_whatsapp.mp4"
     ],
     "resultados": [
         [
@@ -14,22 +13,22 @@
                 "runs_used": 9,
                 "ignored_runs": 1,
                 "statistics": {
-                    "mean": 0.0005459555557333968,
-                    "median": 0.0004894000012427568,
-                    "min": 0.00048099999548867345,
-                    "max": 0.000680800003465265,
-                    "stddev": 8.881383676338523e-05
+                    "mean": 0.005973433247870869,
+                    "median": 0.0038422001525759697,
+                    "min": 0.003449399955570698,
+                    "max": 0.023505800403654575,
+                    "stddev": 0.006578598438915699
                 },
                 "runs": [
-                    0.000681,
-                    0.00067,
-                    0.000639,
-                    0.000484,
-                    0.000499,
-                    0.000489,
-                    0.000481,
-                    0.000483,
-                    0.000487
+                    0.004026,
+                    0.003842,
+                    0.004195,
+                    0.003845,
+                    0.003449,
+                    0.023506,
+                    0.003649,
+                    0.003603,
+                    0.003645
                 ]
             }
         ],
@@ -40,22 +39,22 @@
                 "runs_used": 9,
                 "ignored_runs": 1,
                 "statistics": {
-                    "mean": 0.0004992000006798966,
-                    "median": 0.0004905000023427419,
-                    "min": 0.0004788000005646609,
-                    "max": 0.0005515000011655502,
-                    "stddev": 2.295163326696998e-05
+                    "mean": 0.3418139333112372,
+                    "median": 0.3403508001938462,
+                    "min": 0.33507240004837513,
+                    "max": 0.3534538997337222,
+                    "stddev": 0.005976661060892165
                 },
                 "runs": [
-                    0.000517,
-                    0.000491,
-                    0.000495,
-                    0.000479,
-                    0.000552,
-                    0.000505,
-                    0.000485,
-                    0.000483,
-                    0.000487
+                    0.337647,
+                    0.337465,
+                    0.353454,
+                    0.343559,
+                    0.341875,
+                    0.338066,
+                    0.340351,
+                    0.335072,
+                    0.348836
                 ]
             }
         ],
@@ -66,22 +65,22 @@
                 "runs_used": 9,
                 "ignored_runs": 1,
                 "statistics": {
-                    "mean": 0.00041300000076363277,
-                    "median": 0.0003772000054595992,
-                    "min": 0.00031460000172955915,
-                    "max": 0.0005820000005769543,
-                    "stddev": 9.712697749452108e-05
+                    "mean": 0.33099731109622454,
+                    "median": 0.3243632996454835,
+                    "min": 0.30182959977537394,
+                    "max": 0.3996024001389742,
+                    "stddev": 0.029845804050070035
                 },
                 "runs": [
-                    0.000511,
-                    0.000582,
-                    0.000513,
-                    0.000324,
-                    0.000343,
-                    0.000315,
-                    0.000392,
-                    0.000377,
-                    0.000359
+                    0.30931,
+                    0.31313,
+                    0.399602,
+                    0.346506,
+                    0.329301,
+                    0.342744,
+                    0.324363,
+                    0.30183,
+                    0.312188
                 ]
             }
         ]

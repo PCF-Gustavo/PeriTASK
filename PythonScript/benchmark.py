@@ -1,9 +1,13 @@
 import sys
 import time
 
-MODO_BENCHMARK = "--benchmark" in sys.argv
+def modo_benchmark_MSTest():
+    return "--benchmark_MSTest" in sys.argv
+
+def modo_benchmark_pytest():
+    return "--benchmark_pytest" in sys.argv
 
 def emitir_evento(evento):
-    if MODO_BENCHMARK:
+    if modo_benchmark_MSTest():
         print(f"BENCHMARK:{evento}", flush=True)
         time.sleep(5)

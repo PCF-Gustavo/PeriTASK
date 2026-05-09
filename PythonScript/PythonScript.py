@@ -7,9 +7,7 @@ import hashlib
 from pathlib import Path
 from pymediainfo import MediaInfo
 import av  # libav / ffmpeg
-from benchmark import MODO_BENCHMARK, emitir_evento
-
-
+from benchmark import modo_benchmark_pytest, modo_benchmark_MSTest, emitir_evento
 
 
 def tem_permissao_escrita(pasta):
@@ -594,7 +592,7 @@ def obter_fps_nominal_pyav(arquivo_pyav):
 
     if not rate: return ""
 
-    return f"{rate:.2f} tbr"
+    return f"{float(rate):.2f} tbr"
 
 def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
     arquivo_saida = "tabela_completa_de_informacoes.csv"
@@ -670,11 +668,13 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     
                     # FPS médio
                     fps = (obter_fps_mediainfo(arquivo_mediainfo) or obter_fps_pyav(arquivo_pyav))
-                    writer.writerow(["FPS médio", f'="{f'{fps:.2f}'.replace('.', ',')}"'])
+                    # writer.writerow(["FPS médio", f'="{f'{fps:.2f}'.replace('.', ',')}"'])
+                    writer.writerow(["FPS médio", f'="{fps:.2f}"'.replace('.', ',')])
                     
                     # FPS nominal
                     fps_nominal = (getattr(track_mediainfo, "frame_rate_nominal", "") or obter_fps_nominal_pyav(arquivo_pyav))
-                    writer.writerow(["FPS nominal", f'="{str(fps_nominal).replace('.', ',')}"'])
+                    # writer.writerow(["FPS nominal", f'="{str(fps_nominal).replace('.', ',')}"'])
+                    writer.writerow(["FPS nominal", f'="{str(fps_nominal).replace(".", ",")}"'])
                     
                     # Unidade de tempo interna
                     unidade_de_tempo = obter_unidade_de_tempo_pyav(arquivo_pyav)
@@ -717,8 +717,9 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     writer.writerow(["Codificação", codec_audio])
 
                     # Taxa de amostragem
-                    writer.writerow(["Taxa de amostragem", f"{getattr(track_mediainfo, "sampling_rate", "")} Hz"])
-
+                    # writer.writerow(["Taxa de amostragem", f"{getattr(track_mediainfo, "sampling_rate", "")} Hz"])
+                    writer.writerow(["Taxa de amostragem", f'{getattr(track_mediainfo, "sampling_rate", "")} Hz'])
+                    
                     # Canais
                     canais = getattr(track_mediainfo, "channel_s", "")
                     if canais == 1:
@@ -771,7 +772,7 @@ def main():
         selecao_ComboBox = sys.argv[2]
         arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
 
-    if MODO_BENCHMARK:
+    if modo_benchmark_pytest():
         pasta_saida = Path(os.getenv("TEMP")) / "PeriTASK"
         pasta_saida.mkdir(parents=True, exist_ok=True)
 

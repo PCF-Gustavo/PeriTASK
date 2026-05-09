@@ -3,7 +3,8 @@ import time
 import json
 import statistics
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+BASE_DIR = Path(__file__).resolve().parent
+sys.path.append(str(BASE_DIR.parent))
 from PythonScript import main
 
 def medir(nome, func, rodadas=10, ignorar=1):
@@ -38,10 +39,9 @@ def medir(nome, func, rodadas=10, ignorar=1):
 
 
 def test_pipeline():
-    RESOURCES = Path(__file__).resolve().parent / "resources"
 
     videos = [
-        str(p) for p in (Path(__file__).resolve().parent / "videos").iterdir()
+        str(p) for p in (BASE_DIR / "videos").iterdir()
         if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav", ".avi"}
     ]
 
@@ -51,8 +51,8 @@ def test_pipeline():
         sys.argv = [
             "PythonScript.exe",
             "|".join(videos),
-            "Arquivos -> lista de caminhos em .txt"
-            "--benchmark"
+            "Arquivos -> lista de caminhos em .txt",
+            "--benchmark_pytest"
         ]
         main()
 
@@ -64,8 +64,8 @@ def test_pipeline():
         sys.argv = [
             "PythonScript.exe",
             "|".join(videos),
-            "Vídeos -> tabela simplificada de informações em .csv"
-            "--benchmark"
+            "Vídeos -> tabela simplificada de informações em .csv",
+            "--benchmark_pytest"
         ]
         main()
 
@@ -77,8 +77,8 @@ def test_pipeline():
         sys.argv = [
             "PythonScript.exe",
             "|".join(videos),
-            "Vídeos -> tabela completa de informações em .csv"
-            "--benchmark"
+            "Vídeos -> tabela completa de informações em .csv",
+            "--benchmark_pytest"
         ]
         main()
 
@@ -89,6 +89,13 @@ def test_pipeline():
         "videos": videos,
         "resultados": resultados
     }
-
-    with open(Path("pytest") / "PythonScriptSelection_result.json", "w", encoding="utf-8-sig") as f:
+    
+    import platform
+    aliases = {
+    "MA2023127403": "notebook",
+    }   
+    machine_name = platform.node().strip().upper()
+    machine_name = aliases.get(machine_name, machine_name.lower())
+    
+    with open(BASE_DIR / f"PythonScriptSelection_{machine_name}_result.json", "w", encoding="utf-8-sig") as f:
         json.dump(output, f, indent=4)
