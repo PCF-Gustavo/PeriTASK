@@ -773,7 +773,8 @@ def main():
         arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
 
     if modo_benchmark_pytest():
-        pasta_saida = Path(os.getenv("TEMP")) / "PeriTASK"
+        # pasta_saida = Path(os.getenv("TEMP")) / "PeriTASK"
+        pasta_saida = Path(os.getenv("USERPROFILE")) / "Desktop" / "PeriTASK_pytest"
         pasta_saida.mkdir(parents=True, exist_ok=True)
 
     if selecao_ComboBox == f"Arquivos -> lista de caminhos em .txt":

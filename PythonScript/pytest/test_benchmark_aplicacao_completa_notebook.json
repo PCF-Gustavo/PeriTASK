@@ -1,0 +1,94 @@
+﻿{
+    "system": {
+        "cpu": {
+            "name": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+            "physical_cores": 6,
+            "logical_cores": 12,
+            "freq_mhz": 2100.0
+        },
+        "ram": {
+            "total_gb": 15.39
+        },
+        "disk": {
+            "type": "NVME SSD"
+        },
+        "gpu": {
+            "name": "AMD Radeon(TM) Graphics",
+            "vram_gb": 0.5
+        },
+        "os": "Windows",
+        "os_version": "10.0.19045",
+        "machine": "ma2023127403",
+        "machine_alias": "notebook"
+    },
+    "videos": [
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\laudo530-2025 [02] - 1.dav",
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\video_original.mp4",
+        "C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\pytest\\videos\\video_whatsapp.mp4"
+    ],
+    "benchmark_meta": {
+        "runs_total": 10,
+        "runs_used": 9,
+        "ignored_runs": 1
+    },
+    "resultados": {
+        "txt": {
+            "statistics": {
+                "time": {
+                    "mean": 0.0071,
+                    "min": 0.0039,
+                    "max": 0.0226
+                },
+                "cpu": {
+                    "mean": 2.22,
+                    "min": 0.0,
+                    "max": 20.0
+                },
+                "ram": {
+                    "mean": 30.86,
+                    "min": 0.4,
+                    "max": 64.7
+                }
+            }
+        },
+        "simplificado": {
+            "statistics": {
+                "time": {
+                    "mean": 0.4385,
+                    "min": 0.4215,
+                    "max": 0.463
+                },
+                "cpu": {
+                    "mean": 14.87,
+                    "min": 9.4,
+                    "max": 20.8
+                },
+                "ram": {
+                    "mean": 31.01,
+                    "min": 0.44,
+                    "max": 65.0
+                }
+            }
+        },
+        "completo": {
+            "statistics": {
+                "time": {
+                    "mean": 0.3296,
+                    "min": 0.2974,
+                    "max": 0.4141
+                },
+                "cpu": {
+                    "mean": 16.52,
+                    "min": 8.3,
+                    "max": 33.9
+                },
+                "ram": {
+                    "mean": 31.02,
+                    "min": 0.43,
+                    "max": 65.0
+                }
+            }
+        }
+    }
+}

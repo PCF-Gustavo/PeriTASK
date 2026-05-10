@@ -7,7 +7,7 @@
     <StartupFile>PythonScript.py</StartupFile>
     <SearchPath>
     </SearchPath>
-    <WorkingDirectory>$(ProjectDir)</WorkingDirectory>
+    <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>PythonScript</Name>
     <RootNamespace>PythonScript</RootNamespace>
@@ -26,7 +26,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="pytest\test_1.py" />
+    <Compile Include="pytest\test_benchmark_aplicacao_completa.py" />
     <Compile Include="PythonScript.py" />
   </ItemGroup>
   <ItemGroup>
