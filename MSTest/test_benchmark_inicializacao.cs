@@ -9,8 +9,14 @@ using System.Text.Json;
 namespace MSTest
 {
     [TestClass]
-    public class StartupBenchmarkHotTest
+    public class test_benchmark_inicializacao
     {
+        //===========================
+        //CONFIG RUNS
+        //===========================
+        const int WARMUP_RUNS = 1;
+        const int USED_RUNS = 9;
+
         private static readonly string ExePath =
             Path.GetFullPath(
                 Path.Combine(
@@ -23,11 +29,11 @@ namespace MSTest
             Assert.IsTrue(File.Exists(ExePath),
                 $"Executável não encontrado: {ExePath}");
 
-            const int runs = 10;
+
 
             List<double> results = new();
 
-            for (int i = 0; i < runs; i++)
+            for (int i = 0; i < WARMUP_RUNS+USED_RUNS; i++)
             {
                 ProcessStartInfo psi = new()
                 {
@@ -67,32 +73,32 @@ namespace MSTest
                 throw new Exception("Nenhum resultado coletado.");
 
             // ignora primeira execução (warmup)
-            var valid = results.Skip(1).ToList();
+            var valid = results.Skip(WARMUP_RUNS).ToList();
 
-            double mean = valid.Average();
-            double median = valid.OrderBy(x => x).ElementAt(valid.Count / 2);
-            double min = valid.Min();
-            double max = valid.Max();
-
-            double stddev = Math.Sqrt(valid.Average(v =>
-                Math.Pow(v - mean, 2)));
+            double mean = Math.Round(valid.Average(), 4);
+            double min = Math.Round(valid.Min(), 4);
+            double max = Math.Round(valid.Max(), 4);
 
             var output = new
             {
-                runs_total = results.Count,
-                runs_used = valid.Count,
-                ignored_runs = 1,
-
-                statistics = new
+                run_info = new
                 {
-                    mean,
-                    median,
-                    min,
-                    max,
-                    stddev
+                    warmup_runs = results.Count - valid.Count,
+                    runs_used = valid.Count,
                 },
 
-                runs = valid
+                results = new
+                {
+                    statistics = new
+                    {
+                        time = new
+                        {
+                            mean,
+                            min,
+                            max
+                        }
+                    }
+                }
             };
 
             Dictionary<string, string> aliases = new()
@@ -108,7 +114,7 @@ namespace MSTest
             string file = Path.GetFullPath(
                 Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory,
-                    $@"..\..\..\StartupBenchmarkHotTest_{machineName}_result.json"));
+                    $@"..\..\..\test_benchmark_inicializacao_{machineName}.json"));
 
             File.WriteAllText(
                 file,

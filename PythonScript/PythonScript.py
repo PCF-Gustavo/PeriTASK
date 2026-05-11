@@ -7,7 +7,7 @@ import hashlib
 from pathlib import Path
 from pymediainfo import MediaInfo
 import av  # libav / ffmpeg
-from benchmark import modo_benchmark_pytest, modo_benchmark_MSTest, emitir_evento
+from benchmark import modo_benchmark_pytest, emitir_evento_MSTest
 
 
 def tem_permissao_escrita(pasta):
@@ -760,7 +760,7 @@ def obter_videos(arquivos):
 
 
 def main():
-    emitir_evento("PERITASK_READY")
+    emitir_evento_MSTest("PERITASK_READY")
     if len(sys.argv) < 3:
         sys.exit(1)
         itens_selecionados = r"C:\Users\gustavo.gvs\Desktop\teste.mp4"

@@ -12,6 +12,13 @@ BASE_DIR = Path(__file__).resolve().parent
 sys.path.append(str(BASE_DIR.parent))
 from PythonScript import main
 
+
+# ===========================
+# CONFIG RUNS
+# ===========================
+WARMUP_RUNS = 1
+USED_RUNS = 9
+
 process = psutil.Process()
 
 aliases = {
@@ -24,6 +31,7 @@ machine_name = aliases.get(machine_name, machine_name.lower())
 
 def get_cpu_percent():
     return psutil.cpu_percent(interval=None)
+
 
 def get_gpu_name():
     try:
@@ -85,6 +93,7 @@ def get_disk_type():
     except:
         return "unknown"
 
+
 def collect_static_system_info():
     cpu_freq = psutil.cpu_freq()
 
@@ -115,7 +124,8 @@ def collect_static_system_info():
 # ===========================
 # BENCHMARK (TIME)
 # ===========================
-def medir_time(nome, func, rodadas=10, ignorar=1):
+
+def medir_time(nome, func, rodadas, ignorar):
     runs_all = []
 
     for _ in range(rodadas):
@@ -138,15 +148,14 @@ def medir_time(nome, func, rodadas=10, ignorar=1):
 # ===========================
 # BENCHMARK (CPU ONLY)
 # ===========================
-def medir_cpu_ram(nome, func, rodadas=10, ignorar=1):
+
+def medir_cpu_ram(nome, func, rodadas, ignorar):
     runs_cpu = []
     runs_ram = []
 
     for _ in range(rodadas):
         psutil.cpu_percent(interval=None)
-
         func()
-
         runs_cpu.append(psutil.cpu_percent(interval=None))
         runs_ram.append(psutil.virtual_memory().percent)
         runs_ram.append((process.memory_info().rss / psutil.virtual_memory().total) * 100)
@@ -171,10 +180,12 @@ def medir_cpu_ram(nome, func, rodadas=10, ignorar=1):
 # ===========================
 # TEST PIPELINE
 # ===========================
+
 def test_pipeline():
     system = collect_static_system_info()
 
     videos = [
+        # p.name
         str(p)
         for p in (BASE_DIR / "videos").iterdir()
         if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
@@ -218,16 +229,14 @@ def test_pipeline():
 
     # FASE 1: TIME
     for name, fn in funcs.items():
-        nome, dados = medir_time(name, fn, 10, 1)
+        nome, dados = medir_time(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
         resultados_time.append({nome: dados})
 
     # FASE 2: CPU
     for name, fn in funcs.items():
-        nome, dados = medir_cpu_ram(name, fn, 10, 1)
+        nome, dados = medir_cpu_ram(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
         resultados_cpu.append({nome: dados})
 
-    # MERGE FINAL
-    # MERGE FINAL
     merged = {}
 
     for item in resultados_time:
@@ -244,14 +253,13 @@ def test_pipeline():
             merged[k]["statistics"]["ram"] = v["ram"]
 
     output = {
-        "system": system,
-        "videos": videos,
-        "benchmark_meta": {
-            "runs_total": 10,
-            "runs_used": 9,
-            "ignored_runs": 1
+        "run_info": {
+            "warmup_runs": WARMUP_RUNS,
+            "runs_used": USED_RUNS
         },
-        "resultados": merged
+        "results": merged,
+        "videos": [Path(v).name for v in videos],
+        "system": system
     }
 
     with open(
