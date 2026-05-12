@@ -7,57 +7,57 @@
         "txt": {
             "statistics": {
                 "time": {
-                    "mean": 0.0027,
-                    "min": 0.0016,
-                    "max": 0.0106
+                    "mean": 0.0025,
+                    "min": 0.0023,
+                    "max": 0.0029
                 },
                 "cpu": {
-                    "mean": 4.62,
+                    "mean": 18.78,
                     "min": 0.0,
-                    "max": 33.3
+                    "max": 85.7
                 },
                 "ram": {
-                    "mean": 25.17,
+                    "mean": 30.43,
                     "min": 0.4,
-                    "max": 52.7
+                    "max": 63.8
                 }
             }
         },
         "simplificado": {
             "statistics": {
                 "time": {
-                    "mean": 0.2765,
-                    "min": 0.2702,
-                    "max": 0.284
+                    "mean": 0.3219,
+                    "min": 0.2937,
+                    "max": 0.3767
                 },
                 "cpu": {
-                    "mean": 24.5,
-                    "min": 14.0,
-                    "max": 48.4
+                    "mean": 34.02,
+                    "min": 20.4,
+                    "max": 49.1
                 },
                 "ram": {
-                    "mean": 25.31,
+                    "mean": 30.53,
                     "min": 0.41,
-                    "max": 53.0
+                    "max": 64.0
                 }
             }
         },
         "completo": {
             "statistics": {
                 "time": {
-                    "mean": 0.2543,
-                    "min": 0.2465,
-                    "max": 0.2791
+                    "mean": 0.2927,
+                    "min": 0.2708,
+                    "max": 0.3346
                 },
                 "cpu": {
-                    "mean": 18.77,
-                    "min": 10.9,
-                    "max": 33.0
+                    "mean": 25.24,
+                    "min": 20.9,
+                    "max": 37.9
                 },
                 "ram": {
-                    "mean": 25.24,
+                    "mean": 30.49,
                     "min": 0.44,
-                    "max": 53.0
+                    "max": 63.9
                 }
             }
         }
