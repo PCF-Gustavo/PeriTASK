@@ -1,0 +1,113 @@
+{
+  "test_benchmark_inicializacao": {
+    "run_info": {
+      "warmup_runs": 1,
+      "runs_used": 9
+    },
+    "results": {
+      "statistics": {
+        "time": {
+          "mean": 2.1936,
+          "min": 2.0266,
+          "max": 2.3591
+        }
+      }
+    }
+  },
+  "test_benchmark_aplicacao_completa": {
+    "run_info": {
+      "warmup_runs": 1,
+      "runs_used": 9
+    },
+    "results": {
+      "txt": {
+        "statistics": {
+          "time": {
+            "mean": 0.003,
+            "min": 0.0026,
+            "max": 0.0037
+          },
+          "cpu": {
+            "mean": 4.78,
+            "min": 0.0,
+            "max": 22.2
+          },
+          "ram": {
+            "mean": 31.73,
+            "min": 0.99,
+            "max": 65.9
+          }
+        }
+      },
+      "simplificado": {
+        "statistics": {
+          "time": {
+            "mean": 1.4236,
+            "min": 1.4038,
+            "max": 1.5135
+          },
+          "cpu": {
+            "mean": 22.48,
+            "min": 12.6,
+            "max": 30.3
+          },
+          "ram": {
+            "mean": 31.11,
+            "min": 0.39,
+            "max": 65.2
+          }
+        }
+      },
+      "completo": {
+        "statistics": {
+          "time": {
+            "mean": 1.5892,
+            "min": 1.5665,
+            "max": 1.658
+          },
+          "cpu": {
+            "mean": 22.26,
+            "min": 18.4,
+            "max": 25.4
+          },
+          "ram": {
+            "mean": 31.43,
+            "min": 0.44,
+            "max": 66.0
+          }
+        }
+      }
+    },
+    "videos": [
+      "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+      "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv",
+      "MHDX_ch5_main_20210913112600_20210913112900.dav",
+      "MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav",
+      "video_corrompido.mp4",
+      "video_original.mp4",
+      "video_whatsapp.mp4"
+    ],
+    "system": {
+      "cpu": {
+        "name": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+        "physical_cores": 6,
+        "logical_cores": 12,
+        "freq_mhz": 2100.0
+      },
+      "ram": {
+        "total_gb": 15.39
+      },
+      "disk": {
+        "type": "NVME SSD"
+      },
+      "gpu": {
+        "name": "AMD Radeon(TM) Graphics",
+        "vram_gb": 0.5
+      },
+      "os": "Windows",
+      "os_version": "10.0.19045",
+      "machine": "ma2023127403",
+      "machine_alias": "notebook"
+    }
+  }
+}

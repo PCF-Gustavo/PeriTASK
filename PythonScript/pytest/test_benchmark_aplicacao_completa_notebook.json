@@ -7,64 +7,67 @@
         "txt": {
             "statistics": {
                 "time": {
-                    "mean": 0.0025,
-                    "min": 0.0023,
-                    "max": 0.0029
+                    "mean": 0.003,
+                    "min": 0.0026,
+                    "max": 0.0037
                 },
                 "cpu": {
-                    "mean": 18.78,
+                    "mean": 4.78,
                     "min": 0.0,
-                    "max": 85.7
+                    "max": 22.2
                 },
                 "ram": {
-                    "mean": 30.43,
-                    "min": 0.4,
-                    "max": 63.8
+                    "mean": 31.73,
+                    "min": 0.99,
+                    "max": 65.9
                 }
             }
         },
         "simplificado": {
             "statistics": {
                 "time": {
-                    "mean": 0.3219,
-                    "min": 0.2937,
-                    "max": 0.3767
+                    "mean": 1.4236,
+                    "min": 1.4038,
+                    "max": 1.5135
                 },
                 "cpu": {
-                    "mean": 34.02,
-                    "min": 20.4,
-                    "max": 49.1
+                    "mean": 22.48,
+                    "min": 12.6,
+                    "max": 30.3
                 },
                 "ram": {
-                    "mean": 30.53,
-                    "min": 0.41,
-                    "max": 64.0
+                    "mean": 31.11,
+                    "min": 0.39,
+                    "max": 65.2
                 }
             }
         },
         "completo": {
             "statistics": {
                 "time": {
-                    "mean": 0.2927,
-                    "min": 0.2708,
-                    "max": 0.3346
+                    "mean": 1.5892,
+                    "min": 1.5665,
+                    "max": 1.658
                 },
                 "cpu": {
-                    "mean": 25.24,
-                    "min": 20.9,
-                    "max": 37.9
+                    "mean": 22.26,
+                    "min": 18.4,
+                    "max": 25.4
                 },
                 "ram": {
-                    "mean": 30.49,
+                    "mean": 31.43,
                     "min": 0.44,
-                    "max": 63.9
+                    "max": 66.0
                 }
             }
         }
     },
     "videos": [
         "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
-        "laudo530-2025 [02] - 1.dav",
+        "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv",
+        "MHDX_ch5_main_20210913112600_20210913112900.dav",
+        "MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav",
+        "video_corrompido.mp4",
         "video_original.mp4",
         "video_whatsapp.mp4"
     ],

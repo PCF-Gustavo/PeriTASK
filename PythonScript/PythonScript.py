@@ -1,28 +1,12 @@
 print("STATUS:Executando Python...", flush=True)
 import sys
 import os
-import tempfile
 import csv
 import hashlib
 from pathlib import Path
 from pymediainfo import MediaInfo
 import av  # libav / ffmpeg
 from benchmark import modo_benchmark_pytest, emitir_evento_MSTest
-
-
-def tem_permissao_escrita(pasta):
-    try:
-        with tempfile.NamedTemporaryFile(
-            dir=pasta,
-            mode="w",
-            encoding="utf-8",
-            delete=True
-        ) as f:
-            f.write("teste")
-        return True
-    except Exception:
-        return False
-
 
 def coletar_arquivos_e_pasta_saida(itens):
     arquivos = set()
@@ -163,7 +147,8 @@ def obter_duracao_ms_mediainfo(arquivo_mediainfo):
     return 0
 
 
-def obter_duracao_ms_pyav(arquivo_pyav):
+def obter_duracao_ms_pyav(arquivo):
+    arquivo_pyav = av.open(arquivo)
     stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
     if not stream:
         stream = next((s for s in arquivo_pyav.streams if s.type == "audio"), None)
@@ -186,6 +171,42 @@ def obter_duracao_ms_pyav(arquivo_pyav):
 
     duracao = (last_pts - first_pts) * float(stream.time_base)
     return int(duracao * 1000) if duracao > 0 else 0
+
+def obter_cfr_vfr_pyav(arquivo, tolerancia=0.01):
+    arquivo_pyav = av.open(arquivo)
+    stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
+    if not stream:
+        return ""
+
+    pts_list = []
+    for packet in arquivo_pyav.demux(stream):
+        if packet.pts is not None:
+            pts_list.append(packet.pts)
+
+    if len(pts_list) < 3:
+        return ""
+
+    # calcular deltas (diferença entre timestamps consecutivos)
+    deltas = [
+        (pts_list[i+1] - pts_list[i]) * float(stream.time_base)
+        for i in range(len(pts_list) - 1)
+    ]
+
+    # média e variação
+    media = sum(deltas) / len(deltas)
+
+    if media <= 0:
+        return ""
+
+    max_delta = max(deltas)
+    min_delta = min(deltas)
+
+    variacao_relativa = (max_delta - min_delta) / media
+
+    if variacao_relativa <= tolerancia:
+        return "CFR"
+    else:
+        return "VFR"
 
 def formatar_duracao_hh_mm_ss(ms):
     if not ms:
@@ -210,63 +231,6 @@ def formatar_duracao_hh_mm_ssss(ms):
     s = total_segundos % 60
 
     return f"{h:02}:{m:02}:{s:05.2f}"
-
-
-def obter_fps(media, caminho):
-    video = next((t for t in media.tracks if t.track_type == "Video"), None)
-
-    if video:
-        for attr in ("frame_rate", "frame_rate_nominal"):
-            valor = getattr(video, attr, None)
-            if valor:
-                try:
-                    fps = float(str(valor).replace(",", "."))
-                    if fps > 0:
-                        return fps
-                except ValueError:
-                    pass
-
-    try:
-        container = av.open(caminho)
-        stream = next((s for s in container.streams if s.type == "video"), None)
-
-        if stream and stream.average_rate:
-            fps = float(stream.average_rate)
-            if fps > 0:
-                return fps
-    except Exception:
-        pass
-
-    try:
-        container = av.open(caminho)
-        stream = next((s for s in container.streams if s.type == "video"), None)
-
-        if not stream:
-            return 0.0
-
-        first_pts = None
-        last_pts = None
-        frames = 0
-
-        for packet in container.demux(stream):
-            for frame in packet.decode():
-                if frame.pts is None:
-                    continue
-
-                if first_pts is None:
-                    first_pts = frame.pts
-
-                last_pts = frame.pts
-                frames += 1
-
-        if first_pts is None or last_pts is None or frames < 2:
-            return 0.0
-
-        duracao = (last_pts - first_pts) * float(stream.time_base)
-        return frames / duracao if duracao > 0 else 0.0
-
-    except Exception:
-        return 0.0
 
 
 def obter_fps_mediainfo(arquivo_mediainfo):
@@ -306,33 +270,43 @@ def obter_fps_mediainfo(arquivo_mediainfo):
 
     return 0
 
-def obter_fps_pyav(arquivo_pyav):
+def obter_fps_pyav(arquivo, duracao_ms = None):
+    arquivo_pyav = av.open(arquivo)
     stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
-    if not stream: return 0
+    if not stream:
+        return 0
 
-    first_pts = None
-    last_pts = None
     frames = 0
-
     for packet in arquivo_pyav.demux(stream):
-        for frame in packet.decode():
-            if frame.pts is None:
-                continue
+        if packet.pts is None:
+            continue
+        frames += 1
+        
+    if frames > 0:
+        return  frames / (duracao_ms/1000)
+    
+    if stream.average_rate:
+        return float(stream.average_rate)
 
-            if first_pts is None:
-                first_pts = frame.pts
+    return 0
 
-            last_pts = frame.pts
-            frames += 1
+def obter_bitrate_pyav(arquivo, tipo, duracao_ms):
+    arquivo_pyav = av.open(arquivo)
+    stream = next((s for s in arquivo_pyav.streams if s.type == tipo), None)
+    if not stream:
+        return 0
+    
+    if stream and stream.bit_rate:
+        return stream.bit_rate
 
-    if first_pts is None or last_pts is None or frames < 2:
-        return 0.0
+    total_bytes = 0
+    for packet in arquivo_pyav.demux(stream):
+        total_bytes += packet.size
 
-    duracao = (last_pts - first_pts) * float(stream.time_base)
+    # bitrate em bits por segundo
+    bitrate_bps = (total_bytes * 8) / (duracao_ms/1000)
 
-    return frames / duracao if duracao > 0 else 0
-
-
+    return bitrate_bps
 
 def replace_com_incremento(caminho_tmp, caminho_saida):
     try:
@@ -378,16 +352,14 @@ def imprimir_tabela_simplificada_infos_csv(arquivos_videos, pasta_saida):
 
         for i, arquivo in enumerate(arquivos_videos, start=1):
             arquivo_mediainfo = MediaInfo.parse(arquivo)
-            arquivo_pyav = av.open(arquivo)
 
             video_streams = [t for t in arquivo_mediainfo.tracks if t.track_type == "Video"]
             audio_streams = [t for t in arquivo_mediainfo.tracks if t.track_type == "Audio"]
 
-            duracao_ms = (obter_duracao_ms_mediainfo(arquivo_mediainfo) or obter_duracao_ms_pyav(arquivo_pyav))
+            duracao_ms = obter_duracao_ms_mediainfo(arquivo_mediainfo) or obter_duracao_ms_pyav(arquivo)
             duracao_total_ms += duracao_ms
 
-            # fps_valor = obter_fps(arquivo_mediainfo, arquivo)
-            fps = (obter_fps_mediainfo(arquivo_mediainfo) or obter_fps_pyav(arquivo_pyav))
+            fps = obter_fps_mediainfo(arquivo_mediainfo) or obter_fps_pyav(arquivo,duracao_ms)
 
             resolucao = "Unknown"
             if video_streams:
@@ -564,7 +536,8 @@ def obter_codec_audio_mediainfo(track_mediainfo):
 
     return codec_audio
 
-def obter_unidade_de_tempo_pyav(arquivo_pyav):
+def obter_unidade_de_tempo_pyav(arquivo):
+    arquivo_pyav = av.open(arquivo)
     if not arquivo_pyav: return ""
 
     video_stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
@@ -579,15 +552,14 @@ def obter_unidade_de_tempo_pyav(arquivo_pyav):
     return f"{time_base.denominator} tbn"
 
 
-def obter_fps_nominal_pyav(arquivo_pyav):
+def obter_fps_nominal_pyav(arquivo):
+    arquivo_pyav = av.open(arquivo)
     if not arquivo_pyav: return ""
 
     video_stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
 
     if not video_stream: return ""
 
-    # average_rate é o equivalente ao tbr
-    # rate = getattr(video_stream, "average_rate", None)
     rate = getattr(video_stream, "base_rate", None)
 
     if not rate: return ""
@@ -623,11 +595,11 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
             tamanho_bytes = os.path.getsize(arquivo)
             tamanho_str = formata_tamanho(tamanho_bytes)
             writer.writerow(["Tamanho", tamanho_str ])
-
+            
             # Duração
-            duracao_ms = (obter_duracao_ms_mediainfo(arquivo_mediainfo) or obter_duracao_ms_pyav(arquivo_pyav))
+            duracao_ms = obter_duracao_ms_mediainfo(arquivo_mediainfo) or obter_duracao_ms_pyav(arquivo)
             writer.writerow(["Duracao", formatar_duracao_hh_mm_ssss(duracao_ms)])
-
+            
             contador_fluxo_video = 0
             contador_fluxo_audio = 0
             # FLUXOS
@@ -640,7 +612,7 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     writer.writerow(["Formato do contêiner", container])
 
                     # Taxa de bits total
-                    overall_bitrate = getattr(track_mediainfo, "overall_bit_rate", "")
+                    overall_bitrate = getattr(track_mediainfo, "overall_bit_rate", "") or ((tamanho_bytes * 8) / (duracao_ms / 1000.0))
                     overall_bitrate_str = formata_bitrate(overall_bitrate)
                     writer.writerow(["Taxa de bits total", overall_bitrate_str])
                 
@@ -657,7 +629,7 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     writer.writerow(["Resolução (LxA)", f"{track_mediainfo.width}x{track_mediainfo.height}"])
 
                     # FPS constante
-                    framerate_mode = getattr(track_mediainfo, "frame_rate_mode", "")
+                    framerate_mode = getattr(track_mediainfo, "frame_rate_mode", "") or obter_cfr_vfr_pyav(arquivo, tolerancia=0.03)
                     if framerate_mode == "CFR":
                         fps_constante = "Sim"
                     elif framerate_mode == "VFR":
@@ -667,17 +639,15 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     writer.writerow(["FPS constante", fps_constante])
                     
                     # FPS médio
-                    fps = (obter_fps_mediainfo(arquivo_mediainfo) or obter_fps_pyav(arquivo_pyav))
-                    # writer.writerow(["FPS médio", f'="{f'{fps:.2f}'.replace('.', ',')}"'])
+                    fps = obter_fps_mediainfo(arquivo_mediainfo) or obter_fps_pyav(arquivo,duracao_ms)
                     writer.writerow(["FPS médio", f'="{fps:.2f}"'.replace('.', ',')])
                     
                     # FPS nominal
-                    fps_nominal = (getattr(track_mediainfo, "frame_rate_nominal", "") or obter_fps_nominal_pyav(arquivo_pyav))
-                    # writer.writerow(["FPS nominal", f'="{str(fps_nominal).replace('.', ',')}"'])
+                    fps_nominal = getattr(track_mediainfo, "frame_rate_nominal", "") or obter_fps_nominal_pyav(arquivo)
                     writer.writerow(["FPS nominal", f'="{str(fps_nominal).replace(".", ",")}"'])
                     
                     # Unidade de tempo interna
-                    unidade_de_tempo = obter_unidade_de_tempo_pyav(arquivo_pyav)
+                    unidade_de_tempo = obter_unidade_de_tempo_pyav(arquivo)
                     writer.writerow(["Unidade de tempo interna", unidade_de_tempo])
                     
                     # Espaço de cor
@@ -702,7 +672,7 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     writer.writerow(["Tipo de varredura", tipo_varredura])
 
                     # Taxa de bits
-                    bitrate_video =  getattr(track_mediainfo, "bit_rate", "")
+                    bitrate_video =  getattr(track_mediainfo, "bit_rate", "") or obter_bitrate_pyav(arquivo, "video", duracao_ms)
                     bitrate_video_str = formata_bitrate(bitrate_video)
                     writer.writerow(["Taxa de bits", bitrate_video_str])
                     
@@ -717,7 +687,6 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     writer.writerow(["Codificação", codec_audio])
 
                     # Taxa de amostragem
-                    # writer.writerow(["Taxa de amostragem", f"{getattr(track_mediainfo, "sampling_rate", "")} Hz"])
                     writer.writerow(["Taxa de amostragem", f'{getattr(track_mediainfo, "sampling_rate", "")} Hz'])
                     
                     # Canais
@@ -731,7 +700,7 @@ def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
                     writer.writerow(["Canais", canais_str ])
 
                     # Taxa de bits
-                    bitrate_audio =  getattr(track_mediainfo, "bit_rate", "")
+                    bitrate_audio =  getattr(track_mediainfo, "bit_rate", "") or obter_bitrate_pyav(arquivo, "audio", duracao_ms)
                     bitrate_audio_str = formata_bitrate(bitrate_audio)
                     writer.writerow(["Taxa de bits", bitrate_audio_str])
 
@@ -762,18 +731,17 @@ def obter_videos(arquivos):
 def main():
     emitir_evento_MSTest("PERITASK_READY")
     if len(sys.argv) < 3:
-        sys.exit(1)
-        itens_selecionados = r"C:\Users\gustavo.gvs\Desktop\teste.mp4"
+        # sys.exit(1)
+        pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
+        arquivos = obter_videos(list(Path(r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK").iterdir()))
         selecao_ComboBox = f"Vídeos -> tabela completa de informações em .csv"
-        arquivos = [r"C:\Users\gustavo.gvs\Desktop\teste.mp4"]
-        pasta_saida = r"C:\Users\gustavo.gvs\Desktop"
+        # selecao_ComboBox = f"Vídeos -> tabela simplificada de informações em .csv"
     else:
         itens_selecionados = sys.argv[1].split("|")
         selecao_ComboBox = sys.argv[2]
         arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
 
     if modo_benchmark_pytest():
-        # pasta_saida = Path(os.getenv("TEMP")) / "PeriTASK"
         pasta_saida = Path(os.getenv("USERPROFILE")) / "Desktop" / "PeriTASK_pytest"
         pasta_saida.mkdir(parents=True, exist_ok=True)
 
