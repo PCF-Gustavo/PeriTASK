@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 import psutil
 import wmi
+import threading
 
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.append(str(BASE_DIR.parent))
@@ -29,8 +30,8 @@ machine_name = platform.node().strip().upper()
 machine_name = aliases.get(machine_name, machine_name.lower())
 
 
-def get_cpu_percent():
-    return psutil.cpu_percent(interval=None)
+# def get_cpu_percent():
+#     return psutil.cpu_percent(interval=None)
 
 
 def get_gpu_name():
@@ -134,45 +135,137 @@ def medir_time(nome, func, rodadas, ignorar):
         fim = time.perf_counter()
         runs_all.append(fim - inicio)
 
-    runs_used = runs_all[ignorar:]
+    used_runs = runs_all[ignorar:]
 
     return nome, {
-        "time": {
-            "mean": round(statistics.mean(runs_used), 4),
-            "min": round(min(runs_used), 4),
-            "max": round(max(runs_used), 4),
+        "time_s": {
+            "mean": round(statistics.mean(used_runs), 4),
+            "min": round(min(used_runs), 4),
+            "max": round(max(used_runs), 4),
         }
     }
 
 
 # ===========================
-# BENCHMARK (CPU ONLY)
+# BENCHMARK
 # ===========================
 
-def medir_cpu_ram(nome, func, rodadas, ignorar):
+def medir_cpu_ram_io(nome, func, rodadas, ignorar):
     runs_cpu = []
     runs_ram = []
+    runs_read_iops = []
+    runs_write_iops = []
+    runs_read_bytes = []
+    runs_write_bytes = []
 
     for _ in range(rodadas):
-        psutil.cpu_percent(interval=None)
+
+        cpu_samples = []
+        ram_samples = []
+
+        read_iops_samples = []
+        write_iops_samples = []
+        read_bytes_samples = []
+        write_bytes_samples = []
+
+        executando = True
+
+        def monitor():
+            nonlocal executando
+
+            process.cpu_percent(interval=None)
+
+            prev_io = process.io_counters()
+            last_time = time.perf_counter()
+
+            while executando:
+                time.sleep(0.1)
+
+                cpu_samples.append(process.cpu_percent(interval=None))
+
+                ram_samples.append(
+                    process.memory_info().rss / (1024 * 1024)
+                )
+
+                current_io = process.io_counters()
+                current_time = time.perf_counter()
+
+                dt = current_time - last_time
+                if dt <= 0:
+                    dt = 0.1
+
+                read_ops = current_io.read_count - prev_io.read_count
+                write_ops = current_io.write_count - prev_io.write_count
+
+                read_bytes = current_io.read_bytes - prev_io.read_bytes
+                write_bytes = current_io.write_bytes - prev_io.write_bytes
+
+                read_iops_samples.append(read_ops / dt)
+                write_iops_samples.append(write_ops / dt)
+
+                read_bytes_samples.append(read_bytes / dt)
+                write_bytes_samples.append(write_bytes / dt)
+
+                prev_io = current_io
+                last_time = current_time
+
+        thread = threading.Thread(target=monitor)
+        thread.start()
+
         func()
-        runs_cpu.append(psutil.cpu_percent(interval=None))
-        runs_ram.append(psutil.virtual_memory().percent)
-        runs_ram.append((process.memory_info().rss / psutil.virtual_memory().total) * 100)
+
+        executando = False
+        thread.join()
+
+        runs_cpu.append(max(cpu_samples) if cpu_samples else 0)
+        runs_ram.append(max(ram_samples) if ram_samples else 0)
+
+        runs_read_iops.append(max(read_iops_samples) if read_iops_samples else 0)
+        runs_write_iops.append(max(write_iops_samples) if write_iops_samples else 0)
+
+        runs_read_bytes.append(max(read_bytes_samples) if read_bytes_samples else 0)
+        runs_write_bytes.append(max(write_bytes_samples) if write_bytes_samples else 0)
 
     runs_cpu = runs_cpu[ignorar:]
     runs_ram = runs_ram[ignorar:]
+    runs_read_iops = runs_read_iops[ignorar:]
+    runs_write_iops = runs_write_iops[ignorar:]
+    runs_read_bytes = runs_read_bytes[ignorar:]
+    runs_write_bytes = runs_write_bytes[ignorar:]
 
     return nome, {
-        "cpu": {
+        "cpu_peak": {
             "mean": round(statistics.mean(runs_cpu), 2),
             "min": round(min(runs_cpu), 2),
             "max": round(max(runs_cpu), 2),
         },
-        "ram": {
+        "ram_peak_mb": {
             "mean": round(statistics.mean(runs_ram), 2),
             "min": round(min(runs_ram), 2),
             "max": round(max(runs_ram), 2),
+        },
+
+        "io": {
+            "read_iops": {
+                "mean": round(statistics.mean(runs_read_iops), 2),
+                "min": round(min(runs_read_iops), 2),
+                "max": round(max(runs_read_iops), 2),
+            },
+            "write_iops": {
+                "mean": round(statistics.mean(runs_write_iops), 2),
+                "min": round(min(runs_write_iops), 2),
+                "max": round(max(runs_write_iops), 2),
+            },
+            "read_throughput_bps": {
+                "mean": round(statistics.mean(runs_read_bytes), 2),
+                "min": round(min(runs_read_bytes), 2),
+                "max": round(max(runs_read_bytes), 2),
+            },
+            "write_throughput_bps": {
+                "mean": round(statistics.mean(runs_write_bytes), 2),
+                "min": round(min(runs_write_bytes), 2),
+                "max": round(max(runs_write_bytes), 2),
+            }
         }
     }
 
@@ -234,7 +327,8 @@ def test_pipeline():
 
     # FASE 2: CPU
     for name, fn in funcs.items():
-        nome, dados = medir_cpu_ram(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
+        # nome, dados = medir_cpu_ram(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
+        nome, dados = medir_cpu_ram_io(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
         resultados_cpu.append({nome: dados})
 
     merged = {}
@@ -243,19 +337,22 @@ def test_pipeline():
         for k, v in item.items():
             merged[k] = {
                 "statistics": {
-                    "time": v["time"]
+                    "time_s": v["time_s"]
                 }
             }
 
     for item in resultados_cpu:
         for k, v in item.items():
-            merged[k]["statistics"]["cpu"] = v["cpu"]
-            merged[k]["statistics"]["ram"] = v["ram"]
+            # merged[k]["statistics"]["cpu"] = v["cpu"]
+            # merged[k]["statistics"]["ram"] = v["ram"]            
+            merged[k]["statistics"]["cpu_peak"] = v["cpu_peak"]
+            merged[k]["statistics"]["ram_peak_mb"] = v["ram_peak_mb"]
+            merged[k]["statistics"]["io"] = v["io"]
 
     output = {
         "run_info": {
             "warmup_runs": WARMUP_RUNS,
-            "runs_used": USED_RUNS
+            "used_runs": USED_RUNS
         },
         "results": merged,
         "videos": [Path(v).name for v in videos],

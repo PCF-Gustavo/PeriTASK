@@ -84,14 +84,14 @@ namespace MSTest
                 run_info = new
                 {
                     warmup_runs = results.Count - valid.Count,
-                    runs_used = valid.Count,
+                    used_runs = valid.Count,
                 },
 
                 results = new
                 {
                     statistics = new
                     {
-                        time = new
+                        time_s = new
                         {
                             mean,
                             min,
