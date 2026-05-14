@@ -4,9 +4,25 @@ import os
 import csv
 import hashlib
 from pathlib import Path
-from pymediainfo import MediaInfo
-import av  # libav / ffmpeg
 from benchmark import modo_benchmark_pytest, emitir_evento_MSTest
+from functools import cache
+import importlib
+
+@cache
+def lazy_import(module_name):
+    return importlib.import_module(module_name)
+
+def lazy_imports(*imports):
+    g = globals()
+    for item in imports:
+        if isinstance(item, str):
+            g[item] = lazy_import(item)
+        else:
+            module_name, attr_name = item
+            g[attr_name] = getattr(
+                lazy_import(module_name),
+                attr_name
+            )
 
 def coletar_arquivos_e_pasta_saida(itens):
     arquivos = set()
@@ -728,6 +744,7 @@ def obter_videos(arquivos):
     return arquivos_videos
 
 
+
 def main():
     emitir_evento_MSTest("PERITASK_READY")
     if len(sys.argv) < 3:
@@ -748,12 +765,15 @@ def main():
     if selecao_ComboBox == f"Arquivos -> lista de caminhos em .txt":
         imprimir_lista_caminhos_txt(arquivos, pasta_saida)
     elif selecao_ComboBox == f"Vídeos -> tabela simplificada de informações em .csv":
+        lazy_imports("av",("pymediainfo", "MediaInfo"),)
         arquivos_videos = obter_videos(arquivos)
         imprimir_tabela_simplificada_infos_csv(arquivos_videos, pasta_saida)
     elif selecao_ComboBox == f"Vídeos -> tabela completa de informações em .csv":
+        lazy_imports("av",("pymediainfo", "MediaInfo"),)
         arquivos_videos = obter_videos(arquivos)
         imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida)
 
 
 if __name__ == "__main__":
     main()
+    

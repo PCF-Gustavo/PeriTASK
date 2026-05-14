@@ -11,6 +11,7 @@ namespace MSTest
     [TestClass]
     public class test_benchmark_inicializacao
     {
+        public TestContext TestContext { get; set; }
         //===========================
         //CONFIG RUNS
         //===========================
@@ -78,6 +79,8 @@ namespace MSTest
             double mean = Math.Round(valid.Average(), 4);
             double min = Math.Round(valid.Min(), 4);
             double max = Math.Round(valid.Max(), 4);
+
+            Console.WriteLine($"tempo médio: {mean} segundos");
 
             var output = new
             {
