@@ -1,12 +1,19 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
+from pathlib import Path
+from PyInstaller.utils.hooks import (collect_submodules,collect_dynamic_libs,)
 
+BASE_DIR = Path(os.environ.get("PYI_SPEC_DIR", os.getcwd())).resolve()
 
 a = Analysis(
-    ['C:\\Users\\gustavo.gvs\\source\\repos\\PeriTASK\\PythonScript\\PythonScript.py'],
-    pathex=[],
-    binaries=[],
+    [str(BASE_DIR.parent / "PythonScript" / "PythonScript.py")],
+    pathex=[str(BASE_DIR)],
+    binaries=collect_dynamic_libs("av"),
     datas=[],
-    hiddenimports=[],
+    hiddenimports=(
+        collect_submodules("av") +
+        collect_submodules("pymediainfo")
+    ),
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
