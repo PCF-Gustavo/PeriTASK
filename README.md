@@ -83,7 +83,6 @@ Camada de processamento.
 
 - Contém scripts Python
 - Executa as rotinas principais (ex: análise, processamento, etc.)
-- Pode utilizar bibliotecas como NumPy, OpenCV, etc.
 
 ---
 
