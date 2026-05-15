@@ -79,9 +79,19 @@
 		<Exec Command='"$(WixToolPath)heat.exe" dir "$(PythonDist)" -cg PythonScriptGroup -dr INSTALLFOLDER -var var.PythonDist -gg -scom -sreg -sfrag -srd -out "$(ProjectDir)PythonScriptFragment.wxs"' />
 	</Target>
 
+	<Target Name="CleanPythonBuild" BeforeTargets="BeforeBuild">
+		<RemoveDir Directories="$(SolutionDir)Instalador\bin" />
+		<RemoveDir Directories="$(SolutionDir)Instalador\build" />
+		<RemoveDir Directories="$(SolutionDir)Instalador\obj" />
+	</Target>
+
+	<Target Name="CleanHeat" BeforeTargets="BeforeBuild">
+		<Delete Files="$(ProjectDir)PythonScriptFragment.wxs" ContinueOnError="true" />
+	</Target>
+
+
 	<Target Name="BuildPython" BeforeTargets="BeforeBuild" DependsOnTargets="EnsurePythonEnv">
 	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --remove-output &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
-	<!--<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller &quot;$(SolutionDir)Instalador\PythonScript.spec&quot; *-distpath &quot;$(SolutionDir)Instalador\dist&quot; *-workpath &quot;$(SolutionDir)Instalador\build&quot; *-noconfirm" />-->
   </Target>
   <!--<Target Name="AfterBuild">
 	--><!-- Instala PeriTASK --><!--

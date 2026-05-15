@@ -91,7 +91,7 @@ Camada de processamento.
 Responsável pela distribuição do programa.
 
 - Utiliza WiX Toolset
-- Empacotamento dos scripts Python em executáveis standalone (.exe) utilizando PyInstaller
+- Compilação do código Python utilizando Nuitka
 - Configura ambiente e integrações automaticamente
 
 ---

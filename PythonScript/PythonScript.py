@@ -1,7 +1,4 @@
 print("STATUS:Executando Python...", flush=True)
-if False:
-    import av
-    import pymediainfo
 import sys
 import os
 import csv
