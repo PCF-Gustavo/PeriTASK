@@ -8,12 +8,13 @@
 	<BuildDay>$([System.DateTime]::Now.ToString("dd"))</BuildDay>
 	<BuildRevision>$([System.DateTime]::Now.ToString("HHmm"))</BuildRevision>
 	<ProductVersion>1.$(BuildMonth).$(BuildDay).$(BuildRevision)</ProductVersion>
-	<DefineConstants>ProductVersion=$(ProductVersion)</DefineConstants>
+	<DefineConstants>ProductVersion=$(ProductVersion);PythonDist=$(SolutionDir)Instalador\build\PythonScript.dist\</DefineConstants>
     <ProjectGuid>d2f33520-6af5-4185-86fd-85b29f6f9d63</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>PeriTASK_Setup</OutputName>
     <OutputType>Package</OutputType>
     <Name>Instalador</Name>
+	<PythonDist>$(SolutionDir)Instalador\build\PythonScript.dist</PythonDist>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -37,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
+	<Compile Include="PythonScriptFragment.wxs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AddContextMenu\AddContextMenu.vcxproj">
@@ -72,9 +74,14 @@
   <Target Name="EnsurePythonEnv" Condition="!Exists('$(SolutionDir)PythonScript\venv\Scripts\python.exe')">
 	<Error Text="Python virtual environment not found in PythonScript\venv." />
   </Target>
-  <Target Name="BuildPython" BeforeTargets="Compile" DependsOnTargets="EnsurePythonEnv">
-	<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller &quot;$(SolutionDir)Instalador\PythonScript.spec&quot; --distpath &quot;$(SolutionDir)Instalador\dist&quot; --workpath &quot;$(SolutionDir)Instalador\build&quot; --noconfirm" />
-	<!--<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller *-onefile *-distpath &quot;$(SolutionDir)Instalador\dist&quot; *-workpath &quot;$(SolutionDir)Instalador\build&quot; &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />-->
+	
+	<Target Name="BeforeBuild">
+		<Exec Command='"$(WixToolPath)heat.exe" dir "$(PythonDist)" -cg PythonScriptGroup -dr INSTALLFOLDER -var var.PythonDist -gg -scom -sreg -sfrag -srd -out "$(ProjectDir)PythonScriptFragment.wxs"' />
+	</Target>
+
+	<Target Name="BuildPython" BeforeTargets="BeforeBuild" DependsOnTargets="EnsurePythonEnv">
+	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --remove-output &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
+	<!--<Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m PyInstaller &quot;$(SolutionDir)Instalador\PythonScript.spec&quot; *-distpath &quot;$(SolutionDir)Instalador\dist&quot; *-workpath &quot;$(SolutionDir)Instalador\build&quot; *-noconfirm" />-->
   </Target>
   <!--<Target Name="AfterBuild">
 	--><!-- Instala PeriTASK --><!--

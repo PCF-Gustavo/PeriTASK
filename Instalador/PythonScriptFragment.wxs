@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLFOLDER">
+            <Component Id="cmp342718ABF7BE6CC799B9E5C7EC68B73A" Guid="{8DDF831E-CA8B-4E8C-A3C1-444127C255C4}">
+                <File Id="filE5900FDE8E0DECB9238F5ED632A9F1E0" KeyPath="yes" Source="$(var.PythonDist)\libcrypto-3.dll" />
+            </Component>
+            <Component Id="cmp1A46FA6C035C8DD066529219CD3BC14D" Guid="{246A05E8-BB23-49B3-983F-F87F4EDF81F8}">
+                <File Id="fil456D29D1BA247D97B7FE2A95E01F2325" KeyPath="yes" Source="$(var.PythonDist)\libffi-8.dll" />
+            </Component>
+            <Component Id="cmp1DDC7A17986E4087470D7DAE06E174F9" Guid="{1E68276F-4B61-46E6-9075-D052D73AF522}">
+                <File Id="fil39BC980BAE46B771F5383C352E6E9A62" KeyPath="yes" Source="$(var.PythonDist)\pyexpat.pyd" />
+            </Component>
+            <Component Id="cmpF6807864B8C33B25757F3DADEFD4A488" Guid="{E9341CC6-036C-4F91-8BDA-E1D740291AB4}">
+                <File Id="fil0852BACEFA868A23B67C46559562958A" KeyPath="yes" Source="$(var.PythonDist)\python3.dll" />
+            </Component>
+            <Component Id="cmp98A732240721FB3D0D3F10626AAA3D2A" Guid="{CC3C00FB-BEFE-447E-8DDD-1E5AE370BE9C}">
+                <File Id="fil21EA3CE47A1F2C8C727A5D242C72940E" KeyPath="yes" Source="$(var.PythonDist)\python313.dll" />
+            </Component>
+            <Component Id="cmpE076743E9AB626C92A638F313FB10D01" Guid="{BA3A8E15-93E4-45A5-82F3-775BC13B4C8C}">
+                <File Id="fil79D3404512FD74FF0E8D27AF784580D2" KeyPath="yes" Source="$(var.PythonDist)\PythonScript.exe" />
+            </Component>
+            <Component Id="cmp59DE963F574E473958E76ABF8F6B0542" Guid="{BEB9FD29-D334-4FF0-9CD9-AE5C516F8EC1}">
+                <File Id="filEA82D0CA12096BB7BBD3C68E93AEC9FD" KeyPath="yes" Source="$(var.PythonDist)\select.pyd" />
+            </Component>
+            <Component Id="cmp129B47468B9748E89F50718E887CC4B8" Guid="{D2E7E485-8897-45A6-9CA8-EA539292F98D}">
+                <File Id="fil2BE93E8E8D521569240164A20F72EA13" KeyPath="yes" Source="$(var.PythonDist)\unicodedata.pyd" />
+            </Component>
+            <Component Id="cmpF4BDAE8A068B7352141D703E6D5E677B" Guid="{5942320D-1058-464E-8F4D-2FFACC35868E}">
+                <File Id="fil5DEA999AA1C013B635C8FFBBE3F45E71" KeyPath="yes" Source="$(var.PythonDist)\vcruntime140.dll" />
+            </Component>
+            <Component Id="cmpC45B25996E14AF1484591C266BD5D670" Guid="{2A708864-48D7-487B-B7D7-D0D0F9BD6F4F}">
+                <File Id="fil50A820DB1DF105BC9A83DEF5E3A3A228" KeyPath="yes" Source="$(var.PythonDist)\vcruntime140_1.dll" />
+            </Component>
+            <Component Id="cmpD94008E9D03C54DEA23D56F5D70EE39E" Guid="{43384BCC-1EE3-4AC9-9991-CADB884CDD7E}">
+                <File Id="filC914777247BB0C91F9F602D152ECC882" KeyPath="yes" Source="$(var.PythonDist)\_bz2.pyd" />
+            </Component>
+            <Component Id="cmp919310159469D4666B08D62383DBE6E4" Guid="{D5E335A2-3682-4339-95C7-D98E42E646E9}">
+                <File Id="fil037725B7CEDC947F4EA9E8D91E9A5F34" KeyPath="yes" Source="$(var.PythonDist)\_ctypes.pyd" />
+            </Component>
+            <Component Id="cmpC7EB3B84C1CA1468B5A8E8271DC5B409" Guid="{6AB037E2-3D53-4C60-B943-9389D755B993}">
+                <File Id="fil09658413993C6ECB4011FF79D07A898C" KeyPath="yes" Source="$(var.PythonDist)\_decimal.pyd" />
+            </Component>
+            <Component Id="cmp631053F8B23C9329966A572B12225D44" Guid="{A41D5F23-EC6E-45B3-9D6F-EC383C1A5298}">
+                <File Id="filB0ABFBBC40E87E3A2129453C44435761" KeyPath="yes" Source="$(var.PythonDist)\_elementtree.pyd" />
+            </Component>
+            <Component Id="cmp2B14B30CA2CBDED56C6CD64C514933A6" Guid="{0D2BF0FA-AB05-4B48-ADAC-A54F7E7B629B}">
+                <File Id="fil3DEF234D756BADEF7ACAD03F54569EF2" KeyPath="yes" Source="$(var.PythonDist)\_hashlib.pyd" />
+            </Component>
+            <Component Id="cmpB72FA74A6CE9681CA191F2D04708C8F6" Guid="{87F484FC-21B7-45FF-8706-94058F75DC3F}">
+                <File Id="fil8727F072CD5AFEDB6D84CC217DB50470" KeyPath="yes" Source="$(var.PythonDist)\_lzma.pyd" />
+            </Component>
+            <Component Id="cmpF0F801A0ADFF20646C32E46088585917" Guid="{7B3813D3-5EAB-40B0-945A-83C8EF20C938}">
+                <File Id="fil96CB1FAC08EC1FE6A7EE8EB2D23D49D8" KeyPath="yes" Source="$(var.PythonDist)\_socket.pyd" />
+            </Component>
+            <Component Id="cmp776B7EADB9224CCA747124B7488000F1" Guid="{190DA545-748C-49C9-B334-6833F8EE6B34}">
+                <File Id="fil00FA40134AA1F5FFEAAA4F3A0309742D" KeyPath="yes" Source="$(var.PythonDist)\_wmi.pyd" />
+            </Component>
+            <Directory Id="dir9CC6018C39E6501BAD207D9B01DF1CCC" Name="av">
+                <Component Id="cmp45019E9358622972256C18BAD453223D" Guid="{2E1E7856-55B0-4E84-8164-A0FC71074B31}">
+                    <File Id="fil4F08E3058FA1A87885E4E52308567952" KeyPath="yes" Source="$(var.PythonDist)\av\bitstream.pyd" />
+                </Component>
+                <Component Id="cmpDB17535BE26EFAF3EE5D46ADEA783E4F" Guid="{676DF772-3DA3-4385-9216-2DFD212AD3E3}">
+                    <File Id="fil47CA077BA4E22872BA19BE7FA5369DED" KeyPath="yes" Source="$(var.PythonDist)\av\buffer.pyd" />
+                </Component>
+                <Component Id="cmp3128656AD510E7121C3B65E4203D6AF5" Guid="{D3BCACAD-B161-474E-8EB2-6ADD37994A49}">
+                    <File Id="fil459BA4C4037CD4DE745CA5A86654F6A0" KeyPath="yes" Source="$(var.PythonDist)\av\descriptor.pyd" />
+                </Component>
+                <Component Id="cmpDEB0F817F79252648359E925DF0C0914" Guid="{A6D759C6-47D2-49AC-AEC6-56A22D635F87}">
+                    <File Id="fil1FFAB926080332EE0246F405461F4879" KeyPath="yes" Source="$(var.PythonDist)\av\device.pyd" />
+                </Component>
+                <Component Id="cmpA48CD75BC567A9D10F1456B96195770B" Guid="{874FEC34-86CF-4DCE-B2D6-2DF98FDFE0FE}">
+                    <File Id="fil55D46D30418D08C04654E52BE9131336" KeyPath="yes" Source="$(var.PythonDist)\av\dictionary.pyd" />
+                </Component>
+                <Component Id="cmp7774ADDDCDA367186DF22B8BFB0B7909" Guid="{631FD9F2-D7DD-4748-8C96-C000B0759C10}">
+                    <File Id="fil4134E9AE34ADC781DDC8D5129E0645C6" KeyPath="yes" Source="$(var.PythonDist)\av\error.pyd" />
+                </Component>
+                <Component Id="cmp345773C4A72B6907CCA68856F9928FFA" Guid="{430521E6-5254-4616-8FEB-9BDA2149B2EA}">
+                    <File Id="filDD48956EBD3B92387DC9D969701321C4" KeyPath="yes" Source="$(var.PythonDist)\av\format.pyd" />
+                </Component>
+                <Component Id="cmp6D844CC1618CCE97D07FCF5C629ED43C" Guid="{4F6F20D9-76A1-4EB9-98D6-F00FD98A1407}">
+                    <File Id="fil09DB9D6C48BF39E2581B3083DD9B894F" KeyPath="yes" Source="$(var.PythonDist)\av\frame.pyd" />
+                </Component>
+                <Component Id="cmpEBA6F496574AF65C34CC13ABAB41371C" Guid="{796D69A2-CD10-4506-8C8B-F464CEC109E2}">
+                    <File Id="fil9367A349E412E3DE0A8E98ACEFAA8B5D" KeyPath="yes" Source="$(var.PythonDist)\av\index.pyd" />
+                </Component>
+                <Component Id="cmp67694DEA2A943458DC2654E22AB3D1C6" Guid="{EBB0AC05-B451-4399-97BA-44808A865995}">
+                    <File Id="fil8FFAD0EB19958AC39697986260BB1732" KeyPath="yes" Source="$(var.PythonDist)\av\logging.pyd" />
+                </Component>
+                <Component Id="cmp9CC8C55703C72EE5956323FDC2CBBD67" Guid="{FBCBB60F-3531-4789-ACAA-38E3245F1965}">
+                    <File Id="filBC6813755FBAAB4DF9FAD0DB447E22A4" KeyPath="yes" Source="$(var.PythonDist)\av\opaque.pyd" />
+                </Component>
+                <Component Id="cmpD84F3745AB6182B615084DCE07BD855B" Guid="{36A2E163-22A1-4884-AD92-E20D5D0E8B65}">
+                    <File Id="filF532507C348E818B46A465E3EFBA7989" KeyPath="yes" Source="$(var.PythonDist)\av\option.pyd" />
+                </Component>
+                <Component Id="cmp738FCE73BD7A1A3B21EA0F182ADCC650" Guid="{D384CDD7-6B30-4D94-AB38-F4F1D3B92C4D}">
+                    <File Id="filD87CA62909C811681FAC804ED3A2F8E9" KeyPath="yes" Source="$(var.PythonDist)\av\packet.pyd" />
+                </Component>
+                <Component Id="cmp0D59A03E183248E7AF347C18C4CCB782" Guid="{3F3604B2-E3CF-4B15-89AE-A90411182DD1}">
+                    <File Id="fil24AB7196F043558B45105015E12F6830" KeyPath="yes" Source="$(var.PythonDist)\av\plane.pyd" />
+                </Component>
+                <Component Id="cmp067CD2C609C99083A1A14293B3A5CE9E" Guid="{AD7999ED-7383-40F9-BA5D-E94EB8508A76}">
+                    <File Id="filD7FD15F39D46BAD16D31D1D78D5F9EDA" KeyPath="yes" Source="$(var.PythonDist)\av\stream.pyd" />
+                </Component>
+                <Component Id="cmp596AC036A291CEF2500EED1217C20207" Guid="{AB22609A-F86C-491F-BD3D-9F819F4BA5AF}">
+                    <File Id="filA639A8CFC08F447C084B550FBDB5B39E" KeyPath="yes" Source="$(var.PythonDist)\av\utils.pyd" />
+                </Component>
+                <Component Id="cmpB2A570E279398E349B1276356FEC1BD3" Guid="{746365EA-6CCA-4333-BCCE-C549188349AF}">
+                    <File Id="fil6CA35E60E677A26DFA45556B09C672CE" KeyPath="yes" Source="$(var.PythonDist)\av\_core.pyd" />
+                </Component>
+                <Directory Id="dirF07EB43D1E62C4021A463C692A23DABF" Name="audio">
+                    <Component Id="cmp3B1B23F743CD4D50EDC50E9CAFA6A3D5" Guid="{ED7C5D8D-DCDA-4F18-9CF6-39C2025CD242}">
+                        <File Id="fil085852C438ED4F05DBFFC6F8DBA5F1C5" KeyPath="yes" Source="$(var.PythonDist)\av\audio\codeccontext.pyd" />
+                    </Component>
+                    <Component Id="cmpBF0C77B0950EFDC10C2B3525A72F1938" Guid="{3C9D09D3-0B55-4C1F-A5A2-654449254606}">
+                        <File Id="filD7B8AB8BB90D477C583BF180D1059DB3" KeyPath="yes" Source="$(var.PythonDist)\av\audio\fifo.pyd" />
+                    </Component>
+                    <Component Id="cmpF043E98D746B913FD51E9A4A5D9F94F1" Guid="{4CAF2E0B-592B-4106-BC6E-707658D349D1}">
+                        <File Id="fil5E6DA629D71F79307DF1F595DDC8AEFA" KeyPath="yes" Source="$(var.PythonDist)\av\audio\format.pyd" />
+                    </Component>
+                    <Component Id="cmp770612AF4A7B9627BEAF4C83BCDFEE1C" Guid="{F0BDB18A-F3B7-4885-B12F-264ABB412217}">
+                        <File Id="fil9A0899F3555132B9CAB18C6880E0E931" KeyPath="yes" Source="$(var.PythonDist)\av\audio\frame.pyd" />
+                    </Component>
+                    <Component Id="cmp499CF2E9F6DE047C0422B8604FE2C38E" Guid="{56AA3BEC-BAFB-4836-A656-4115456AF20F}">
+                        <File Id="filCF3CA20F124F9437A490C28C7BCEF785" KeyPath="yes" Source="$(var.PythonDist)\av\audio\layout.pyd" />
+                    </Component>
+                    <Component Id="cmp9097023EA792FB03D42D39B28EF45690" Guid="{126757E1-FECF-4FB4-98B0-E73293C90A67}">
+                        <File Id="fil58F1361956BFBF84069AF7BCF1FD53B1" KeyPath="yes" Source="$(var.PythonDist)\av\audio\plane.pyd" />
+                    </Component>
+                    <Component Id="cmp65F1D19F7E43307CDBD75F348AAB199A" Guid="{C9B3276F-D79A-4823-9EA8-79149714EF68}">
+                        <File Id="fil10CA826EB863B2B6DDCB4229EC53B968" KeyPath="yes" Source="$(var.PythonDist)\av\audio\resampler.pyd" />
+                    </Component>
+                    <Component Id="cmpA2C5916A1085D0E278A2326B0C07E1E7" Guid="{A13AAE6E-38A8-43E0-833F-E4561574204E}">
+                        <File Id="fil15D96B0A2E4BEFE0DE90C04AA9175AA5" KeyPath="yes" Source="$(var.PythonDist)\av\audio\stream.pyd" />
+                    </Component>
+                </Directory>
+                <Directory Id="dirFBBB656827FDD9C6A2A7896ECA8EAAA9" Name="codec">
+                    <Component Id="cmpEFBDCC3385C4EA8973443EBBEA54A67E" Guid="{EBF76BBB-1C95-4B0D-B1C3-4E33C1B0AB35}">
+                        <File Id="fil8171C52D1E2BD18871AEC10D8563F811" KeyPath="yes" Source="$(var.PythonDist)\av\codec\codec.pyd" />
+                    </Component>
+                    <Component Id="cmpABC7643B009EA2608ABD9B1B08B3EF17" Guid="{B033F347-6935-4FBA-A7A9-7ED9133B58E9}">
+                        <File Id="fil3D7BBBE7BF50B18DF906CB94E417A6DB" KeyPath="yes" Source="$(var.PythonDist)\av\codec\context.pyd" />
+                    </Component>
+                    <Component Id="cmp2AF06EA2324DD4545AB6B471E23B2CD4" Guid="{91B6EC31-1933-4569-92CA-4D14CD648FBB}">
+                        <File Id="filD35F34D05A9EB28C86CE53D2B8C2DE57" KeyPath="yes" Source="$(var.PythonDist)\av\codec\hwaccel.pyd" />
+                    </Component>
+                </Directory>
+                <Directory Id="dir95D0C5901D61CFB08D03218D27473579" Name="container">
+                    <Component Id="cmp4EF80304B167EE543E14DFB9536AFB5D" Guid="{B48A8E8C-ED1F-4366-8FEF-C59AFA97822D}">
+                        <File Id="fil7155EF5DFE28E9BC0D104577B50D494B" KeyPath="yes" Source="$(var.PythonDist)\av\container\core.pyd" />
+                    </Component>
+                    <Component Id="cmpD59BC3A1F4E25DA964FF9A63E14C4CD4" Guid="{028BE734-CD34-40E5-B98A-037A399F3078}">
+                        <File Id="fil77F8EE371334B194D55094217787EA77" KeyPath="yes" Source="$(var.PythonDist)\av\container\input.pyd" />
+                    </Component>
+                    <Component Id="cmp0ED5C16F623EE14233D09B0081836B2A" Guid="{D7CC21BD-15EA-440F-957C-0F5BABC165F2}">
+                        <File Id="filFA97FF4C97C92663AB8FEBD97283EDEB" KeyPath="yes" Source="$(var.PythonDist)\av\container\output.pyd" />
+                    </Component>
+                    <Component Id="cmpD843AEDBBC2E3824F0BC49D0A0634C69" Guid="{4C52D0EB-D997-4F19-945B-E429E3BA780B}">
+                        <File Id="filE0EA46B3A2528786C821FCB58CC53FA7" KeyPath="yes" Source="$(var.PythonDist)\av\container\pyio.pyd" />
+                    </Component>
+                    <Component Id="cmpF93B8FE0862A049481FAA24D89317E89" Guid="{BA3DAD33-925C-443E-B01F-31DDEFD780FB}">
+                        <File Id="fil952209CC87A0ACAFD0478DB49B50216F" KeyPath="yes" Source="$(var.PythonDist)\av\container\streams.pyd" />
+                    </Component>
+                </Directory>
+                <Directory Id="dir55C65EAEBBBB774A87E449C07D36681C" Name="filter">
+                    <Component Id="cmp695DE30D782C3CDE38843AC62F8AEEC0" Guid="{F5F9FA8A-5E47-4946-91EE-B4795EFED7DD}">
+                        <File Id="filC0E9DE1C803FB576F44FB4E099D9AD8F" KeyPath="yes" Source="$(var.PythonDist)\av\filter\context.pyd" />
+                    </Component>
+                    <Component Id="cmp0DE05EF58E001072ED3672905B70EF01" Guid="{36E4DCAC-BB54-493C-9E32-B3F7A7D05505}">
+                        <File Id="fil2D2B505581A67498FDF478F4FB1B5304" KeyPath="yes" Source="$(var.PythonDist)\av\filter\filter.pyd" />
+                    </Component>
+                    <Component Id="cmp561A8500BBD5529DE6F98A3BE8BEE7B9" Guid="{1A815A62-3804-44EB-8A66-4C5859A19022}">
+                        <File Id="fil3ABA1619C815D5BC778374646E80D1BA" KeyPath="yes" Source="$(var.PythonDist)\av\filter\graph.pyd" />
+                    </Component>
+                    <Component Id="cmpB4F8C8765F0726CE395F25D98FD7EAE6" Guid="{F599C7A1-3FB5-45B2-A4FB-1B3E736FDDF8}">
+                        <File Id="fil0E07F424117C29712419979E03D8843D" KeyPath="yes" Source="$(var.PythonDist)\av\filter\link.pyd" />
+                    </Component>
+                    <Component Id="cmpE0B097758EFB0ADA469F1EEC1338C9FA" Guid="{34789DAC-CFC9-4F0E-8173-07F059E6D11C}">
+                        <File Id="fil9DEED80E1048AD8964EEDC1092CEB6ED" KeyPath="yes" Source="$(var.PythonDist)\av\filter\loudnorm.pyd" />
+                    </Component>
+                </Directory>
+                <Directory Id="dir25C9FC61A76201E99595AF546FD49D57" Name="sidedata">
+                    <Component Id="cmp8FA27903A88F9F9EFB809D14D2A1416A" Guid="{0A3ACD70-6A05-4B75-868F-19658F331840}">
+                        <File Id="fil469916C141886FD3D859FD57224E9443" KeyPath="yes" Source="$(var.PythonDist)\av\sidedata\encparams.pyd" />
+                    </Component>
+                    <Component Id="cmp1264FFF99212F25123C47996D764B221" Guid="{0A9092AB-CE8D-46FF-B305-30360462DB27}">
+                        <File Id="filCD7936C6CBCBA07389D8378154C95195" KeyPath="yes" Source="$(var.PythonDist)\av\sidedata\motionvectors.pyd" />
+                    </Component>
+                    <Component Id="cmpD0641F648037A49C4450D2D370AF2099" Guid="{0DE6DD67-101C-42B3-92C2-A318A010B8B2}">
+                        <File Id="fil0C0943C1C954D950A16B0E485940CB6E" KeyPath="yes" Source="$(var.PythonDist)\av\sidedata\sidedata.pyd" />
+                    </Component>
+                </Directory>
+                <Directory Id="dirF89B9B6D59F95431E5D76700726DC2CA" Name="subtitles">
+                    <Component Id="cmp8EFEA38A4482BC779FF0BC6CAAC2A791" Guid="{813C0002-CFC2-4E13-B02D-590A128EBACE}">
+                        <File Id="fil26E285E8A9DE5E4EA610EC94ECEF2324" KeyPath="yes" Source="$(var.PythonDist)\av\subtitles\codeccontext.pyd" />
+                    </Component>
+                    <Component Id="cmp9E206AE4CAA20953AA05737317C787FB" Guid="{6BA5E3DC-33D3-4D90-B75F-0E48860911CB}">
+                        <File Id="fil31C8CBF3C382FECC0A405FC83D43D924" KeyPath="yes" Source="$(var.PythonDist)\av\subtitles\stream.pyd" />
+                    </Component>
+                    <Component Id="cmp9C0D3B5E535874E756371C4A42EBCF68" Guid="{518DF135-491D-446B-94F8-E32249DAA5E2}">
+                        <File Id="filCB61EF9E3BCF0730481C23A042CCE692" KeyPath="yes" Source="$(var.PythonDist)\av\subtitles\subtitle.pyd" />
+                    </Component>
+                </Directory>
+                <Directory Id="dir9F682F942706802F00E68337791EF38E" Name="video">
+                    <Component Id="cmp16F6BA01EE80E30DD0765E8C5EAB034F" Guid="{584D02BC-6EBC-4E79-B823-173C8E1BB563}">
+                        <File Id="filDE205677B2D8362870E47E2670CE16FD" KeyPath="yes" Source="$(var.PythonDist)\av\video\codeccontext.pyd" />
+                    </Component>
+                    <Component Id="cmpE08EBCDEBC87BAEA83A7E578622111A7" Guid="{E1BFF507-23E8-463B-99F3-A36D6F7B5749}">
+                        <File Id="fil6E4994066300942756522F80A5321D6C" KeyPath="yes" Source="$(var.PythonDist)\av\video\format.pyd" />
+                    </Component>
+                    <Component Id="cmp8DE0F84CA46573EA087BFC63A999E616" Guid="{B7494D39-4509-420E-B10F-7AD85FCFA0F0}">
+                        <File Id="fil98408939931ABDF0018EAA660F83D2A6" KeyPath="yes" Source="$(var.PythonDist)\av\video\frame.pyd" />
+                    </Component>
+                    <Component Id="cmpB7C889156C2C487CA918784ABFE79451" Guid="{7DBADA01-C765-4324-90C5-5BF177E2336E}">
+                        <File Id="fil68C5FC7AFB2EE8B6C0C029972F3603A7" KeyPath="yes" Source="$(var.PythonDist)\av\video\plane.pyd" />
+                    </Component>
+                    <Component Id="cmp5CE9DED4C540526D346B020A22834B36" Guid="{9479C201-EF39-4D54-A8A0-3F929E763977}">
+                        <File Id="filE06292CBEEB3457C705FDE29282F42E6" KeyPath="yes" Source="$(var.PythonDist)\av\video\reformatter.pyd" />
+                    </Component>
+                    <Component Id="cmpD443E463AABD8A58AEFA4E9273FC9DEE" Guid="{54A8C366-899F-4954-B967-0847F073B0BE}">
+                        <File Id="fil15111BECDEAFF4C3D83CB9C15404F5B9" KeyPath="yes" Source="$(var.PythonDist)\av\video\stream.pyd" />
+                    </Component>
+                </Directory>
+            </Directory>
+            <Directory Id="dir45458BE4B7ED98420EDF95A1C09CAAA4" Name="av.libs">
+                <Component Id="cmpBDD31DD51B6C9E0D4634C098586FDD9A" Guid="{8B45487A-46D3-4862-9457-8984B3BA4CB1}">
+                    <File Id="fil274AA04BDC9BAAA4BC6B617FD6F9BC3C" KeyPath="yes" Source="$(var.PythonDist)\av.libs\avcodec-62-3940774d70936a4a2ea89886c85e9317.dll" />
+                </Component>
+                <Component Id="cmp80F75DA8318A2390EE6416C76755C068" Guid="{6475C09E-8F18-43BC-BEF8-41D31B5DEAF7}">
+                    <File Id="fil058592DB0BEA2966804CB333D67D8D65" KeyPath="yes" Source="$(var.PythonDist)\av.libs\avdevice-62-766e6dd5f8c7fd8d737de0ee962a3bfd.dll" />
+                </Component>
+                <Component Id="cmp2E1B5137395EAD6E47D0FA717E5F617F" Guid="{DBA48231-8BE8-4449-8945-E6F4D1B2C571}">
+                    <File Id="fil66E94E5D62B23B8B6FE2E10010F19D27" KeyPath="yes" Source="$(var.PythonDist)\av.libs\avfilter-11-f92a6b8cb3ef788fc4280b60af7ff6b5.dll" />
+                </Component>
+                <Component Id="cmpB0AF6FBCD322B005944B7FE610782A71" Guid="{C9C355A1-CCEA-457C-9504-9DCF0EA22039}">
+                    <File Id="fil3F313B7F74DDC38F358C1B617FE3551D" KeyPath="yes" Source="$(var.PythonDist)\av.libs\avformat-62-2be7dd535524c05af04f1022f20ff113.dll" />
+                </Component>
+                <Component Id="cmp66218B65A93CDACE2FFD5288987CB506" Guid="{40644C41-BCAD-4C37-8277-77C7FCF0DE6A}">
+                    <File Id="filD0892E3A22B0B6201FEE11C238744AA9" KeyPath="yes" Source="$(var.PythonDist)\av.libs\avutil-60-f9538342a3d3617535a6e391bd72c482.dll" />
+                </Component>
+                <Component Id="cmpC6B1636E368F5B0017C48C254EEC4CD1" Guid="{B82FB8BC-9CFC-4CD1-84D2-57C1FFAC2EF9}">
+                    <File Id="fil4E1516B4632F467717F99767C27FAB4D" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libdav1d-2854208e7402bc0207d81c69183d2d55.dll" />
+                </Component>
+                <Component Id="cmp9B79E49EA05FCEABB681A1EA8785866B" Guid="{563AF31D-BE23-47A3-A0AB-64AC2D432126}">
+                    <File Id="fil77A2AD93FD1E082520BD2A8BD98DF090" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libgcc_s_seh-1-3a8ef13ba1b41e1f6f0c464b6cc39141.dll" />
+                </Component>
+                <Component Id="cmpCE10B407386318FAB1900DE0919C2FE6" Guid="{54D9191F-035E-4B2D-9951-10045E9A6D2A}">
+                    <File Id="fil5C38BBFC2AB152B8E463829D464A354B" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libiconv-2-ae7b916fbe4f07d00594ccf5b482cd92.dll" />
+                </Component>
+                <Component Id="cmpE152857A9C75703C22F82297D6D3AF21" Guid="{F1729A04-7001-439D-A452-41DD07D7AB4B}">
+                    <File Id="filFD67FF76EAC7AEACF592CF8687B0D97D" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libmp3lame-0-a40e869d35020af0f107aa1ac8422722.dll" />
+                </Component>
+                <Component Id="cmp3F1F27EDBC3EA2D275A692384FF8A8FD" Guid="{DB9D11DF-C1D9-4EB7-90F6-4537FE41F81A}">
+                    <File Id="fil29FB6DFB19EB9417FEA01ADBFE58A8B2" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libogg-0-3c0d59d85a7487ccfe2b7e3f1ec0a8e6.dll" />
+                </Component>
+                <Component Id="cmpC6F529AFE712AC800A2218224E81C1F9" Guid="{61F97F05-C8E3-44B6-8297-38906FAFC7CB}">
+                    <File Id="filC87EF4028BC399F866A1943144957B26" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libopencore-amrnb-0-a12cef9e3ba1bd5045a731c65b6f09ea.dll" />
+                </Component>
+                <Component Id="cmp8EBC5DB75FB4971F12F9F797D88B5419" Guid="{F29684B2-A0ED-4989-87C3-CDC4C6FD1049}">
+                    <File Id="fil82A1900CADA736F6663CF196EA36D226" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libopencore-amrwb-0-cf5ea681342bef4ee8af3e51e6be55d7.dll" />
+                </Component>
+                <Component Id="cmp799FF225DECC9F804253A08CCFA02ABA" Guid="{9378A3D6-73C2-447D-8B0D-66054399EC60}">
+                    <File Id="filAAC8949C43D737FB3517E4AB72A893E6" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libopenh264-7-750382b3e9621d634b578275276a2ff7.dll" />
+                </Component>
+                <Component Id="cmp914C2C64CDEB7725395BD094E6CC44A1" Guid="{BFED2429-33C8-4F65-B391-916AA6473DEB}">
+                    <File Id="filFEA984B475960F6D685A59A71F2D479D" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libopus-0-fb6521a3026e90bf1d367739ba9d7e1c.dll" />
+                </Component>
+                <Component Id="cmp64DF7D6BB39C2E32A7CC4BBBA27DE7E8" Guid="{9EC69F89-A6FF-40EC-85BE-A70A9BE28261}">
+                    <File Id="fil831A8DEA286E1C970AE86135BB955738" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libsharpyuv-01e2902fb55969a9ac20a3341865c1ef.dll" />
+                </Component>
+                <Component Id="cmp14858CEDF548AB0B4EF50DDD6A45BE66" Guid="{B8644513-720D-450D-A026-1C46F53D4C8C}">
+                    <File Id="filFEC88BF577BADA035F3EE272CC6CB99F" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libspeex-1-ba4815f6ed79adf1b23cd127d9d8eaab.dll" />
+                </Component>
+                <Component Id="cmpB5EF2E4FF6B8380BE71A17828F5476C1" Guid="{3C96008E-13B7-4BE9-918E-EC3BFC121443}">
+                    <File Id="fil831BD3EA71BC8424B5D48587E3CB489E" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libstdc++-6-6ebbb912d64b3a5dab46558325e09937.dll" />
+                </Component>
+                <Component Id="cmp3BF8C5B5D18BF6ABE36610C61CC1105E" Guid="{1D77A4B4-D45D-4F18-AE3B-0FB4E0F09857}">
+                    <File Id="fil9D12F88C499AD83807DB560819835C74" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libSvtAv1Enc-fb4b3af5fd3747228b98cb4aefb94824.dll" />
+                </Component>
+                <Component Id="cmpD17B13567193C85598735ADCD5DC5E08" Guid="{E3508EEE-D96C-4E01-B128-347801826AC3}">
+                    <File Id="filD05F85680FE8F0BB172DAB9D0819AE4E" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libvorbis-0-8cd95dec6ff8998dc9f6dcfa8f2d7774.dll" />
+                </Component>
+                <Component Id="cmpC324D468FBB0618277DD03A1F92A383F" Guid="{0E4F8522-3C3E-4989-A2F3-7FD9F0FA1DA3}">
+                    <File Id="fil8887B04156162C6E80DF566F55CD58D2" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libvorbisenc-2-2f569ff7b44c838288ad93bb99e3a711.dll" />
+                </Component>
+                <Component Id="cmpD9ECE1BCFE674C4D4A5E3921EE209A79" Guid="{6658B6AC-3649-4F46-A800-FB875CAC28ED}">
+                    <File Id="fil34B8705E7D1DF5088A3F1A2D87EBF805" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libvpl-0ab370e90005ea546d35a470a4f868f5.dll" />
+                </Component>
+                <Component Id="cmpB69CD59739A2448280CADF4AA3A4EB6C" Guid="{AE3A6F73-6554-4147-8749-CD7A2FC0F9A3}">
+                    <File Id="fil4C0CC93D8530F9AC51F37D5A183D2F1A" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libvpx-1-9d6803226398ef2833bb80efd4316820.dll" />
+                </Component>
+                <Component Id="cmp077A4EAC83CA178B7E4429AB54D8F45B" Guid="{F1A16BB6-AABB-4398-BA2D-878AFDD350CE}">
+                    <File Id="fil9961EA6E291D55DE04B85B694147DB15" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libwebp-3b7b09eb07baa72c65eb22fd48b02534.dll" />
+                </Component>
+                <Component Id="cmp9D31A3FB38AD009A90D28AB868391F26" Guid="{14EBBFC6-A06D-4477-AB27-60CCF9C32ADE}">
+                    <File Id="fil882EB1F0469116F229886507C510CF82" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libwebpmux-53ac7751e913f0e551cf8009d2a980b0.dll" />
+                </Component>
+                <Component Id="cmp742E471D00BC3EC6935D4622EDD4474F" Guid="{972CCEA4-B575-4439-AEF9-CEE13C41E21A}">
+                    <File Id="fil9790D66F91A4A357A817EE0C89D27325" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libwinpthread-1-48c4238b59e26fb10619fa726758a7eb.dll" />
+                </Component>
+                <Component Id="cmp95E481A419950FCC2EF8B141C8795EC2" Guid="{B887B3F5-A425-4595-9869-1CA7AB57F18D}">
+                    <File Id="fil51FF0F2040A1237BFC052C69BFE41964" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libx264-165-a7a268a1f003004287007cd3db81cdbf.dll" />
+                </Component>
+                <Component Id="cmpF986F5B9187C1C08A430C42B2A524484" Guid="{CEE6FA36-96A9-40A2-B57E-B4A89B66BE18}">
+                    <File Id="filE8B7E5088837C9712C798852E683454F" KeyPath="yes" Source="$(var.PythonDist)\av.libs\libx265-69ce56c9697f2c7ef6b7218fe3c79e94.dll" />
+                </Component>
+                <Component Id="cmpAF04605A5B6271461879BF5F00CD5FC5" Guid="{0F4C1169-64D4-4E46-B197-BE9B0B5C69E5}">
+                    <File Id="filE8BB545B393E079F3FA6A259B5E5566B" KeyPath="yes" Source="$(var.PythonDist)\av.libs\swresample-6-5c7b6591ccd2418794032a025b353420.dll" />
+                </Component>
+                <Component Id="cmpB9314C9C5C2947E9E23973AD431572B0" Guid="{2BFDDC67-69ED-4736-ADD4-F536725DF236}">
+                    <File Id="filBE167725C2C5AD2DF84536E967F41203" KeyPath="yes" Source="$(var.PythonDist)\av.libs\swscale-9-83e116b1f922de2417186c4b455a287a.dll" />
+                </Component>
+                <Component Id="cmp1A3F65A7000EA1DDBE1AFE3E02B8A8B0" Guid="{8CE1ED1B-C5BD-4462-9A08-8AB76864A48A}">
+                    <File Id="filB5F3760B479B9F018298F5FC3014ED71" KeyPath="yes" Source="$(var.PythonDist)\av.libs\zlib1-29152992f0da46321a6677f166b0d3ff.dll" />
+                </Component>
+            </Directory>
+            <Directory Id="dirC146288197954336C7DDECD1B4B9C15D" Name="pymediainfo">
+                <Component Id="cmpDB5CFE58499E7002FEB10D557600B31A" Guid="{5B62C264-A1AD-4FB1-9FA4-B557FEA5735E}">
+                    <File Id="fil13B777D4AD67A99282791861B2A4DC51" KeyPath="yes" Source="$(var.PythonDist)\pymediainfo\MediaInfo.dll" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="PythonScriptGroup">
+            <ComponentRef Id="cmp342718ABF7BE6CC799B9E5C7EC68B73A" />
+            <ComponentRef Id="cmp1A46FA6C035C8DD066529219CD3BC14D" />
+            <ComponentRef Id="cmp1DDC7A17986E4087470D7DAE06E174F9" />
+            <ComponentRef Id="cmpF6807864B8C33B25757F3DADEFD4A488" />
+            <ComponentRef Id="cmp98A732240721FB3D0D3F10626AAA3D2A" />
+            <ComponentRef Id="cmpE076743E9AB626C92A638F313FB10D01" />
+            <ComponentRef Id="cmp59DE963F574E473958E76ABF8F6B0542" />
+            <ComponentRef Id="cmp129B47468B9748E89F50718E887CC4B8" />
+            <ComponentRef Id="cmpF4BDAE8A068B7352141D703E6D5E677B" />
+            <ComponentRef Id="cmpC45B25996E14AF1484591C266BD5D670" />
+            <ComponentRef Id="cmpD94008E9D03C54DEA23D56F5D70EE39E" />
+            <ComponentRef Id="cmp919310159469D4666B08D62383DBE6E4" />
+            <ComponentRef Id="cmpC7EB3B84C1CA1468B5A8E8271DC5B409" />
+            <ComponentRef Id="cmp631053F8B23C9329966A572B12225D44" />
+            <ComponentRef Id="cmp2B14B30CA2CBDED56C6CD64C514933A6" />
+            <ComponentRef Id="cmpB72FA74A6CE9681CA191F2D04708C8F6" />
+            <ComponentRef Id="cmpF0F801A0ADFF20646C32E46088585917" />
+            <ComponentRef Id="cmp776B7EADB9224CCA747124B7488000F1" />
+            <ComponentRef Id="cmp45019E9358622972256C18BAD453223D" />
+            <ComponentRef Id="cmpDB17535BE26EFAF3EE5D46ADEA783E4F" />
+            <ComponentRef Id="cmp3128656AD510E7121C3B65E4203D6AF5" />
+            <ComponentRef Id="cmpDEB0F817F79252648359E925DF0C0914" />
+            <ComponentRef Id="cmpA48CD75BC567A9D10F1456B96195770B" />
+            <ComponentRef Id="cmp7774ADDDCDA367186DF22B8BFB0B7909" />
+            <ComponentRef Id="cmp345773C4A72B6907CCA68856F9928FFA" />
+            <ComponentRef Id="cmp6D844CC1618CCE97D07FCF5C629ED43C" />
+            <ComponentRef Id="cmpEBA6F496574AF65C34CC13ABAB41371C" />
+            <ComponentRef Id="cmp67694DEA2A943458DC2654E22AB3D1C6" />
+            <ComponentRef Id="cmp9CC8C55703C72EE5956323FDC2CBBD67" />
+            <ComponentRef Id="cmpD84F3745AB6182B615084DCE07BD855B" />
+            <ComponentRef Id="cmp738FCE73BD7A1A3B21EA0F182ADCC650" />
+            <ComponentRef Id="cmp0D59A03E183248E7AF347C18C4CCB782" />
+            <ComponentRef Id="cmp067CD2C609C99083A1A14293B3A5CE9E" />
+            <ComponentRef Id="cmp596AC036A291CEF2500EED1217C20207" />
+            <ComponentRef Id="cmpB2A570E279398E349B1276356FEC1BD3" />
+            <ComponentRef Id="cmp3B1B23F743CD4D50EDC50E9CAFA6A3D5" />
+            <ComponentRef Id="cmpBF0C77B0950EFDC10C2B3525A72F1938" />
+            <ComponentRef Id="cmpF043E98D746B913FD51E9A4A5D9F94F1" />
+            <ComponentRef Id="cmp770612AF4A7B9627BEAF4C83BCDFEE1C" />
+            <ComponentRef Id="cmp499CF2E9F6DE047C0422B8604FE2C38E" />
+            <ComponentRef Id="cmp9097023EA792FB03D42D39B28EF45690" />
+            <ComponentRef Id="cmp65F1D19F7E43307CDBD75F348AAB199A" />
+            <ComponentRef Id="cmpA2C5916A1085D0E278A2326B0C07E1E7" />
+            <ComponentRef Id="cmpEFBDCC3385C4EA8973443EBBEA54A67E" />
+            <ComponentRef Id="cmpABC7643B009EA2608ABD9B1B08B3EF17" />
+            <ComponentRef Id="cmp2AF06EA2324DD4545AB6B471E23B2CD4" />
+            <ComponentRef Id="cmp4EF80304B167EE543E14DFB9536AFB5D" />
+            <ComponentRef Id="cmpD59BC3A1F4E25DA964FF9A63E14C4CD4" />
+            <ComponentRef Id="cmp0ED5C16F623EE14233D09B0081836B2A" />
+            <ComponentRef Id="cmpD843AEDBBC2E3824F0BC49D0A0634C69" />
+            <ComponentRef Id="cmpF93B8FE0862A049481FAA24D89317E89" />
+            <ComponentRef Id="cmp695DE30D782C3CDE38843AC62F8AEEC0" />
+            <ComponentRef Id="cmp0DE05EF58E001072ED3672905B70EF01" />
+            <ComponentRef Id="cmp561A8500BBD5529DE6F98A3BE8BEE7B9" />
+            <ComponentRef Id="cmpB4F8C8765F0726CE395F25D98FD7EAE6" />
+            <ComponentRef Id="cmpE0B097758EFB0ADA469F1EEC1338C9FA" />
+            <ComponentRef Id="cmp8FA27903A88F9F9EFB809D14D2A1416A" />
+            <ComponentRef Id="cmp1264FFF99212F25123C47996D764B221" />
+            <ComponentRef Id="cmpD0641F648037A49C4450D2D370AF2099" />
+            <ComponentRef Id="cmp8EFEA38A4482BC779FF0BC6CAAC2A791" />
+            <ComponentRef Id="cmp9E206AE4CAA20953AA05737317C787FB" />
+            <ComponentRef Id="cmp9C0D3B5E535874E756371C4A42EBCF68" />
+            <ComponentRef Id="cmp16F6BA01EE80E30DD0765E8C5EAB034F" />
+            <ComponentRef Id="cmpE08EBCDEBC87BAEA83A7E578622111A7" />
+            <ComponentRef Id="cmp8DE0F84CA46573EA087BFC63A999E616" />
+            <ComponentRef Id="cmpB7C889156C2C487CA918784ABFE79451" />
+            <ComponentRef Id="cmp5CE9DED4C540526D346B020A22834B36" />
+            <ComponentRef Id="cmpD443E463AABD8A58AEFA4E9273FC9DEE" />
+            <ComponentRef Id="cmpBDD31DD51B6C9E0D4634C098586FDD9A" />
+            <ComponentRef Id="cmp80F75DA8318A2390EE6416C76755C068" />
+            <ComponentRef Id="cmp2E1B5137395EAD6E47D0FA717E5F617F" />
+            <ComponentRef Id="cmpB0AF6FBCD322B005944B7FE610782A71" />
+            <ComponentRef Id="cmp66218B65A93CDACE2FFD5288987CB506" />
+            <ComponentRef Id="cmpC6B1636E368F5B0017C48C254EEC4CD1" />
+            <ComponentRef Id="cmp9B79E49EA05FCEABB681A1EA8785866B" />
+            <ComponentRef Id="cmpCE10B407386318FAB1900DE0919C2FE6" />
+            <ComponentRef Id="cmpE152857A9C75703C22F82297D6D3AF21" />
+            <ComponentRef Id="cmp3F1F27EDBC3EA2D275A692384FF8A8FD" />
+            <ComponentRef Id="cmpC6F529AFE712AC800A2218224E81C1F9" />
+            <ComponentRef Id="cmp8EBC5DB75FB4971F12F9F797D88B5419" />
+            <ComponentRef Id="cmp799FF225DECC9F804253A08CCFA02ABA" />
+            <ComponentRef Id="cmp914C2C64CDEB7725395BD094E6CC44A1" />
+            <ComponentRef Id="cmp64DF7D6BB39C2E32A7CC4BBBA27DE7E8" />
+            <ComponentRef Id="cmp14858CEDF548AB0B4EF50DDD6A45BE66" />
+            <ComponentRef Id="cmpB5EF2E4FF6B8380BE71A17828F5476C1" />
+            <ComponentRef Id="cmp3BF8C5B5D18BF6ABE36610C61CC1105E" />
+            <ComponentRef Id="cmpD17B13567193C85598735ADCD5DC5E08" />
+            <ComponentRef Id="cmpC324D468FBB0618277DD03A1F92A383F" />
+            <ComponentRef Id="cmpD9ECE1BCFE674C4D4A5E3921EE209A79" />
+            <ComponentRef Id="cmpB69CD59739A2448280CADF4AA3A4EB6C" />
+            <ComponentRef Id="cmp077A4EAC83CA178B7E4429AB54D8F45B" />
+            <ComponentRef Id="cmp9D31A3FB38AD009A90D28AB868391F26" />
+            <ComponentRef Id="cmp742E471D00BC3EC6935D4622EDD4474F" />
+            <ComponentRef Id="cmp95E481A419950FCC2EF8B141C8795EC2" />
+            <ComponentRef Id="cmpF986F5B9187C1C08A430C42B2A524484" />
+            <ComponentRef Id="cmpAF04605A5B6271461879BF5F00CD5FC5" />
+            <ComponentRef Id="cmpB9314C9C5C2947E9E23973AD431572B0" />
+            <ComponentRef Id="cmp1A3F65A7000EA1DDBE1AFE3E02B8A8B0" />
+            <ComponentRef Id="cmpDB5CFE58499E7002FEB10D557600B31A" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>
