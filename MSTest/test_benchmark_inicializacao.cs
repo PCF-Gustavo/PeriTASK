@@ -22,7 +22,7 @@ namespace MSTest
             Path.GetFullPath(
                 Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory,
-                    @"..\..\..\..\Instalador\build\PythonScript.dist\PythonScript.exe"));
+                    @"..\..\..\..\Instalador\build\main.dist\PythonScript.exe"));
 
         [TestMethod]
         public void Benchmark_Startup_Time()

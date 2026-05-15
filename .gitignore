@@ -3,23 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# ---------------------
-# AddContextMenu
-# ---------------------
-
-# ---------------------
-# Instalador
-# ---------------------
-
-
-# ---------------------
-# PythonScript
-# ---------------------
-
-# ---------------------
-# UserInterface
-# ---------------------
-
 # User-specific files
 *.rsuser
 *.suo
@@ -36,9 +19,6 @@ mono_crash.*
 # =========================
 # Arquivos e pastas gerados por compilação (build)
 # =========================
-# Contêm binários, objetos intermediários, logs e saídas de build.
-# Esses arquivos são recriados automaticamente pelo Visual Studio/MSBuild,
-# WiX, Python (PyInstaller) e outras ferramentas, e não devem ser versionados.
 
 # Modos de build
 [Dd]ebug/

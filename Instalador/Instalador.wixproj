@@ -8,13 +8,13 @@
 	<BuildDay>$([System.DateTime]::Now.ToString("dd"))</BuildDay>
 	<BuildRevision>$([System.DateTime]::Now.ToString("HHmm"))</BuildRevision>
 	<ProductVersion>1.$(BuildMonth).$(BuildDay).$(BuildRevision)</ProductVersion>
-	<DefineConstants>ProductVersion=$(ProductVersion);PythonDist=$(SolutionDir)Instalador\build\PythonScript.dist\</DefineConstants>
+	<DefineConstants>ProductVersion=$(ProductVersion);PythonDist=$(SolutionDir)Instalador\build\main.dist\</DefineConstants>
     <ProjectGuid>d2f33520-6af5-4185-86fd-85b29f6f9d63</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>PeriTASK_Setup</OutputName>
     <OutputType>Package</OutputType>
     <Name>Instalador</Name>
-	<PythonDist>$(SolutionDir)Instalador\build\PythonScript.dist</PythonDist>
+	<PythonDist>$(SolutionDir)Instalador\build\main.dist</PythonDist>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -91,7 +91,7 @@
 
 
 	<Target Name="BuildPython" BeforeTargets="BeforeBuild" DependsOnTargets="EnsurePythonEnv">
-	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --remove-output &quot;$(SolutionDir)PythonScript\PythonScript.py&quot;" />
+	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --remove-output &quot;$(SolutionDir)PythonScript\main.py&quot;" />
   </Target>
   <!--<Target Name="AfterBuild">
 	--><!-- Instala PeriTASK --><!--

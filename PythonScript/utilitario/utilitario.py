@@ -1,28 +1,9 @@
-print("STATUS:Executando Python...", flush=True)
-import sys
+﻿from lazy_imports import lazy_imports
+av = lazy_imports("av")
+
 import os
-import csv
 import hashlib
 from pathlib import Path
-from benchmark import modo_benchmark_pytest, emitir_evento_MSTest
-from functools import cache
-import importlib
-
-@cache
-def lazy_import(module_name):
-    return importlib.import_module(module_name)
-
-def lazy_imports(*imports):
-    g = globals()
-    for item in imports:
-        if isinstance(item, str):
-            g[item] = lazy_import(item)
-        else:
-            module_name, attr_name = item
-            g[attr_name] = getattr(
-                lazy_import(module_name),
-                attr_name
-            )
 
 def coletar_arquivos_e_pasta_saida(itens):
     arquivos = set()
@@ -76,32 +57,6 @@ def coletar_arquivos_e_pasta_saida(itens):
         pasta = os.path.dirname(pasta)
 
     return arquivos, pasta
-
-
-def imprimir_lista_caminhos_txt(arquivos, pasta_saida):
-    arquivo_saida = "caminho_dos_arquivos.txt"
-    caminho_saida = os.path.join(pasta_saida, arquivo_saida)
-    caminho_tmp = os.path.join(os.getenv("TEMP"), arquivo_saida + ".tmp")
-
-    print("STATUS:Imprimindo caminhos dos arquivos em .txt", flush=True)
-
-    total = len(arquivos)
-    ultimo_progresso = -1
-
-    if total == 0:
-        print("PROGRESS:100", flush=True)
-        return
-
-    with open(caminho_tmp, "w", encoding="utf-8") as f:
-        for i, arquivo in enumerate(arquivos, start=1):
-            f.write(arquivo + "\n")
-
-            progresso = int((i / total) * 100)
-            if progresso != ultimo_progresso:
-                print(f"PROGRESS:{progresso}", flush=True)
-                ultimo_progresso = progresso
-
-    os.replace(caminho_tmp, caminho_saida)
 
 
 def calcular_sha256(caminho):
@@ -341,73 +296,6 @@ def replace_com_incremento(caminho_tmp, caminho_saida):
                 contador += 1
 
 
-def imprimir_tabela_simplificada_infos_csv(arquivos_videos, pasta_saida):
-    arquivo_saida = "tabela_simplificada_de_informacoes.csv"
-    caminho_saida = os.path.join(pasta_saida, arquivo_saida)
-    caminho_tmp = os.path.join(os.getenv("TEMP"), arquivo_saida + ".tmp")
-
-    total = len(arquivos_videos)
-    duracao_total_ms = 0
-
-    print("STATUS:Vídeos -> tabela simplificada de informações em .csv", flush=True)
-
-    if total == 0:
-        print("PROGRESS:100", flush=True)
-        return
-
-    ultimo_progresso = -1
-
-    with open(caminho_tmp, "w", newline="", encoding="utf-8-sig") as csvfile:
-        writer = csv.writer(csvfile, delimiter=";")
-
-        writer.writerow([
-            "#", "Pasta", "Nome do Arquivo", "Hash SHA-256",
-            "Duracao", "Fluxos de Video", "Fluxos de Audio",
-            "FPS", "Resolucao"
-        ])
-
-        for i, arquivo in enumerate(arquivos_videos, start=1):
-            arquivo_mediainfo = MediaInfo.parse(arquivo)
-
-            video_streams = [t for t in arquivo_mediainfo.tracks if t.track_type == "Video"]
-            audio_streams = [t for t in arquivo_mediainfo.tracks if t.track_type == "Audio"]
-
-            duracao_ms = obter_duracao_ms_mediainfo(arquivo_mediainfo) or obter_duracao_ms_pyav(arquivo)
-            duracao_total_ms += duracao_ms
-
-            fps = obter_fps_mediainfo(arquivo_mediainfo) or obter_fps_pyav(arquivo,duracao_ms)
-
-            resolucao = "Unknown"
-            if video_streams:
-                v = video_streams[0]
-                if v.width and v.height:
-                    resolucao = f"{v.width}x{v.height}"
-
-            writer.writerow([
-                i,
-                os.path.dirname(arquivo),
-                os.path.basename(arquivo),
-                calcular_sha256(arquivo),
-                formatar_duracao_hh_mm_ss(duracao_ms),
-                len(video_streams),
-                len(audio_streams),
-                f"{fps:.0f}",
-                resolucao
-            ])
-
-            progresso = int((i / total) * 100)
-            if progresso != ultimo_progresso:
-                print(f"PROGRESS:{progresso}", flush=True)
-                ultimo_progresso = progresso
-
-        writer.writerow([
-            "", "", "", "Duracao Total",
-            formatar_duracao_hh_mm_ss(duracao_total_ms),
-            "", "", "", ""
-        ])
-
-    replace_com_incremento(caminho_tmp, caminho_saida)
-
 def formata_tamanho(tamanho_bytes):
     if tamanho_bytes >= 1024 * 1024:
         tamanho_str = f"{tamanho_bytes / (1024 * 1024):.2f} MB"
@@ -582,158 +470,6 @@ def obter_fps_nominal_pyav(arquivo):
 
     return f"{float(rate):.2f} tbr"
 
-def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
-    arquivo_saida = "tabela_completa_de_informacoes.csv"
-    caminho_saida = os.path.join(pasta_saida, arquivo_saida)
-    caminho_tmp = os.path.join(os.getenv("TEMP"), arquivo_saida + ".tmp")
-
-    total = len(arquivos_videos)
-
-    print("STATUS:Vídeos -> tabela completa de informações em .csv", flush=True)
-
-    if total == 0:
-        print("PROGRESS:100", flush=True)
-        return
-
-    ultimo_progresso = -1
-
-    with open(caminho_tmp, "w", newline="", encoding="utf-8-sig") as csvfile:
-        writer = csv.writer(csvfile, delimiter=";")
-
-        for i, arquivo in enumerate(arquivos_videos, start=1):
-            arquivo_mediainfo = MediaInfo.parse(arquivo)
-            arquivo_pyav = av.open(arquivo)
-
-            # Nome
-            writer.writerow(["Nome do Arquivo" , os.path.basename(arquivo)])
-
-            # Tamanho
-            tamanho_bytes = os.path.getsize(arquivo)
-            tamanho_str = formata_tamanho(tamanho_bytes)
-            writer.writerow(["Tamanho", tamanho_str ])
-            
-            # Duração
-            duracao_ms = obter_duracao_ms_mediainfo(arquivo_mediainfo) or obter_duracao_ms_pyav(arquivo)
-            writer.writerow(["Duracao", formatar_duracao_hh_mm_ssss(duracao_ms)])
-            
-            contador_fluxo_video = 0
-            contador_fluxo_audio = 0
-            # FLUXOS
-            for track_mediainfo in arquivo_mediainfo.tracks:
-                # Fluxo geral
-                if track_mediainfo.track_type == "General":
-
-                    # Formato do conteiner
-                    container = obter_conteiner_mediainfo(track_mediainfo)
-                    writer.writerow(["Formato do contêiner", container])
-
-                    # Taxa de bits total
-                    overall_bitrate = getattr(track_mediainfo, "overall_bit_rate", "") or ((tamanho_bytes * 8) / (duracao_ms / 1000.0))
-                    overall_bitrate_str = formata_bitrate(overall_bitrate)
-                    writer.writerow(["Taxa de bits total", overall_bitrate_str])
-                
-                # Fluxos de Video
-                if track_mediainfo.track_type == "Video":
-                    contador_fluxo_video += 1
-                    writer.writerow([f"Fluxo de Vídeo ({contador_fluxo_video})"])
-
-                    # Codificação
-                    codec_video = obter_codec_video_mediainfo(track_mediainfo)
-                    writer.writerow(["Codificação", codec_video])
-
-                    # Resolução
-                    writer.writerow(["Resolução (LxA)", f"{track_mediainfo.width}x{track_mediainfo.height}"])
-
-                    # FPS constante
-                    framerate_mode = getattr(track_mediainfo, "frame_rate_mode", "") or obter_cfr_vfr_pyav(arquivo, tolerancia=0.03)
-                    if framerate_mode == "CFR":
-                        fps_constante = "Sim"
-                    elif framerate_mode == "VFR":
-                        fps_constante = "Não"
-                    else:
-                        fps_constante = ""
-                    writer.writerow(["FPS constante", fps_constante])
-                    
-                    # FPS médio
-                    fps = obter_fps_mediainfo(arquivo_mediainfo) or obter_fps_pyav(arquivo,duracao_ms)
-                    writer.writerow(["FPS médio", f'="{fps:.2f}"'.replace('.', ',')])
-                    
-                    # FPS nominal
-                    fps_nominal = getattr(track_mediainfo, "frame_rate_nominal", "") or obter_fps_nominal_pyav(arquivo)
-                    writer.writerow(["FPS nominal", f'="{str(fps_nominal).replace(".", ",")}"'])
-                    
-                    # Unidade de tempo interna
-                    unidade_de_tempo = obter_unidade_de_tempo_pyav(arquivo)
-                    writer.writerow(["Unidade de tempo interna", unidade_de_tempo])
-                    
-                    # Espaço de cor
-                    writer.writerow(["Espaço de cor", getattr(track_mediainfo, "color_space", "")])
-                    
-                    # Subamostragem de cor
-                    writer.writerow(["Subamostragem de cor", f'="{getattr(track_mediainfo, "chroma_subsampling", "")}"'])
-                    
-                    # Profundidade de bits por canal
-                    writer.writerow(["Profundidade de bits por canal", f'="{getattr(track_mediainfo, "bit_depth", "")} bits"'])
-                    
-                    # Cores primárias
-                    cores_primarias = ( getattr(track_mediainfo, "color_primaries", "") or getattr(track_mediainfo, "transfer_characteristics", "") or getattr(track_mediainfo, "matrix_coefficients", "") or "(não informado)")
-                    writer.writerow(["Cores primárias", cores_primarias ])
-                    
-                    # Tipo de varredura
-                    scan_type = getattr(track_mediainfo, "scan_type", "")
-                    if scan_type == "Progressive":
-                        tipo_varredura = "Progressiva"
-                    else:
-                        tipo_varredura = "Entrelaçada"
-                    writer.writerow(["Tipo de varredura", tipo_varredura])
-
-                    # Taxa de bits
-                    bitrate_video =  getattr(track_mediainfo, "bit_rate", "") or obter_bitrate_pyav(arquivo, "video", duracao_ms)
-                    bitrate_video_str = formata_bitrate(bitrate_video)
-                    writer.writerow(["Taxa de bits", bitrate_video_str])
-                    
-
-                # Fluxos de Audio
-                elif track_mediainfo.track_type == "Audio":
-                    contador_fluxo_audio += 1
-                    writer.writerow([f"Fluxo de Áudio ({contador_fluxo_audio})"])
-
-                    # Codificação
-                    codec_audio = obter_codec_audio_mediainfo(track_mediainfo)
-                    writer.writerow(["Codificação", codec_audio])
-
-                    # Taxa de amostragem
-                    writer.writerow(["Taxa de amostragem", f'{getattr(track_mediainfo, "sampling_rate", "")} Hz'])
-                    
-                    # Canais
-                    canais = getattr(track_mediainfo, "channel_s", "")
-                    if canais == 1:
-                        canais_str = "Mono"
-                    elif canais == 2:
-                        canais_str = "Estéreo"
-                    else:
-                        canais_str = ""
-                    writer.writerow(["Canais", canais_str ])
-
-                    # Taxa de bits
-                    bitrate_audio =  getattr(track_mediainfo, "bit_rate", "") or obter_bitrate_pyav(arquivo, "audio", duracao_ms)
-                    bitrate_audio_str = formata_bitrate(bitrate_audio)
-                    writer.writerow(["Taxa de bits", bitrate_audio_str])
-
-                # Outros fluxos
-                else:
-                    pass
-
-            arquivo_pyav.close()
-            writer.writerow([])
-
-            progresso = int((i / total) * 100)
-            if progresso != ultimo_progresso:
-                print(f"PROGRESS:{progresso}", flush=True)
-                ultimo_progresso = progresso
-
-    replace_com_incremento(caminho_tmp, caminho_saida)
-
 def obter_videos(arquivos):
     extensoes_video = {
         ".avi", ".mp4", ".mkv", ".mov", ".wmv", ".flv",
@@ -742,38 +478,3 @@ def obter_videos(arquivos):
     }
     arquivos_videos = [ arq for arq in arquivos if Path(arq).suffix.lower() in extensoes_video ]
     return arquivos_videos
-
-
-
-def main():
-    emitir_evento_MSTest("PERITASK_READY")
-    if len(sys.argv) < 3:
-        # sys.exit(1)
-        pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
-        arquivos = obter_videos(list(Path(r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK").iterdir()))
-        selecao_ComboBox = f"Vídeos -> tabela completa de informações em .csv"
-        # selecao_ComboBox = f"Vídeos -> tabela simplificada de informações em .csv"
-    else:
-        itens_selecionados = sys.argv[1].split("|")
-        selecao_ComboBox = sys.argv[2]
-        arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
-
-    if modo_benchmark_pytest():
-        pasta_saida = Path(os.getenv("USERPROFILE")) / "Desktop" / "PeriTASK_pytest"
-        pasta_saida.mkdir(parents=True, exist_ok=True)
-
-    if selecao_ComboBox == f"Arquivos -> lista de caminhos em .txt":
-        imprimir_lista_caminhos_txt(arquivos, pasta_saida)
-    elif selecao_ComboBox == f"Vídeos -> tabela simplificada de informações em .csv":
-        lazy_imports("av",("pymediainfo", "MediaInfo"),)
-        arquivos_videos = obter_videos(arquivos)
-        imprimir_tabela_simplificada_infos_csv(arquivos_videos, pasta_saida)
-    elif selecao_ComboBox == f"Vídeos -> tabela completa de informações em .csv":
-        lazy_imports("av",("pymediainfo", "MediaInfo"),)
-        arquivos_videos = obter_videos(arquivos)
-        imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida)
-
-
-if __name__ == "__main__":
-    main()
-    

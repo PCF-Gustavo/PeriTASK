@@ -11,7 +11,7 @@ import threading
 
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.append(str(BASE_DIR.parent))
-from PythonScript import main
+from main import main
 
 
 # ===========================
