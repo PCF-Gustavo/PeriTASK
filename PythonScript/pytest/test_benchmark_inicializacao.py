@@ -1,9 +1,7 @@
 ﻿import sys
 import json
 import statistics
-import platform
 import subprocess
-import psutil
 import time
 from utilitario import BASE_DIR, ROOT, EXE_PATH, machine_name
 
@@ -23,7 +21,7 @@ USED_RUNS = 9
 
 def medir_startup():
     psi = subprocess.Popen(
-        [str(EXE_PATH), "--benchmark_MSTest"],
+        [str(EXE_PATH), "--benchmark"],
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
         text=True

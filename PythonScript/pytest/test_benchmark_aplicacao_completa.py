@@ -275,7 +275,7 @@ def test_pipeline():
             "PythonScript.exe",
             "|".join(videos),
             "Arquivos -> lista de caminhos em .txt",
-            "--benchmark_pytest"
+            "--benchmark"
         ]
         main()
 
@@ -284,7 +284,7 @@ def test_pipeline():
             "PythonScript.exe",
             "|".join(videos),
             "Vídeos -> tabela simplificada de informações em .csv",
-            "--benchmark_pytest"
+            "--benchmark"
         ]
         main()
 
@@ -293,7 +293,7 @@ def test_pipeline():
             "PythonScript.exe",
             "|".join(videos),
             "Vídeos -> tabela completa de informações em .csv",
-            "--benchmark_pytest"
+            "--benchmark"
         ]
         main()
 

@@ -1,5 +1,5 @@
-﻿from lazy_imports import lazy_imports
-av = lazy_imports("av")
+﻿# from lazy_imports import lazy_imports
+# av = lazy_imports("av")
 
 import os
 import hashlib
@@ -119,6 +119,7 @@ def obter_duracao_ms_mediainfo(arquivo_mediainfo):
 
 
 def obter_duracao_ms_pyav(arquivo):
+    import av
     arquivo_pyav = av.open(arquivo)
     stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
     if not stream:
@@ -144,6 +145,7 @@ def obter_duracao_ms_pyav(arquivo):
     return int(duracao * 1000) if duracao > 0 else 0
 
 def obter_cfr_vfr_pyav(arquivo, tolerancia=0.01):
+    import av
     arquivo_pyav = av.open(arquivo)
     stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
     if not stream:
@@ -242,6 +244,7 @@ def obter_fps_mediainfo(arquivo_mediainfo):
     return 0
 
 def obter_fps_pyav(arquivo, duracao_ms = None):
+    import av
     arquivo_pyav = av.open(arquivo)
     stream = next((s for s in arquivo_pyav.streams if s.type == "video"), None)
     if not stream:
@@ -262,6 +265,7 @@ def obter_fps_pyav(arquivo, duracao_ms = None):
     return 0
 
 def obter_bitrate_pyav(arquivo, tipo, duracao_ms):
+    import av
     arquivo_pyav = av.open(arquivo)
     stream = next((s for s in arquivo_pyav.streams if s.type == tipo), None)
     if not stream:
@@ -441,6 +445,7 @@ def obter_codec_audio_mediainfo(track_mediainfo):
     return codec_audio
 
 def obter_unidade_de_tempo_pyav(arquivo):
+    import av
     arquivo_pyav = av.open(arquivo)
     if not arquivo_pyav: return ""
 
@@ -457,6 +462,7 @@ def obter_unidade_de_tempo_pyav(arquivo):
 
 
 def obter_fps_nominal_pyav(arquivo):
+    import av
     arquivo_pyav = av.open(arquivo)
     if not arquivo_pyav: return ""
 

@@ -3,12 +3,7 @@
 import sys
 import os
 from pathlib import Path
-from benchmark import modo_benchmark_pytest, emitir_evento_MSTest
-
-# saida
-from saida.imprimir_lista_caminhos_txt import imprimir_lista_caminhos_txt
-from saida.imprimir_tabela_simplificada_infos_csv import imprimir_tabela_simplificada_infos_csv
-from saida.imprimir_tabela_completa_infos_csv import imprimir_tabela_completa_infos_csv
+from benchmark import modo_benchmark_pytest, emitir_evento_pytest
 
 # utilitario
 from utilitario.utilitario import coletar_arquivos_e_pasta_saida, obter_videos
@@ -17,7 +12,7 @@ def main():
     # =========================
     # MODO BENCHMARK MSTEST
     # =========================
-    emitir_evento_MSTest("PERITASK_READY")
+    emitir_evento_pytest("PERITASK_READY")
     
     # =========================
     # MODO DEBUG (usando depurador da UI do Visual Studio)
@@ -47,11 +42,14 @@ def main():
     # ROTEAMENTO
     # =========================
     if selecao_ComboBox == f"Arquivos -> lista de caminhos em .txt":
+        from saida.imprimir_lista_caminhos_txt import imprimir_lista_caminhos_txt
         imprimir_lista_caminhos_txt(arquivos, pasta_saida)
     elif selecao_ComboBox == f"Vídeos -> tabela simplificada de informações em .csv":
+        from saida.imprimir_tabela_simplificada_infos_csv import imprimir_tabela_simplificada_infos_csv
         arquivos_videos = obter_videos(arquivos)
         imprimir_tabela_simplificada_infos_csv(arquivos_videos, pasta_saida)
     elif selecao_ComboBox == f"Vídeos -> tabela completa de informações em .csv":
+        from saida.imprimir_tabela_completa_infos_csv import imprimir_tabela_completa_infos_csv
         arquivos_videos = obter_videos(arquivos)
         imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida)
 
