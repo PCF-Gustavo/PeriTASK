@@ -27,6 +27,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="benchmark.py" />
+    <Compile Include="pytest\utilitario.py" />
+    <Compile Include="pytest\test_zGenerate_Report.py" />
+    <Compile Include="pytest\test_benchmark_inicializacao.py" />
     <Compile Include="saida\imprimir_lista_caminhos_txt.py" />
     <Compile Include="saida\imprimir_tabela_completa_infos_csv.py" />
     <Compile Include="saida\imprimir_tabela_simplificada_infos_csv.py" />

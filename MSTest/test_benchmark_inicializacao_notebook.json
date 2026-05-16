@@ -6,9 +6,9 @@
   "results": {
     "statistics": {
       "time_s": {
-        "mean": 0.1876,
-        "min": 0.171,
-        "max": 0.2269
+        "mean": 0.2356,
+        "min": 0.2044,
+        "max": 0.2999
       }
     }
   }

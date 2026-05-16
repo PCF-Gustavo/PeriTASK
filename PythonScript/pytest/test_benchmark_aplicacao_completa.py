@@ -8,11 +8,10 @@ from pathlib import Path
 import psutil
 import wmi
 import threading
+from utilitario import BASE_DIR, ROOT, machine_name
 
-BASE_DIR = Path(__file__).resolve().parent
-sys.path.append(str(BASE_DIR.parent))
+sys.path.append(str(ROOT))
 from main import main
-
 
 # ===========================
 # CONFIG RUNS
@@ -21,18 +20,6 @@ WARMUP_RUNS = 1
 USED_RUNS = 9
 
 process = psutil.Process()
-
-aliases = {
-    "MA2023127403": "notebook"
-}
-
-machine_name = platform.node().strip().upper()
-machine_name = aliases.get(machine_name, machine_name.lower())
-
-
-# def get_cpu_percent():
-#     return psutil.cpu_percent(interval=None)
-
 
 def get_gpu_name():
     try:
@@ -278,7 +265,6 @@ def test_pipeline():
     system = collect_static_system_info()
 
     videos = [
-        # p.name
         str(p)
         for p in (BASE_DIR / "videos").iterdir()
         if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
@@ -327,7 +313,6 @@ def test_pipeline():
 
     # FASE 2: CPU
     for name, fn in funcs.items():
-        # nome, dados = medir_cpu_ram(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
         nome, dados = medir_cpu_ram_io(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
         resultados_cpu.append({nome: dados})
 
@@ -343,8 +328,6 @@ def test_pipeline():
 
     for item in resultados_cpu:
         for k, v in item.items():
-            # merged[k]["statistics"]["cpu"] = v["cpu"]
-            # merged[k]["statistics"]["ram"] = v["ram"]            
             merged[k]["statistics"]["cpu_peak"] = v["cpu_peak"]
             merged[k]["statistics"]["ram_peak_mb"] = v["ram_peak_mb"]
             merged[k]["statistics"]["io"] = v["io"]

@@ -1,6 +1,10 @@
 av==17.0.1
+colorama==0.4.6
+iniconfig==2.3.0
 Nuitka==4.1
+packaging==26.2
 pip==26.1.1
+pluggy==1.6.0
 psutil==7.2.2
 pymediainfo==7.0.1
 pytest==7.4.4
