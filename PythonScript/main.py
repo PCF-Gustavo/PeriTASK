@@ -10,7 +10,7 @@ from utilitario.utilitario import coletar_arquivos_e_pasta_saida, obter_videos
 
 def main():
     # =========================
-    # MODO BENCHMARK MSTEST
+    # MODO BENCHMARK INICIALIZAÇÃO
     # =========================
     emitir_evento_pytest("PERITASK_READY")
     
@@ -32,7 +32,7 @@ def main():
         arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
 
     # =========================
-    # MODO BENCHMARK PYTEST
+    # MODO BENCHMARK APLICACAO COMPLETA
     # =========================
     if modo_benchmark_pytest():
         pasta_saida = Path(os.getenv("USERPROFILE")) / "Desktop" / "PeriTASK_pytest"

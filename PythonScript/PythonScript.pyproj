@@ -33,7 +33,6 @@
     <Compile Include="saida\imprimir_lista_caminhos_txt.py" />
     <Compile Include="saida\imprimir_tabela_completa_infos_csv.py" />
     <Compile Include="saida\imprimir_tabela_simplificada_infos_csv.py" />
-    <Compile Include="lazy_imports.py" />
     <Compile Include="pytest\test_benchmark_aplicacao_completa.py" />
     <Compile Include="main.py" />
     <Compile Include="utilitario\utilitario.py" />

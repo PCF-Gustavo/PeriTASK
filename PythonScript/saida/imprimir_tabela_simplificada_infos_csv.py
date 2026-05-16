@@ -1,8 +1,6 @@
-﻿from lazy_imports import lazy_imports
-MediaInfo = lazy_imports("pymediainfo", "MediaInfo")
-
-import os
+﻿import os
 import csv
+from pymediainfo import MediaInfo
 from utilitario.utilitario import (
     calcular_sha256,
     obter_duracao_ms_mediainfo,

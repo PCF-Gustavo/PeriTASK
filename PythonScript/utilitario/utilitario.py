@@ -1,7 +1,4 @@
-﻿# from lazy_imports import lazy_imports
-# av = lazy_imports("av")
-
-import os
+﻿import os
 import hashlib
 from pathlib import Path
 
