@@ -7,4 +7,3 @@ def modo_benchmark_pytest():
 def emitir_evento_pytest(evento):
     if ("--benchmark" in sys.argv):
         print(f"BENCHMARK:{evento}", flush=True)
-        time.sleep(5)

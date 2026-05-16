@@ -3,7 +3,7 @@ import json
 import statistics
 import subprocess
 import time
-from utilitario import BASE_DIR, ROOT, EXE_PATH, machine_name
+from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH, machine_name
 
 sys.path.append(str(ROOT))
 

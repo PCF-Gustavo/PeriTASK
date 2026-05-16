@@ -1,24 +1,10 @@
 ﻿import os
 import csv
 from pymediainfo import MediaInfo
-from utilitario.utilitario import (
-    obter_duracao_ms_mediainfo,
-    obter_duracao_ms_pyav,
-    obter_fps_mediainfo,
-    obter_fps_pyav,
-    obter_cfr_vfr_pyav,
-    obter_bitrate_pyav,
-    obter_unidade_de_tempo_pyav,
-    obter_fps_nominal_pyav,
-    obter_conteiner_mediainfo,
-    obter_codec_video_mediainfo,
-    obter_codec_audio_mediainfo,
-    formatar_duracao_hh_mm_ssss,
-    formata_tamanho,
-    formata_bitrate,
-    replace_com_incremento,
-)
-
+from utilitario.mediainfo import obter_duracao_ms_mediainfo, obter_fps_mediainfo, obter_conteiner_mediainfo, obter_codec_video_mediainfo, obter_codec_audio_mediainfo
+from utilitario.pyav import obter_duracao_ms_pyav, obter_fps_pyav, obter_cfr_vfr_pyav, obter_bitrate_pyav, obter_unidade_de_tempo_pyav, obter_fps_nominal_pyav
+from utilitario.formatacao import formatar_duracao_hh_mm_ssss, formata_tamanho, formata_bitrate
+from utilitario.outros import replace_com_incremento
 
 def imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida):
     arquivo_saida = "tabela_completa_de_informacoes.csv"

@@ -1,15 +1,10 @@
 ﻿import os
 import csv
 from pymediainfo import MediaInfo
-from utilitario.utilitario import (
-    calcular_sha256,
-    obter_duracao_ms_mediainfo,
-    obter_duracao_ms_pyav,
-    obter_fps_mediainfo,
-    obter_fps_pyav,
-    formatar_duracao_hh_mm_ss,
-    replace_com_incremento,
-)
+from utilitario.mediainfo import obter_duracao_ms_mediainfo, obter_fps_mediainfo
+from utilitario.pyav import obter_duracao_ms_pyav, obter_fps_pyav
+from utilitario.formatacao import formatar_duracao_hh_mm_ss, formata_tamanho, formata_bitrate
+from utilitario.outros import calcular_sha256, replace_com_incremento
 
 
 def imprimir_tabela_simplificada_infos_csv(arquivos_videos, pasta_saida):

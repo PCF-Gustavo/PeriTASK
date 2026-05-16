@@ -8,7 +8,7 @@ from pathlib import Path
 import psutil
 import wmi
 import threading
-from utilitario import BASE_DIR, ROOT, machine_name
+from utilitario_pytest import BASE_DIR, ROOT, machine_name
 
 sys.path.append(str(ROOT))
 from main import main

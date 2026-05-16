@@ -6,7 +6,7 @@ from pathlib import Path
 from benchmark import modo_benchmark_pytest, emitir_evento_pytest
 
 # utilitario
-from utilitario.utilitario import coletar_arquivos_e_pasta_saida, obter_videos
+from utilitario.outros import coletar_arquivos_e_pasta_saida, obter_videos
 
 def main():
     # =========================

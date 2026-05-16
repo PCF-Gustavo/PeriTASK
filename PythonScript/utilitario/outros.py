@@ -1,0 +1,91 @@
+﻿import os
+import hashlib
+from pathlib import Path
+
+def coletar_arquivos_e_pasta_saida(itens):
+    arquivos = set()
+    pastas_selecionadas = []
+
+    for item in itens:
+        if not item:
+            continue
+
+        if item.startswith(("::", "shell:")):
+            continue
+
+        caminho = os.path.abspath(item)
+
+        if not os.path.exists(caminho):
+            continue
+
+        if caminho.lower().endswith(".lnk"):
+            continue
+
+        if os.path.isdir(caminho):
+            pastas_selecionadas.append(caminho)
+
+            for raiz, _, nomes in os.walk(
+                caminho,
+                followlinks=False,
+                onerror=lambda e: None
+            ):
+                for nome in nomes:
+                    arquivo = os.path.join(raiz, nome)
+                    if os.path.isfile(arquivo):
+                        arquivos.add(arquivo)
+
+        elif os.path.isfile(caminho):
+            arquivos.add(caminho)
+
+    arquivos = sorted(arquivos)
+
+    if not arquivos:
+        return [], None
+
+    if len(pastas_selecionadas) == 1 and len(itens) == 1:
+        return arquivos, os.path.dirname(pastas_selecionadas[0])
+
+    try:
+        pasta = os.path.commonpath(arquivos)
+    except ValueError:
+        return arquivos, None
+
+    if not os.path.isdir(pasta):
+        pasta = os.path.dirname(pasta)
+
+    return arquivos, pasta
+
+
+def calcular_sha256(caminho):
+    h = hashlib.sha256()
+    with open(caminho, "rb") as f:
+        for bloco in iter(lambda: f.read(8192), b""):
+            h.update(bloco)
+    return h.hexdigest()
+
+
+def replace_com_incremento(caminho_tmp, caminho_saida):
+    try:
+        os.replace(caminho_tmp, caminho_saida)
+        return caminho_saida
+    except PermissionError:
+        base, ext = os.path.splitext(caminho_saida)
+        contador = 1
+
+        while True:
+            novo_caminho = f"{base}({contador}){ext}"
+            try:
+                os.replace(caminho_tmp, novo_caminho)
+                return novo_caminho
+            except PermissionError:
+                contador += 1
+
+
+def obter_videos(arquivos):
+    extensoes_video = {
+        ".avi", ".mp4", ".mkv", ".mov", ".wmv", ".flv",
+        ".mpeg", ".mpg", ".webm", ".dav", ".m4v",
+        ".3gp", ".ts", ".vob"
+    }
+    arquivos_videos = [ arq for arq in arquivos if Path(arq).suffix.lower() in extensoes_video ]
+    return arquivos_videos

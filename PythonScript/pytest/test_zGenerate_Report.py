@@ -1,5 +1,5 @@
 ﻿import json
-from utilitario import BASE_DIR, machine_name
+from utilitario_pytest import BASE_DIR, machine_name
 
 
 def test_generate_benchmark_report():
