@@ -1,0 +1,15 @@
+{
+  "run_info": {
+    "warmup_runs": 1,
+    "used_runs": 9
+  },
+  "results": {
+    "statistics": {
+      "time_s": {
+        "mean": 0.2356,
+        "min": 0.2044,
+        "max": 0.2999
+      }
+    }
+  }
+}
