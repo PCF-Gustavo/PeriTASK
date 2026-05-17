@@ -1,4 +1,29 @@
-﻿import sys
+﻿"""
+===========================================================
+BENCHMARK: TEMPO DE INICIALIZAÇÃO DO EXE (STARTUP)
+===========================================================
+
+Este benchmark mede exclusivamente o tempo de inicialização
+do executável (PythonScript.exe), desde o início do processo
+até o momento em que a aplicação sinaliza que está pronta
+para executar tarefas (evento "PERITASK_READY").
+
+✔ O que este teste mede:
+- Tempo de criação do processo (subprocess)
+- Inicialização do runtime Python/Nuitka
+- Importação de módulos (lazy ou não)
+- Setup inicial da aplicação
+- Overhead de startup do executável
+
+📌 Interpretação:
+Este teste isola o custo de inicialização da aplicação,
+permitindo identificar gargalos de startup e impactos de:
+- Lazy imports
+- Bibliotecas pesadas
+- Estratégias de empacotamento
+"""
+
+import sys
 import json
 import statistics
 import subprocess

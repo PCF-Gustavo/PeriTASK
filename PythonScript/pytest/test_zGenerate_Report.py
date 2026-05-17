@@ -8,8 +8,12 @@ def test_generate_benchmark_report():
         BASE_DIR / f"test_benchmark_inicializacao_{machine_name}.json"
     )
 
-    test_benchmark_aplicacao_completa_path = (
-        BASE_DIR / f"test_benchmark_aplicacao_completa_{machine_name}.json"
+    test_benchmark_app_exe_path = (
+        BASE_DIR / f"test_benchmark_app_exe_{machine_name}.json"
+    )
+
+    test_benchmark_engine_python_path = (
+        BASE_DIR / f"test_benchmark_engine_python_{machine_name}.json"
     )
 
     output_path = (
@@ -24,8 +28,12 @@ def test_generate_benchmark_report():
         f"Arquivo não encontrado: {test_benchmark_inicializacao_path}"
     )
 
-    assert test_benchmark_aplicacao_completa_path.exists(), (
-        f"Arquivo não encontrado: {test_benchmark_aplicacao_completa_path}"
+    assert test_benchmark_app_exe_path.exists(), (
+        f"Arquivo não encontrado: {test_benchmark_app_exe_path}"
+    )   
+    
+    assert test_benchmark_engine_python_path.exists(), (
+        f"Arquivo não encontrado: {test_benchmark_engine_python_path}"
     )
 
     # =========================
@@ -35,8 +43,11 @@ def test_generate_benchmark_report():
     with open(test_benchmark_inicializacao_path, encoding="utf-8-sig") as f:
         inicializacao_json = json.load(f)
 
-    with open(test_benchmark_aplicacao_completa_path, encoding="utf-8-sig") as f:
-        aplicacao_json = json.load(f)
+    with open(test_benchmark_app_exe_path, encoding="utf-8-sig") as f:
+        aplicacao_completa_exe = json.load(f)
+        
+    with open(test_benchmark_engine_python_path, encoding="utf-8-sig") as f:
+        aplicacao_completa_python = json.load(f)
 
     # =========================
     # MERGE FINAL
@@ -44,7 +55,8 @@ def test_generate_benchmark_report():
 
     combined = {
         "test_benchmark_inicializacao": inicializacao_json,
-        "test_benchmark_aplicacao_completa": aplicacao_json,
+        "test_benchmark_engine_python": aplicacao_completa_python,
+        "test_benchmark_app_exe": aplicacao_completa_exe,
     }
 
     # =========================

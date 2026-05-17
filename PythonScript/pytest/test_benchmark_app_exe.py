@@ -1,4 +1,35 @@
-﻿import sys
+﻿"""
+===========================================================
+BENCHMARK: EXECUÇÃO REAL DO EXE (END-TO-END)
+===========================================================
+
+Este benchmark mede a execução completa da aplicação a partir
+do executável (PythonScript.exe), incluindo todos os custos
+reais percebidos pelo usuário.
+
+✔ O que este teste mede:
+- Tempo total de execução (startup + processamento)
+- Tempo de inicialização do Python/Nuitka
+- Carregamento de bibliotecas
+- Criação de processo (subprocess)
+- Uso real de CPU, RAM e IO do EXE
+
+✖ O que este teste NÃO isola:
+- Não separa startup de execução (mede tudo junto)
+
+📌 Interpretação:
+Este teste representa o desempenho real da ferramenta em uso
+operacional, exatamente como o usuário final experimenta.
+
+👉 Em resumo:
+Este é um benchmark da APLICAÇÃO COMPLETA.
+
+⚠️ Observação:
+Diferenças entre este teste e o benchmark Python puro indicam
+o overhead introduzido pelo empacotamento e inicialização.
+"""
+
+import sys
 import time
 import json
 import statistics
@@ -7,11 +38,9 @@ import subprocess
 from pathlib import Path
 import psutil
 import wmi
-import threading
-from utilitario_pytest import BASE_DIR, ROOT, machine_name
-
+import pytest
+from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH, machine_name
 sys.path.append(str(ROOT))
-from main import main
 
 # ===========================
 # CONFIG RUNS
@@ -19,7 +48,11 @@ from main import main
 WARMUP_RUNS = 1
 USED_RUNS = 9
 
-process = psutil.Process()
+
+if not EXE_PATH.exists():
+        pytest.skip(f"Exe não encontrado: {EXE_PATH}")
+
+
 
 def get_gpu_name():
     try:
@@ -118,7 +151,7 @@ def medir_time(nome, func, rodadas, ignorar):
 
     for _ in range(rodadas):
         inicio = time.perf_counter()
-        func()
+        subprocess.run(func(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         fim = time.perf_counter()
         runs_all.append(fim - inicio)
 
@@ -130,6 +163,73 @@ def medir_time(nome, func, rodadas, ignorar):
             "min": round(min(used_runs), 4),
             "max": round(max(used_runs), 4),
         }
+    }
+
+
+# ===========================
+# NOVO: EXECUTOR COM MONITOR
+# ===========================
+
+def executar_com_monitor(args):
+
+    proc = subprocess.Popen(
+        args,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
+
+    proc_ps = psutil.Process(proc.pid)
+
+    cpu_samples = []
+    ram_samples = []
+    read_iops_samples = []
+    write_iops_samples = []
+    read_bytes_samples = []
+    write_bytes_samples = []
+
+    prev_io = proc_ps.io_counters()
+    last_time = time.perf_counter()
+
+    while proc.poll() is None:
+        time.sleep(0.1)
+
+        try:
+            cpu_samples.append(proc_ps.cpu_percent(interval=None))
+            ram_samples.append(proc_ps.memory_info().rss / (1024 * 1024))
+
+            current_io = proc_ps.io_counters()
+        
+        except psutil.NoSuchProcess:
+            break
+        
+        current_time = time.perf_counter()
+
+        dt = current_time - last_time
+        if dt <= 0:
+            dt = 0.1
+
+        read_ops = current_io.read_count - prev_io.read_count
+        write_ops = current_io.write_count - prev_io.write_count
+
+        read_bytes = current_io.read_bytes - prev_io.read_bytes
+        write_bytes = current_io.write_bytes - prev_io.write_bytes
+
+        read_iops_samples.append(read_ops / dt)
+        write_iops_samples.append(write_ops / dt)
+
+        read_bytes_samples.append(read_bytes / dt)
+        write_bytes_samples.append(write_bytes / dt)
+
+        prev_io = current_io
+        last_time = current_time
+
+    return {
+        "cpu": cpu_samples,
+        "ram": ram_samples,
+        "read_iops": read_iops_samples,
+        "write_iops": write_iops_samples,
+        "read_bytes": read_bytes_samples,
+        "write_bytes": write_bytes_samples
     }
 
 
@@ -147,71 +247,16 @@ def medir_cpu_ram_io(nome, func, rodadas, ignorar):
 
     for _ in range(rodadas):
 
-        cpu_samples = []
-        ram_samples = []
+        stats = executar_com_monitor(func())
 
-        read_iops_samples = []
-        write_iops_samples = []
-        read_bytes_samples = []
-        write_bytes_samples = []
+        runs_cpu.append(max(stats["cpu"]) if stats["cpu"] else 0)
+        runs_ram.append(max(stats["ram"]) if stats["ram"] else 0)
 
-        executando = True
+        runs_read_iops.append(max(stats["read_iops"]) if stats["read_iops"] else 0)
+        runs_write_iops.append(max(stats["write_iops"]) if stats["write_iops"] else 0)
 
-        def monitor():
-            nonlocal executando
-
-            process.cpu_percent(interval=None)
-
-            prev_io = process.io_counters()
-            last_time = time.perf_counter()
-
-            while executando:
-                time.sleep(0.1)
-
-                cpu_samples.append(process.cpu_percent(interval=None))
-
-                ram_samples.append(
-                    process.memory_info().rss / (1024 * 1024)
-                )
-
-                current_io = process.io_counters()
-                current_time = time.perf_counter()
-
-                dt = current_time - last_time
-                if dt <= 0:
-                    dt = 0.1
-
-                read_ops = current_io.read_count - prev_io.read_count
-                write_ops = current_io.write_count - prev_io.write_count
-
-                read_bytes = current_io.read_bytes - prev_io.read_bytes
-                write_bytes = current_io.write_bytes - prev_io.write_bytes
-
-                read_iops_samples.append(read_ops / dt)
-                write_iops_samples.append(write_ops / dt)
-
-                read_bytes_samples.append(read_bytes / dt)
-                write_bytes_samples.append(write_bytes / dt)
-
-                prev_io = current_io
-                last_time = current_time
-
-        thread = threading.Thread(target=monitor)
-        thread.start()
-
-        func()
-
-        executando = False
-        thread.join()
-
-        runs_cpu.append(max(cpu_samples) if cpu_samples else 0)
-        runs_ram.append(max(ram_samples) if ram_samples else 0)
-
-        runs_read_iops.append(max(read_iops_samples) if read_iops_samples else 0)
-        runs_write_iops.append(max(write_iops_samples) if write_iops_samples else 0)
-
-        runs_read_bytes.append(max(read_bytes_samples) if read_bytes_samples else 0)
-        runs_write_bytes.append(max(write_bytes_samples) if write_bytes_samples else 0)
+        runs_read_bytes.append(max(stats["read_bytes"]) if stats["read_bytes"] else 0)
+        runs_write_bytes.append(max(stats["write_bytes"]) if stats["write_bytes"] else 0)
 
     runs_cpu = runs_cpu[ignorar:]
     runs_ram = runs_ram[ignorar:]
@@ -270,32 +315,30 @@ def test_pipeline():
         if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
     ]
 
+    # 🔥 agora retorna args, não executa
     def run_txt():
-        sys.argv = [
-            "PythonScript.exe",
+        return [
+            str(EXE_PATH),
             "|".join(videos),
             "Arquivos -> lista de caminhos em .txt",
             "--benchmark"
         ]
-        main()
 
     def run_simplificado():
-        sys.argv = [
-            "PythonScript.exe",
+        return [
+            str(EXE_PATH),
             "|".join(videos),
             "Vídeos -> tabela simplificada de informações em .csv",
             "--benchmark"
         ]
-        main()
 
     def run_completo():
-        sys.argv = [
-            "PythonScript.exe",
+        return [
+            str(EXE_PATH),
             "|".join(videos),
             "Vídeos -> tabela completa de informações em .csv",
             "--benchmark"
         ]
-        main()
 
     funcs = {
         "txt": run_txt,
@@ -343,7 +386,7 @@ def test_pipeline():
     }
 
     with open(
-        BASE_DIR / f"test_benchmark_aplicacao_completa_{machine_name}.json",
+        BASE_DIR / f"test_benchmark_app_exe_{machine_name}.json",
         "w",
         encoding="utf-8-sig"
     ) as f:

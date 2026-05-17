@@ -1,0 +1,135 @@
+﻿"""
+===========================================================
+BENCHMARK: EXECUÇÃO INTERNA (PYTHON PURO)
+===========================================================
+
+Este benchmark mede a performance do pipeline executado
+diretamente dentro do interpretador Python, chamando a função
+main().
+
+✔ O que este teste mede:
+- Tempo de execução da lógica do código Python
+
+📌 Interpretação:
+Este teste representa o desempenho "ideal" do sistema, isolando
+apenas a lógica interna. É útil para análise, otimização de
+algoritmos e comparação entre implementações.
+"""
+
+import sys
+import time
+import json
+import statistics
+from utilitario_pytest import BASE_DIR, ROOT, machine_name
+
+sys.path.append(str(ROOT))
+from main import main
+
+# ===========================
+# CONFIG RUNS
+# ===========================
+WARMUP_RUNS = 1
+USED_RUNS = 9
+
+# ===========================
+# BENCHMARK (TIME)
+# ===========================
+def medir_time(nome, func, rodadas, ignorar):
+    runs_all = []
+
+    for _ in range(rodadas):
+        inicio = time.perf_counter()
+        func()
+        fim = time.perf_counter()
+        runs_all.append(fim - inicio)
+
+    used_runs = runs_all[ignorar:]
+
+    return nome, {
+        "time_s": {
+            "mean": round(statistics.mean(used_runs), 4),
+            "min": round(min(used_runs), 4),
+            "max": round(max(used_runs), 4),
+        }
+    }
+
+
+# ===========================
+# TEST PIPELINE
+# ===========================
+def test_pipeline():
+
+    videos = [
+        str(p)
+        for p in (BASE_DIR / "videos").iterdir()
+        if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
+    ]
+
+    def run_txt():
+        sys.argv = [
+            "PythonScript.exe",
+            "|".join(videos),
+            "Arquivos -> lista de caminhos em .txt",
+            "--benchmark"
+        ]
+        main()
+
+    def run_simplificado():
+        sys.argv = [
+            "PythonScript.exe",
+            "|".join(videos),
+            "Vídeos -> tabela simplificada de informações em .csv",
+            "--benchmark"
+        ]
+        main()
+
+    def run_completo():
+        sys.argv = [
+            "PythonScript.exe",
+            "|".join(videos),
+            "Vídeos -> tabela completa de informações em .csv",
+            "--benchmark"
+        ]
+        main()
+
+    funcs = {
+        "txt": run_txt,
+        "simplificado": run_simplificado,
+        "completo": run_completo
+    }
+
+    resultados_time = []
+
+    for name, fn in funcs.items():
+        nome, dados = medir_time(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
+        resultados_time.append({nome: dados})
+
+    merged = {}
+
+    for item in resultados_time:
+        for k, v in item.items():
+            merged[k] = {
+                "statistics": {
+                    "time_s": v["time_s"]
+                }
+            }
+
+    output = {
+        "run_info": {
+            "warmup_runs": WARMUP_RUNS,
+            "used_runs": USED_RUNS
+        },
+        "results": merged,
+    }
+
+    with open(
+        BASE_DIR / f"test_benchmark_engine_python_{machine_name}.json",
+        "w",
+        encoding="utf-8-sig"
+    ) as f:
+        json.dump(output, f, indent=4)
+
+
+if __name__ == "__main__":
+    if "--run-once" in sys.argv:
+        test_pipeline()

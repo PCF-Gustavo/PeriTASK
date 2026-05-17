@@ -1,0 +1,35 @@
+﻿{
+    "run_info": {
+        "warmup_runs": 1,
+        "used_runs": 9
+    },
+    "results": {
+        "txt": {
+            "statistics": {
+                "time_s": {
+                    "mean": 0.0026,
+                    "min": 0.0022,
+                    "max": 0.0029
+                }
+            }
+        },
+        "simplificado": {
+            "statistics": {
+                "time_s": {
+                    "mean": 1.3631,
+                    "min": 1.343,
+                    "max": 1.3912
+                }
+            }
+        },
+        "completo": {
+            "statistics": {
+                "time_s": {
+                    "mean": 1.4862,
+                    "min": 1.4713,
+                    "max": 1.5065
+                }
+            }
+        }
+    }
+}
