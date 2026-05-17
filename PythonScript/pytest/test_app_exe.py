@@ -49,9 +49,17 @@ VIDEOS_ARG = "|".join(VIDEOS)
 def executar(args):
     result = subprocess.run(
         args,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
+        capture_output=True,
+        text=True
     )
+
+    
+    print("\n===== STDOUT =====\n")
+    print(result.stdout)
+
+    print("\n===== STDERR =====\n")
+    print(result.stderr)
+
 
     assert result.returncode == 0, (
         f"Execução falhou com código {result.returncode}"
@@ -110,7 +118,7 @@ def test_output_txt():
     args = [
         str(EXE_PATH),
         VIDEOS_ARG,
-        "Arquivos -> lista de caminhos em .txt",
+        "lista_caminhos_txt",
         "--benchmark"
     ]
 
@@ -126,7 +134,7 @@ def test_output_csv_simplificado():
     args = [
         str(EXE_PATH),
         VIDEOS_ARG,
-        "Vídeos -> tabela simplificada de informações em .csv",
+        "videos_csv_simplificado",
         "--benchmark"
     ]
 
@@ -142,7 +150,7 @@ def test_output_csv_completo():
     args = [
         str(EXE_PATH),
         VIDEOS_ARG,
-        "Vídeos -> tabela completa de informações em .csv",
+        "videos_csv_completo",
         "--benchmark"
     ]
 

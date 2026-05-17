@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.IO;
 using System.Windows.Controls;
+using static UserInterface.MainWindow;
 
 namespace UserInterface
 {
@@ -30,6 +31,8 @@ namespace UserInterface
             }
 
             InitializeComponent();
+            LoadConfig();
+            LoadComboBox();
         }
 
         private void Button_ok_Click(object sender, RoutedEventArgs e)
@@ -37,14 +40,14 @@ namespace UserInterface
             //Executa PythonScript
             string argumento_itens_selecionados = string.Join("|", itens_selecionados);
 
-            if (ComboBox1.SelectedItem is not ComboBoxItem item)
+            if (ComboBox1.SelectedItem is not ComboBoxOption item)
             {
                 MessageBox.Show("Selecione uma opção na ComboBox.", "PeriTASK",
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            string selecao_ComboBox = item.Content.ToString();
-            
+            string selecao_ComboBox = item.id;
+
             string argumentosPython = $"\"{argumento_itens_selecionados}\" \"{selecao_ComboBox}\"";
 
             var psi = new ProcessStartInfo
@@ -146,5 +149,33 @@ namespace UserInterface
         {
 
         }
+
+
+        private ComboBoxOptionsConfig _config;
+        private void LoadConfig()
+        {
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Compartilhado", "combo_box_options.json" );
+            var json = File.ReadAllText(path);
+
+            _config = System.Text.Json.JsonSerializer.Deserialize<ComboBoxOptionsConfig>(json);
+        }
+
+        private void LoadComboBox()
+        {
+            ComboBox1.ItemsSource = _config.combo_box_options;
+            ComboBox1.DisplayMemberPath = "label";
+        }
+    }
+
+
+    public class ComboBoxOption
+    {
+        public string id { get; set; }
+        public string label { get; set; }
+    }
+
+    public class ComboBoxOptionsConfig
+    {
+        public List<ComboBoxOption> combo_box_options { get; set; }
     }
 }

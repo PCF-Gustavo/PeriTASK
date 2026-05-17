@@ -69,7 +69,7 @@ def test_pipeline():
         sys.argv = [
             "PythonScript.exe",
             "|".join(videos),
-            "Arquivos -> lista de caminhos em .txt",
+            "lista_caminhos_txt",
             "--benchmark"
         ]
         main()
@@ -78,7 +78,7 @@ def test_pipeline():
         sys.argv = [
             "PythonScript.exe",
             "|".join(videos),
-            "Vídeos -> tabela simplificada de informações em .csv",
+            "videos_csv_simplificado",
             "--benchmark"
         ]
         main()
@@ -87,7 +87,7 @@ def test_pipeline():
         sys.argv = [
             "PythonScript.exe",
             "|".join(videos),
-            "Vídeos -> tabela completa de informações em .csv",
+            "videos_csv_completo",
             "--benchmark"
         ]
         main()

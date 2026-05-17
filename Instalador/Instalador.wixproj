@@ -91,7 +91,7 @@
 
 
 	<Target Name="BuildPython" BeforeTargets="BeforeBuild" DependsOnTargets="EnsurePythonEnv">
-	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --remove-output &quot;$(SolutionDir)PythonScript\main.py&quot;" />
+	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --include-data-dir=$(SolutionDir)Compartilhado=Compartilhado --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --remove-output &quot;$(SolutionDir)PythonScript\main.py&quot;" />
   </Target>
   <!--<Target Name="AfterBuild">
 	--><!-- Instala PeriTASK --><!--

@@ -1,0 +1,25 @@
+﻿{
+	"_comentario": [
+		"Para adicionar uma nova funcionalidade:",
+		"1. Adicione um novo item em combo_box_options",
+		"2. O campo 'id' deve ser igual ao nome da função Python",
+		"3. A função deve ser implementada em roteamento.py"
+	],
+
+	"version": "1.0",
+
+	"combo_box_options": [
+		{
+			"id": "lista_caminhos_txt",
+			"label": "Arquivos -> lista de caminhos em .txt"
+		},
+		{
+			"id": "videos_csv_simplificado",
+			"label": "Vídeos -> tabela simplificada de informações em .csv"
+		},
+		{
+			"id": "videos_csv_completo",
+			"label": "Vídeos -> tabela completa de informações em .csv"
+		}
+	]
+}

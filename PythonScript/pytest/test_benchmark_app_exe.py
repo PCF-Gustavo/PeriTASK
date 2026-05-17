@@ -320,7 +320,7 @@ def test_pipeline():
         return [
             str(EXE_PATH),
             "|".join(videos),
-            "Arquivos -> lista de caminhos em .txt",
+            "lista_caminhos_txt",
             "--benchmark"
         ]
 
@@ -328,7 +328,7 @@ def test_pipeline():
         return [
             str(EXE_PATH),
             "|".join(videos),
-            "Vídeos -> tabela simplificada de informações em .csv",
+            "videos_csv_simplificado",
             "--benchmark"
         ]
 
@@ -336,7 +336,7 @@ def test_pipeline():
         return [
             str(EXE_PATH),
             "|".join(videos),
-            "Vídeos -> tabela completa de informações em .csv",
+            "videos_csv_completo",
             "--benchmark"
         ]
 

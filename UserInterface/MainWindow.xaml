@@ -17,9 +17,6 @@
                   IsDropDownOpen="True"
                   SelectedIndex="0" SelectionChanged="ComboBox1_SelectionChanged"
                   >
-            <ComboBoxItem Content="Arquivos -> lista de caminhos em .txt" />
-            <ComboBoxItem Content="Vídeos -> tabela simplificada de informações em .csv" />
-            <ComboBoxItem Content="Vídeos -> tabela completa de informações em .csv" />
         </ComboBox>
     </Grid>
 </Window>
