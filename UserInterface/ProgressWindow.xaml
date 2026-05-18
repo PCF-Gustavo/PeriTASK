@@ -64,11 +64,11 @@
                 <!-- Botão Cancelar -->
                 <Button
                 Grid.Column="1"
-                Content="Cancelar"
+                Content="{Binding MainButtonText}"
                 Width="80"
                 Height="25"
                 VerticalAlignment="Bottom"
-                Command="{Binding CancelCommand}" />
+                Command="{Binding MainButtonCommand}" />
             </Grid>
         </Grid>
     </Grid>

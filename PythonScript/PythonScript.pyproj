@@ -27,8 +27,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="benchmark.py" />
-    <Compile Include="processador_combo_box_options.py" />
-    <Compile Include="pytest\test_app_exe2.py" />
+    <Compile Include="processador_argumento_ui.py" />
     <Compile Include="pytest\test_app_exe.py" />
     <Compile Include="pytest\test_benchmark_app_exe.py" />
     <Compile Include="pytest\utilitario_pytest.py" />

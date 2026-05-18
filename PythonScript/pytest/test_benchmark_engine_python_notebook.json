@@ -7,27 +7,27 @@
         "txt": {
             "statistics": {
                 "time_s": {
-                    "mean": 0.004,
-                    "min": 0.0029,
-                    "max": 0.0096
+                    "mean": 0.0039,
+                    "min": 0.003,
+                    "max": 0.0087
                 }
             }
         },
         "simplificado": {
             "statistics": {
                 "time_s": {
-                    "mean": 1.3403,
-                    "min": 1.3255,
-                    "max": 1.354
+                    "mean": 1.3491,
+                    "min": 1.3334,
+                    "max": 1.3611
                 }
             }
         },
         "completo": {
             "statistics": {
                 "time_s": {
-                    "mean": 1.4759,
-                    "min": 1.4489,
-                    "max": 1.5404
+                    "mean": 1.5259,
+                    "min": 1.4406,
+                    "max": 1.6592
                 }
             }
         }

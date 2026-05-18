@@ -39,9 +39,8 @@ from pathlib import Path
 import psutil
 import wmi
 import pytest
-from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH, machine_name
+from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH, machine_name, criar_argumento_ui
 sys.path.append(str(ROOT))
-from utilitario.outros import obter_videos
 
 # ===========================
 # CONFIG RUNS
@@ -310,35 +309,30 @@ def medir_cpu_ram_io(nome, func, rodadas, ignorar):
 def test_pipeline():
     system = collect_static_system_info()
 
-    videos = [
-        str(p)
-        for p in (BASE_DIR / "videos").iterdir()
-        if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
-    ]
-    videos = obter_videos(list((BASE_DIR / "videos").iterdir()))
-    videos_argumentos = "|".join(str(v) for v in videos)
+    arquivos = [str(p) for p in (BASE_DIR / "videos").iterdir() if p.is_file()]
+    arquivos_argumentos = "|".join(str(v) for v in arquivos)
 
     def run_txt():
         return [
             str(EXE_PATH),
-            videos_argumentos,
-            "lista_caminhos_txt",
+            arquivos_argumentos,
+            criar_argumento_ui("lista_caminhos_txt"),
             "--benchmark"
         ]
 
     def run_simplificado():
         return [
             str(EXE_PATH),
-            videos_argumentos,
-            "videos_csv_simplificado",
+            arquivos_argumentos,
+            criar_argumento_ui("videos_csv_simplificado"),
             "--benchmark"
         ]
 
     def run_completo():
         return [
             str(EXE_PATH),
-            videos_argumentos,
-            "videos_csv_completo",
+            arquivos_argumentos,
+            criar_argumento_ui("videos_csv_completo"),
             "--benchmark"
         ]
 
@@ -383,7 +377,7 @@ def test_pipeline():
             "used_runs": USED_RUNS
         },
         "results": merged,
-        "videos": [Path(v).name for v in videos],
+        "videos": [Path(v).name for v in arquivos],
         "system": system
     }
 

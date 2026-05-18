@@ -2,12 +2,14 @@
 
 import sys
 import os
+import json
+import base64
 from pathlib import Path
 from benchmark import modo_benchmark_pytest, emitir_evento_pytest
 
 # utilitario
 from utilitario.outros import coletar_arquivos_e_pasta_saida, obter_videos
-from processador_combo_box_options import executar_combo_box_option
+from processador_argumento_ui import executar_argumento_ui
 
 def main():
     # =========================
@@ -21,15 +23,14 @@ def main():
     if len(sys.argv) < 3:
         pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
         arquivos = obter_videos(list(Path(r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK").iterdir()))
-        selecao_ComboBox_id = f"videos_csv_completo"
-        # selecao_ComboBox_id = f"videos_csv_simplificado"
+        argumento_ui = base64.b64encode(json.dumps({"combo_box_options_id": "videos_csv_completo"}).encode("utf-8")).decode("utf-8")
         
     # =========================
     # MODO NORMAL
     # =========================
     else:
         itens_selecionados = sys.argv[1].split("|")
-        selecao_ComboBox_id = sys.argv[2]
+        argumento_ui = sys.argv[2]
         arquivos, pasta_saida = coletar_arquivos_e_pasta_saida(itens_selecionados)
 
     # =========================
@@ -42,7 +43,7 @@ def main():
     # =========================
     # ROTEAMENTO
     # =========================
-    executar_combo_box_option(selecao_ComboBox_id, arquivos, pasta_saida)    
+    executar_argumento_ui(argumento_ui, arquivos, pasta_saida)
 
 if __name__ == "__main__":
     main()

@@ -17,14 +17,27 @@ namespace UserInterface
         private Queue<double> _temposIteracao;
         private const int TAMANHO_MEDIA = 10;
 
-        public ProgressViewModel(Action cancelar)
+        private readonly Action _cancelar;
+        private readonly Action _continuar;
+
+        private bool _aguardandoContinuar;
+
+
+        public ProgressViewModel(Action cancelar, Action continuar)
         {
-            CancelCommand = new RelayCommand(cancelar);
+            _cancelar = cancelar;
+            _continuar = continuar;
+
+            MainButtonCommand = new RelayCommand(ExecutarBotaoPrincipal);
+
             _ultimoUpdate = DateTime.Now;
             _temposIteracao = new Queue<double>();
+
             Status_Python = "Fazendo configurações iniciais...";
             Progress = 0;
+            AguardandoContinuar = false;
         }
+
 
         public double Progress
         {
@@ -71,7 +84,37 @@ namespace UserInterface
             }
         }
 
-        public ICommand CancelCommand { get; set; }
+
+        public bool AguardandoContinuar
+        {
+            get => _aguardandoContinuar;
+            set
+            {
+                if (_aguardandoContinuar != value)
+                {
+                    _aguardandoContinuar = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(MainButtonText));
+                }
+            }
+        }
+        public string MainButtonText
+        {
+            get => AguardandoContinuar ? "Continuar" : "Cancelar";
+        }
+
+
+        public ICommand MainButtonCommand { get; }
+
+
+        private void ExecutarBotaoPrincipal()
+        {
+            if (AguardandoContinuar)
+                _continuar();
+            else
+                _cancelar();
+        }
+
 
         private void AtualizarTempoRestante()
         {
