@@ -41,6 +41,7 @@ import wmi
 import pytest
 from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH, machine_name
 sys.path.append(str(ROOT))
+from utilitario.outros import obter_videos
 
 # ===========================
 # CONFIG RUNS
@@ -167,7 +168,7 @@ def medir_time(nome, func, rodadas, ignorar):
 
 
 # ===========================
-# NOVO: EXECUTOR COM MONITOR
+# EXECUTOR COM MONITOR
 # ===========================
 
 def executar_com_monitor(args):
@@ -314,12 +315,13 @@ def test_pipeline():
         for p in (BASE_DIR / "videos").iterdir()
         if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
     ]
+    videos = obter_videos(list((BASE_DIR / "videos").iterdir()))
+    videos_argumentos = "|".join(str(v) for v in videos)
 
-    # 🔥 agora retorna args, não executa
     def run_txt():
         return [
             str(EXE_PATH),
-            "|".join(videos),
+            videos_argumentos,
             "lista_caminhos_txt",
             "--benchmark"
         ]
@@ -327,7 +329,7 @@ def test_pipeline():
     def run_simplificado():
         return [
             str(EXE_PATH),
-            "|".join(videos),
+            videos_argumentos,
             "videos_csv_simplificado",
             "--benchmark"
         ]
@@ -335,7 +337,7 @@ def test_pipeline():
     def run_completo():
         return [
             str(EXE_PATH),
-            "|".join(videos),
+            videos_argumentos,
             "videos_csv_completo",
             "--benchmark"
         ]

@@ -1,5 +1,4 @@
 import sys
-import time
 
 def modo_benchmark_pytest():
     return "--benchmark" in sys.argv

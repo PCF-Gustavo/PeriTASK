@@ -1,5 +1,4 @@
 ﻿import json
-import sys
 from utilitario.caminhos import obter_pasta_raiz
 
 combo_box_options_path = obter_pasta_raiz() / "Compartilhado" / "combo_box_options.json"

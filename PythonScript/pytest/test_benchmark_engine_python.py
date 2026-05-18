@@ -21,8 +21,8 @@ import time
 import json
 import statistics
 from utilitario_pytest import BASE_DIR, ROOT, machine_name
-
 sys.path.append(str(ROOT))
+from utilitario.outros import obter_videos
 from main import main
 
 # ===========================
@@ -58,17 +58,13 @@ def medir_time(nome, func, rodadas, ignorar):
 # TEST PIPELINE
 # ===========================
 def test_pipeline():
-
-    videos = [
-        str(p)
-        for p in (BASE_DIR / "videos").iterdir()
-        if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
-    ]
+    videos = obter_videos(list((BASE_DIR / "videos").iterdir()))
+    videos_argumentos = "|".join(str(v) for v in videos)
 
     def run_txt():
         sys.argv = [
             "PythonScript.exe",
-            "|".join(videos),
+            videos_argumentos,
             "lista_caminhos_txt",
             "--benchmark"
         ]
@@ -77,7 +73,7 @@ def test_pipeline():
     def run_simplificado():
         sys.argv = [
             "PythonScript.exe",
-            "|".join(videos),
+            videos_argumentos,
             "videos_csv_simplificado",
             "--benchmark"
         ]
@@ -86,7 +82,7 @@ def test_pipeline():
     def run_completo():
         sys.argv = [
             "PythonScript.exe",
-            "|".join(videos),
+            videos_argumentos,
             "videos_csv_completo",
             "--benchmark"
         ]

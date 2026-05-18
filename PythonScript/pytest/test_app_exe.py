@@ -23,8 +23,8 @@ import pytest
 import shutil
 from pathlib import Path
 from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH
-
 sys.path.append(str(ROOT))
+from utilitario.outros import obter_videos
 
 pasta_saida = Path(os.getenv("USERPROFILE")) / "Desktop" / "PeriTASK_pytest"
 if pasta_saida.exists(): shutil.rmtree(pasta_saida)
@@ -33,13 +33,8 @@ if not EXE_PATH.exists():
     pytest.skip(f"Exe não encontrado: {EXE_PATH}")
 
 
-VIDEOS = [
-    str(p)
-    for p in (BASE_DIR / "videos").iterdir()
-    if p.is_file() and p.suffix.lower() in {".mp4", ".mkv", ".mov", ".avi", ".dav"}
-]
-
-VIDEOS_ARG = "|".join(VIDEOS)
+videos = obter_videos(list((BASE_DIR / "videos").iterdir()))
+videos_argumentos = "|".join(str(v) for v in videos)
 
 
 # ===========================
@@ -117,7 +112,7 @@ def test_output_txt():
 
     args = [
         str(EXE_PATH),
-        VIDEOS_ARG,
+        videos_argumentos,
         "lista_caminhos_txt",
         "--benchmark"
     ]
@@ -133,7 +128,7 @@ def test_output_csv_simplificado():
 
     args = [
         str(EXE_PATH),
-        VIDEOS_ARG,
+        videos_argumentos,
         "videos_csv_simplificado",
         "--benchmark"
     ]
@@ -149,7 +144,7 @@ def test_output_csv_completo():
 
     args = [
         str(EXE_PATH),
-        VIDEOS_ARG,
+        videos_argumentos,
         "videos_csv_completo",
         "--benchmark"
     ]
