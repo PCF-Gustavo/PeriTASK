@@ -20,7 +20,8 @@ import sys
 import time
 import json
 import statistics
-from utilitario_pytest import BASE_DIR, ROOT, machine_name, criar_argumento_ui
+from pathlib import Path
+from utilitario_pytest import BASE_DIR, ROOT, machine_name, criar_argumento_ui, obter_combo_box_options_ids
 sys.path.append(str(ROOT))
 from main import main
 
@@ -29,6 +30,46 @@ from main import main
 # ===========================
 WARMUP_RUNS = 1
 USED_RUNS = 9
+
+# ===========================
+# INPUTS FIXOS
+# ===========================
+
+arquivos = [str(p) for p in (BASE_DIR / "videos").iterdir() if p.is_file()]
+arquivos_argumentos = "|".join(arquivos)
+
+assert arquivos, f"Nenhum arquivo encontrado em: {BASE_DIR / 'videos'}"
+
+
+# ===========================
+# ARGUMENTOS GENÉRICOS
+# ===========================
+
+def criar_argv_funcao(func_id):
+    return [
+        "PythonScript.exe",
+        arquivos_argumentos,
+        criar_argumento_ui(func_id),
+        "--benchmark",
+    ]
+
+
+def executar_main_com_argv(argv):
+    argv_original = sys.argv[:]
+
+    try:
+        sys.argv = argv
+        main()
+    finally:
+        sys.argv = argv_original
+
+
+def obter_funcoes_benchmark():
+    return {
+        func_id: (lambda fid=func_id: executar_main_com_argv(criar_argv_funcao(fid)))
+        for func_id in obter_combo_box_options_ids()
+    }
+
 
 # ===========================
 # BENCHMARK (TIME)
@@ -53,50 +94,26 @@ def medir_time(nome, func, rodadas, ignorar):
     }
 
 
+
 # ===========================
 # TEST PIPELINE
 # ===========================
+
 def test_pipeline():
-    arquivos = [str(p) for p in (BASE_DIR / "videos").iterdir() if p.is_file()]
-    arquivos_argumentos = "|".join(str(v) for v in arquivos)
+    funcs = obter_funcoes_benchmark()
 
-    def run_txt():
-        sys.argv = [
-            "PythonScript.exe",
-            arquivos_argumentos,
-            criar_argumento_ui("lista_caminhos_txt"),
-            "--benchmark"
-        ]
-        main()
-
-    def run_simplificado():
-        sys.argv = [
-            "PythonScript.exe",
-            arquivos_argumentos,
-            criar_argumento_ui("videos_csv_simplificado"),
-            "--benchmark"
-        ]
-        main()
-
-    def run_completo():
-        sys.argv = [
-            "PythonScript.exe",
-            arquivos_argumentos,
-            criar_argumento_ui("videos_csv_completo"),
-            "--benchmark"
-        ]
-        main()
-
-    funcs = {
-        "txt": run_txt,
-        "simplificado": run_simplificado,
-        "completo": run_completo
-    }
+    assert funcs, "Nenhuma função encontrada em combo_box_options.json"
 
     resultados_time = []
 
     for name, fn in funcs.items():
-        nome, dados = medir_time(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
+        nome, dados = medir_time(
+            name,
+            fn,
+            WARMUP_RUNS + USED_RUNS,
+            WARMUP_RUNS,
+        )
+
         resultados_time.append({nome: dados})
 
     merged = {}
@@ -114,15 +131,19 @@ def test_pipeline():
             "warmup_runs": WARMUP_RUNS,
             "used_runs": USED_RUNS
         },
-        "results": merged,
+        "results": merged
     }
 
+    output_path = BASE_DIR / f"test_benchmark_engine_python_{machine_name}.json"
+
     with open(
-        BASE_DIR / f"test_benchmark_engine_python_{machine_name}.json",
+        output_path,
         "w",
         encoding="utf-8-sig"
     ) as f:
-        json.dump(output, f, indent=4)
+        json.dump(output, f, indent=4, ensure_ascii=False)
+
+    assert output_path.exists(), f"Falha ao gerar arquivo: {output_path}"
 
 
 if __name__ == "__main__":

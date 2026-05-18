@@ -1,4 +1,5 @@
 ﻿import os
+from utilitario.outros import replace_com_incremento
 
 def imprimir_lista_caminhos_txt(arquivos, pasta_saida):
     arquivo_saida = "caminho_dos_arquivos.txt"
@@ -23,4 +24,4 @@ def imprimir_lista_caminhos_txt(arquivos, pasta_saida):
                 print(f"PROGRESS:{progresso}", flush=True)
                 ultimo_progresso = progresso
 
-    os.replace(caminho_tmp, caminho_saida)
+    replace_com_incremento(caminho_tmp, caminho_saida)

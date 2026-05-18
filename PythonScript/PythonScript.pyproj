@@ -30,6 +30,7 @@
     <Compile Include="processador_argumento_ui.py" />
     <Compile Include="pytest\test_app_exe.py" />
     <Compile Include="pytest\test_benchmark_app_exe.py" />
+    <Compile Include="pytest\test_benchmark_engine_python.py" />
     <Compile Include="pytest\utilitario_pytest.py" />
     <Compile Include="pytest\test_zGenerate_Report.py" />
     <Compile Include="pytest\test_benchmark_inicializacao.py" />
@@ -37,7 +38,6 @@
     <Compile Include="saida\imprimir_lista_caminhos_txt.py" />
     <Compile Include="saida\imprimir_tabela_completa_infos_csv.py" />
     <Compile Include="saida\imprimir_tabela_simplificada_infos_csv.py" />
-    <Compile Include="pytest\test_benchmark_engine_python.py" />
     <Compile Include="main.py" />
     <Compile Include="saida\__init__.py" />
     <Compile Include="utilitario\mediainfo.py" />

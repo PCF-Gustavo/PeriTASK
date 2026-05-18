@@ -39,7 +39,7 @@ if not EXE_PATH.exists():
 # ===========================
 
 arquivos = [str(p) for p in (BASE_DIR / "videos").iterdir() if p.is_file()]
-arquivos_argumentos = "|".join(str(v) for v in arquivos)
+arquivos_argumentos = "|".join(arquivos)
 
 # ===========================
 # HELPERS

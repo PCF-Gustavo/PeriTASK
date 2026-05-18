@@ -39,7 +39,7 @@ from pathlib import Path
 import psutil
 import wmi
 import pytest
-from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH, machine_name, criar_argumento_ui
+from utilitario_pytest import BASE_DIR, ROOT, EXE_PATH, machine_name, criar_argumento_ui, obter_combo_box_options_ids
 sys.path.append(str(ROOT))
 
 # ===========================
@@ -52,7 +52,20 @@ USED_RUNS = 9
 if not EXE_PATH.exists():
         pytest.skip(f"Exe não encontrado: {EXE_PATH}")
 
+        
+# ===========================
+# INPUTS FIXOS
+# ===========================
 
+arquivos = [str(p) for p in (BASE_DIR / "videos").iterdir() if p.is_file()]
+arquivos_argumentos = "|".join(arquivos)
+
+assert arquivos, f"Nenhum arquivo encontrado em: {BASE_DIR / 'videos'}"
+
+
+# ===========================
+# SISTEMA
+# ===========================
 
 def get_gpu_name():
     try:
@@ -141,29 +154,27 @@ def collect_static_system_info():
         "machine_alias": machine_name
     }
 
-
 # ===========================
-# BENCHMARK (TIME)
+# ARGUMENTOS GENÉRICOS
 # ===========================
 
-def medir_time(nome, func, rodadas, ignorar):
-    runs_all = []
+def criar_args_funcao(func_id):
+    return [
+        str(EXE_PATH),
+        arquivos_argumentos,
+        criar_argumento_ui(func_id),
+        "--benchmark",
+    ]
 
-    for _ in range(rodadas):
-        inicio = time.perf_counter()
-        subprocess.run(func(), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        fim = time.perf_counter()
-        runs_all.append(fim - inicio)
 
-    used_runs = runs_all[ignorar:]
-
-    return nome, {
-        "time_s": {
-            "mean": round(statistics.mean(used_runs), 4),
-            "min": round(min(used_runs), 4),
-            "max": round(max(used_runs), 4),
-        }
+def obter_funcoes_benchmark():
+    return {
+        func_id: (lambda fid=func_id: criar_args_funcao(fid))
+        for func_id in obter_combo_box_options_ids()
     }
+
+
+
 
 
 # ===========================
@@ -232,9 +243,43 @@ def executar_com_monitor(args):
         "write_bytes": write_bytes_samples
     }
 
+# ===========================
+# BENCHMARK (TIME)
+# ===========================
+
+def medir_time(nome, func, rodadas, ignorar):
+    runs_all = []
+
+    for _ in range(rodadas):
+        inicio = time.perf_counter()
+
+        result = subprocess.run(
+            func(),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=300
+        )
+
+        fim = time.perf_counter()
+
+        assert result.returncode == 0, (
+            f"Execução falhou em '{nome}' com código {result.returncode}"
+        )
+
+        runs_all.append(fim - inicio)
+
+    used_runs = runs_all[ignorar:]
+
+    return nome, {
+        "time_s": {
+            "mean": round(statistics.mean(used_runs), 4),
+            "min": round(min(used_runs), 4),
+            "max": round(max(used_runs), 4),
+        }
+    }
 
 # ===========================
-# BENCHMARK
+# BENCHMARK (CPU, RAM, IO)
 # ===========================
 
 def medir_cpu_ram_io(nome, func, rodadas, ignorar):
@@ -309,50 +354,33 @@ def medir_cpu_ram_io(nome, func, rodadas, ignorar):
 def test_pipeline():
     system = collect_static_system_info()
 
-    arquivos = [str(p) for p in (BASE_DIR / "videos").iterdir() if p.is_file()]
-    arquivos_argumentos = "|".join(str(v) for v in arquivos)
+    funcs = obter_funcoes_benchmark()
 
-    def run_txt():
-        return [
-            str(EXE_PATH),
-            arquivos_argumentos,
-            criar_argumento_ui("lista_caminhos_txt"),
-            "--benchmark"
-        ]
-
-    def run_simplificado():
-        return [
-            str(EXE_PATH),
-            arquivos_argumentos,
-            criar_argumento_ui("videos_csv_simplificado"),
-            "--benchmark"
-        ]
-
-    def run_completo():
-        return [
-            str(EXE_PATH),
-            arquivos_argumentos,
-            criar_argumento_ui("videos_csv_completo"),
-            "--benchmark"
-        ]
-
-    funcs = {
-        "txt": run_txt,
-        "simplificado": run_simplificado,
-        "completo": run_completo
-    }
+    assert funcs, "Nenhuma função encontrada em combo_box_options.json"
 
     resultados_time = []
     resultados_cpu = []
 
     # FASE 1: TIME
     for name, fn in funcs.items():
-        nome, dados = medir_time(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
+        nome, dados = medir_time(
+            name,
+            fn,
+            WARMUP_RUNS + USED_RUNS,
+            WARMUP_RUNS,
+        )
+
         resultados_time.append({nome: dados})
 
-    # FASE 2: CPU
+    # FASE 2: CPU / RAM / IO
     for name, fn in funcs.items():
-        nome, dados = medir_cpu_ram_io(name, fn, WARMUP_RUNS+USED_RUNS, WARMUP_RUNS)
+        nome, dados = medir_cpu_ram_io(
+            name,
+            fn,
+            WARMUP_RUNS + USED_RUNS,
+            WARMUP_RUNS,
+        )
+
         resultados_cpu.append({nome: dados})
 
     merged = {}
@@ -361,7 +389,7 @@ def test_pipeline():
         for k, v in item.items():
             merged[k] = {
                 "statistics": {
-                    "time_s": v["time_s"]
+                    "time_s": v["time_s"],
                 }
             }
 
@@ -374,19 +402,24 @@ def test_pipeline():
     output = {
         "run_info": {
             "warmup_runs": WARMUP_RUNS,
-            "used_runs": USED_RUNS
+            "used_runs": USED_RUNS,
         },
         "results": merged,
-        "videos": [Path(v).name for v in arquivos],
-        "system": system
+        "input_files": [Path(v).name for v in arquivos],
+        "system": system,
     }
 
+    output_path = BASE_DIR / f"test_benchmark_app_exe_{machine_name}.json"
+
     with open(
-        BASE_DIR / f"test_benchmark_app_exe_{machine_name}.json",
+        output_path,
         "w",
-        encoding="utf-8-sig"
+        encoding="utf-8-sig",
     ) as f:
-        json.dump(output, f, indent=4)
+        json.dump(output, f, indent=4, ensure_ascii=False)
+
+    assert output_path.exists(), f"Falha ao gerar arquivo: {output_path}"
+
 
 
 if __name__ == "__main__":

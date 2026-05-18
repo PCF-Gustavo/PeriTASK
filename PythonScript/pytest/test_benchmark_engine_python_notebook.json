@@ -4,32 +4,50 @@
         "used_runs": 9
     },
     "results": {
-        "txt": {
+        "lista_caminhos_txt": {
             "statistics": {
                 "time_s": {
-                    "mean": 0.0039,
+                    "mean": 0.0067,
                     "min": 0.003,
-                    "max": 0.0087
+                    "max": 0.0247
                 }
             }
         },
-        "simplificado": {
+        "videos_csv_simplificado": {
             "statistics": {
                 "time_s": {
-                    "mean": 1.3491,
-                    "min": 1.3334,
-                    "max": 1.3611
+                    "mean": 1.3548,
+                    "min": 1.3475,
+                    "max": 1.365
                 }
             }
         },
-        "completo": {
+        "videos_csv_completo": {
             "statistics": {
                 "time_s": {
-                    "mean": 1.5259,
-                    "min": 1.4406,
-                    "max": 1.6592
+                    "mean": 1.4813,
+                    "min": 1.4523,
+                    "max": 1.5019
+                }
+            }
+        },
+        "teste_id": {
+            "statistics": {
+                "time_s": {
+                    "mean": 0.0018,
+                    "min": 0.0014,
+                    "max": 0.003
                 }
             }
         }
-    }
+    },
+    "input_files": [
+        "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+        "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv",
+        "MHDX_ch5_main_20210913112600_20210913112900.dav",
+        "MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav",
+        "video_corrompido.mp4",
+        "video_original.mp4",
+        "video_whatsapp.mp4"
+    ]
 }
