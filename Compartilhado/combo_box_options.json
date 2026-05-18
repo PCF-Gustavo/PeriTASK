@@ -20,6 +20,10 @@
 		{
 			"id": "videos_csv_completo",
 			"label": "Vídeos -> tabela completa de informações em .csv"
+		},
+		{
+			"id": "teste_id",
+			"label": "teste"
 		}
 	]
 }

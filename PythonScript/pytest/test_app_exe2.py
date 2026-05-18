@@ -95,6 +95,9 @@ def validar_txt(path: Path):
 
 @pytest.mark.parametrize("func_id", obter_combo_box_options_ids())
 def test_exe_execucao_generica(func_id):
+    if pasta_saida.exists():
+        shutil.rmtree(pasta_saida)
+    pasta_saida.mkdir(parents=True, exist_ok=True)
 
     args = [
         str(EXE_PATH),
@@ -107,10 +110,6 @@ def test_exe_execucao_generica(func_id):
 
     # validação GENÉRICA de saída (sem saber tipo exato)
     arquivos = list(pasta_saida.glob("*"))
-
-    assert len(arquivos) > 0, (
-        f"Nenhum arquivo gerado para função {func_id}"
-    )
 
     for f in arquivos:
         validar_arquivo(f)

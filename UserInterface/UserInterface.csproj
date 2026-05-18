@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\Compartilhado\combo_box_options.json" Link="combo_box_options.json">
+    <Content Include="..\Compartilhado\combo_box_options.json" Link="Compartilhado\combo_box_options.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

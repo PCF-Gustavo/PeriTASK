@@ -22,7 +22,8 @@ def executar_combo_box_option(selecao_id,arquivos,pasta_saida,):
         import roteamento
         funcao = getattr(roteamento, selecao_id,)
 
-    except Exception as e:
-        raise ImportError(f"Erro ao carregar rota " f"'{selecao_id}': {e}")
+    except AttributeError:
+        raise NotImplementedError(f"Função '{selecao_id}' ainda não implementada em roteamento.py"
+    )
 
     funcao(arquivos, pasta_saida)

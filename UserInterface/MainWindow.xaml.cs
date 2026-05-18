@@ -122,7 +122,7 @@ namespace UserInterface
                 {
                     progressWindow.Dispatcher.Invoke(() =>
                     {
-                        progressViewModel.Status_Python = "Erro: " + e.Data;
+                        progressViewModel.Status_Python = e.Data;
                     });
                 }
             };
@@ -132,8 +132,15 @@ namespace UserInterface
             {
                 progressWindow.Dispatcher.Invoke(() =>
                 {
-                    progressViewModel.Progress = 100; // garante barra cheia
-                    progressWindow.Close();
+                    if (process.ExitCode == 0)
+                    {
+                        progressViewModel.Progress = 100; // garante barra cheia
+                        progressWindow.Close();
+                    }
+                    //else
+                    //{
+                    //    progressViewModel.Status_Python = "Execução finalizada com erro.";
+                    //}
                 });
             };
 
