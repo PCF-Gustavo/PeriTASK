@@ -20,17 +20,9 @@ namespace UserInterface
             // Pega argumentos da linha de comando
             itens_selecionados = Environment.GetCommandLineArgs().Skip(1).ToList();
 
-            // Executa apenas se não estiver no debug
-            if (!Debugger.IsAttached)
-            {
-                if (itens_selecionados == null || itens_selecionados.Count == 0)
-                {
-                    MessageBox.Show("Nenhum arquivo recebido.", "PeriTASK", 
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    Application.Current.Shutdown();
-                    return;
-                }
-            }
+            if (!janela_principal.ValidarItensSelecionados(itens_selecionados))
+                return;
+
 
             InitializeComponent();
             ConfigurarComboBox();
@@ -70,11 +62,9 @@ namespace UserInterface
         }
 
 
-        private ComboBoxOptionsConfig _config;
-
         private void ConfigurarComboBox()
         {
-            _config = ComboBoxOptionsUI.Configurar(ComboBox1);
+            ComboBoxOptionsUI.Configurar(ComboBox1);
         }
 
         private void RenderUI(ComboBoxOption option)
