@@ -1,52 +1,30 @@
-﻿import os
-import sys
-import subprocess
-from pathlib import Path
-from utilitario_pytest import ROOT
+﻿"""
+===========================================================
+TESTE DE COMUNICAÇÃO UI -> PYTHONSCRIPT
+===========================================================
+Executa UserInterface.exe em modo CLI/benchmark, sem abrir janela,
+e valida que a UI consegue chamar o PythonScript e entrar na rota correta.
+"""
 
-sys.path.append(str(ROOT))
-from processador_argumento_ui import carregar_combo_box_options
+from utilitario_pytest import (
+    criar_args_ui_benchmark,
+    criar_arquivo_txt_temporario_para_ui,
+    executar_subprocess,
+    obter_combo_box_options_ids,
+)
 
 
 def test_comunicacao_UI_PythonScript():
-    ui_exe = (
-        Path(__file__).resolve().parents[2]
-        / "UserInterface"
-        / "bin"
-        / "x64"
-        / "Debug"
-        / "net8.0-windows"
-        / "UserInterface.exe"
-    )
-
-    data = carregar_combo_box_options()
-
-    rotas = [item["id"] for item in data["combo_box_options"]]
-
+    rotas = obter_combo_box_options_ids()
     assert rotas, "Nenhuma rota encontrada no combo_box_options.json"
 
-    pasta_teste = Path(os.getenv("TEMP")) / "PeriTASK_UI_CLI_Test"
-    pasta_teste.mkdir(parents=True, exist_ok=True)
-
-    arquivo_teste = pasta_teste / "arquivo_teste.txt"
-    arquivo_teste.write_text(
-        "arquivo usado no teste de integração UI -> Python",
-        encoding="utf-8"
-    )
+    arquivo_teste = criar_arquivo_txt_temporario_para_ui()
 
     falhas = []
 
     for rota in rotas:
-        result = subprocess.run(
-            [
-                str(ui_exe),
-                "--benchmark",
-                "--route",
-                rota,
-                str(arquivo_teste),
-            ],
-            capture_output=True,
-            text=True,
+        result = executar_subprocess(
+            criar_args_ui_benchmark(rota, arquivo_teste),
             timeout=60,
         )
 
