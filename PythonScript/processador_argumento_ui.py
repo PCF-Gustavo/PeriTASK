@@ -1,5 +1,6 @@
 ﻿import json
 from utilitario.caminhos import obter_pasta_raiz
+from benchmark import emitir_evento_pytest
 import base64
 import binascii
 
@@ -47,6 +48,7 @@ def executar_argumento_ui(argumento_ui, arquivos, pasta_saida):
     if funcao is None:
         raise NotImplementedError(f"Função '{selecao_id}' ainda não implementada em roteamento.py")
 
+    emitir_evento_pytest(f"ROTA:{selecao_id}")
 
     # -------------------------
     # executa função final

@@ -173,10 +173,6 @@ def obter_funcoes_benchmark():
         for func_id in obter_combo_box_options_ids()
     }
 
-
-
-
-
 # ===========================
 # EXECUTOR COM MONITOR
 # ===========================

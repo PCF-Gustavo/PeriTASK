@@ -7,47 +7,38 @@
         "lista_caminhos_txt": {
             "statistics": {
                 "time_s": {
-                    "mean": 0.0067,
-                    "min": 0.003,
-                    "max": 0.0247
+                    "mean": 0.0061,
+                    "min": 0.005,
+                    "max": 0.0074
                 }
             }
         },
         "videos_csv_simplificado": {
             "statistics": {
                 "time_s": {
-                    "mean": 1.3548,
-                    "min": 1.3475,
-                    "max": 1.365
+                    "mean": 1.5273,
+                    "min": 1.4965,
+                    "max": 1.566
                 }
             }
         },
         "videos_csv_completo": {
             "statistics": {
                 "time_s": {
-                    "mean": 1.4813,
-                    "min": 1.4523,
-                    "max": 1.5019
+                    "mean": 1.6505,
+                    "min": 1.6293,
+                    "max": 1.673
                 }
             }
         },
         "teste_id": {
             "statistics": {
                 "time_s": {
-                    "mean": 0.0018,
-                    "min": 0.0014,
-                    "max": 0.003
+                    "mean": 0.0019,
+                    "min": 0.0018,
+                    "max": 0.0021
                 }
             }
         }
-    },
-    "input_files": [
-        "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
-        "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv",
-        "MHDX_ch5_main_20210913112600_20210913112900.dav",
-        "MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav",
-        "video_corrompido.mp4",
-        "video_original.mp4",
-        "video_whatsapp.mp4"
-    ]
+    }
 }
