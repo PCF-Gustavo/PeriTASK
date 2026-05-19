@@ -65,17 +65,17 @@
       <Link>combo_box_options.json</Link>
     </Content>
     <Content Include="pytest.ini" />
-    <Content Include="pytest\videos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv" />
-    <Content Include="pytest\videos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv" />
-    <Content Include="pytest\videos\MHDX_ch5_main_20210913112600_20210913112900.dav" />
-    <Content Include="pytest\videos\MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav" />
-    <Content Include="pytest\videos\video_corrompido.mp4" />
-    <Content Include="pytest\videos\video_original.mp4" />
-    <Content Include="pytest\videos\video_whatsapp.mp4" />
+    <Content Include="pytest\recursos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv" />
+    <Content Include="pytest\recursos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv" />
+    <Content Include="pytest\recursos\MHDX_ch5_main_20210913112600_20210913112900.dav" />
+    <Content Include="pytest\recursos\MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav" />
+    <Content Include="pytest\recursos\video_corrompido.mp4" />
+    <Content Include="pytest\recursos\video_original.mp4" />
+    <Content Include="pytest\recursos\video_whatsapp.mp4" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="pytest\videos\" />
+    <Folder Include="pytest\recursos\" />
     <Folder Include="utilitario\" />
     <Folder Include="saida\" />
     <Folder Include="pytest\" />

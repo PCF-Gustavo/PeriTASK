@@ -18,7 +18,7 @@ from utilitario_pytest import (
     exigir_pythonscript_exe,
     medir_cpu_ram_io,
     medir_time_subprocess,
-    obter_arquivos_video_teste,
+    obter_arquivos_recursos_teste,
     obter_combo_box_options_ids,
 )
 
@@ -98,7 +98,7 @@ def test_pipeline():
             merged[k]["statistics"]["ram_peak_mb"] = v["ram_peak_mb"]
             merged[k]["statistics"]["io"] = v["io"]
 
-    arquivos = obter_arquivos_video_teste()
+    arquivos = obter_arquivos_recursos_teste()
 
     output = {
         "run_info": {

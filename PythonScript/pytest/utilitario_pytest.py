@@ -73,15 +73,15 @@ def criar_argumento_ui(combo_box_options_id, controls=None):
 # INPUTS DE TESTE
 # =========================
 
-def obter_arquivos_video_teste():
-    pasta_videos = BASE_DIR / "videos"
-    arquivos = [str(p) for p in pasta_videos.iterdir() if p.is_file()]
-    assert arquivos, f"Nenhum arquivo encontrado em: {pasta_videos}"
+def obter_arquivos_recursos_teste():
+    pasta_recursos = BASE_DIR / "recursos"
+    arquivos = [str(p) for p in pasta_recursos.iterdir() if p.is_file()]
+    assert arquivos, f"Nenhum arquivo encontrado em: {pasta_recursos}"
     return arquivos
 
 
 def obter_arquivos_argumentos_teste():
-    return "|".join(obter_arquivos_video_teste())
+    return "|".join(obter_arquivos_recursos_teste())
 
 
 def criar_arquivo_txt_temporario_para_ui():
