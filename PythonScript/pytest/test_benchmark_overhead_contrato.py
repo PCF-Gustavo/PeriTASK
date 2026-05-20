@@ -23,12 +23,12 @@ from utilitario_pytest import (
     BASE_DIR,
     ROOT,
     machine_name,
-    obter_combo_box_options_ids,
+    obter_catalogo_de_comandos_ids,
 )
 
 sys.path.append(str(ROOT))
 
-from processador_argumento_ui import executar_argumento_ui
+from utilitario.executor_comando import executar_argumento_ui
 import comandos
 
 
@@ -44,7 +44,7 @@ USED_RUNS = 50
 # ===========================
 def criar_argumento_ui_base64(comando_id, controls=None):
     payload = {
-        "combo_box_options_id": comando_id,
+        "comando_id": comando_id,
         "controls": controls or {},
     }
 
@@ -82,9 +82,9 @@ def medir_overhead_medio(func, rodadas, ignorar):
 # BENCHMARK
 # ===========================
 def test_benchmark_overhead_contrato(monkeypatch):
-    comandos_ids = obter_combo_box_options_ids()
+    comandos_ids = obter_catalogo_de_comandos_ids()
 
-    assert comandos_ids, "Nenhum comando encontrado no combo_box_options.json"
+    assert comandos_ids, "Nenhum comando encontrado no catalogo_de_comandos.json"
 
     pasta_saida = BASE_DIR
     arquivos = []

@@ -4,11 +4,11 @@ namespace UserInterface
 {
     public static class ComboBoxOptionsUI
     {
-        public static ComboBoxOptionsConfig Configurar(ComboBox comboBox)
+        public static ComandosConfig Configurar(ComboBox comboBox)
         {
-            ComboBoxOptionsConfig config = ComboBoxOptions.Carregar();
+            ComandosConfig config = ComboBoxOptions.Carregar();
 
-            comboBox.ItemsSource = config.combo_box_options;
+            comboBox.ItemsSource = config.comandos;
             comboBox.DisplayMemberPath = "label";
 
             return config;

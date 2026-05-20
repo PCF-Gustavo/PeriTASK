@@ -26,13 +26,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="benchmark.py" />
+    <Compile Include="utilitario\benchmark.py" />
     <Compile Include="comandos\teste_id.py" />
     <Compile Include="comandos\lista_caminhos_txt.py" />
     <Compile Include="comandos\videos_csv_completo.py" />
     <Compile Include="comandos\videos_csv_simplificado.py" />
     <Compile Include="comandos\__init__.py" />
-    <Compile Include="processador_argumento_ui.py" />
+    <Compile Include="utilitario\executor_comando.py" />
     <Compile Include="pytest\conftest.py" />
     <Compile Include="pytest\test_benchmark_comunicacao_UI_PythonScript.py" />
     <Compile Include="pytest\test_benchmark_overhead_contrato.py" />
@@ -63,8 +63,8 @@
     </Interpreter>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Compartilhado\combo_box_options.json">
-      <Link>combo_box_options.json</Link>
+    <Content Include="..\Compartilhado\catalogo_de_comandos.json">
+      <Link>catalogo_de_comandos.json</Link>
     </Content>
     <Content Include="pytest.ini" />
     <Content Include="pytest\recursos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv" />

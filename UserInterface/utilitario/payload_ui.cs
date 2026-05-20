@@ -14,7 +14,7 @@ namespace UserInterface
         {
             var payload = new
             {
-                combo_box_options_id = comboBoxOptionsId,
+                comando_id = comboBoxOptionsId,
                 controls = controls
             };
 
@@ -29,7 +29,7 @@ namespace UserInterface
         {
             var payload = new
             {
-                combo_box_options_id = rota,
+                comando_id = rota,
                 controls = new { }
             };
 

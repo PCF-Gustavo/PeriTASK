@@ -39,12 +39,12 @@ namespace UserInterface
                 string comboPath = Path.Combine(
                     solutionRoot,
                     "Compartilhado",
-                    "combo_box_options.json"
+                    "catalogo_de_comandos.json"
                 );
 
                 if (!File.Exists(comboPath))
                 {
-                    Console.WriteLine($"BENCHMARK:ERRO:combo_box_options.json não encontrado: {comboPath}");
+                    Console.WriteLine($"BENCHMARK:ERRO:catalogo_de_comandos.json não encontrado: {comboPath}");
                     return 4;
                 }
 
@@ -112,7 +112,7 @@ namespace UserInterface
             using var doc = JsonDocument.Parse(json);
 
             var opcoes = doc.RootElement
-                .GetProperty("combo_box_options")
+                .GetProperty("comandos")
                 .EnumerateArray();
 
             bool existe = opcoes.Any(item =>
@@ -122,7 +122,7 @@ namespace UserInterface
 
             if (!existe)
                 throw new InvalidOperationException(
-                    $"Rota não encontrada no combo_box_options.json: {rota}"
+                    $"Rota não encontrada no catalogo_de_comandos.json: {rota}"
                 );
         }
     }

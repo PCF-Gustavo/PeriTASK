@@ -27,7 +27,7 @@ PASTA_TEMP_UI_CLI = Path(os.getenv("TEMP")) / "PeriTASK_UI_CLI_Test"
 
 sys.path.append(str(ROOT))
 
-from processador_argumento_ui import carregar_combo_box_options
+from utilitario.executor_comando import carregar_catalogo_de_comandos
 
 
 # =========================
@@ -48,20 +48,20 @@ machine_name = get_machine_name()
 
 
 # =========================
-# COMBO BOX / UI PAYLOAD
+# CATÁLOGO DE COMANDOS
 # =========================
 
-def obter_combo_box_options_ids():
-    data = carregar_combo_box_options()
-    return [item["id"] for item in data["combo_box_options"]]
+def obter_catalogo_de_comandos_ids():
+    catalogo_de_comandos = carregar_catalogo_de_comandos()
+    return [comando["id"] for comando in catalogo_de_comandos["comandos"]]
 
 
-def criar_argumento_ui(combo_box_options_id, controls=None):
+def criar_argumento_ui(comando_id, controls=None):
     if controls is None:
         controls = {}
 
     payload = {
-        "combo_box_options_id": combo_box_options_id,
+        "comando_id": comando_id,
         "controls": controls,
     }
 

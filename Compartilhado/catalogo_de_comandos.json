@@ -1,14 +1,14 @@
 ﻿{
 	"_comentario": [
 		"Para adicionar uma nova funcionalidade:",
-		"1. Adicione um novo item em combo_box_options",
+		"1. Adicione um novo item em comandos (ver abaixo neste arquivo)",
 		"2. O campo 'id' deve ser igual ao nome do arquivo Python em PythonScript/comandos",
 		"3. O arquivo deve conter uma função executar(arquivos, ui_state, pasta_saida)"
 	],
 
 	"version": "1.0",
 
-	"combo_box_options": [
+	"comandos": [
 		{
 			"id": "lista_caminhos_txt",
 			"label": "Arquivos -> lista de caminhos em .txt"

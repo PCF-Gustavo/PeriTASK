@@ -19,7 +19,7 @@ from utilitario_pytest import (
     medir_cpu_ram_io,
     medir_time_subprocess,
     obter_arquivos_recursos_teste,
-    obter_combo_box_options_ids,
+    obter_catalogo_de_comandos_ids,
 )
 
 
@@ -42,7 +42,7 @@ def criar_args_funcao(func_id):
 def obter_funcoes_benchmark():
     return {
         func_id: (lambda fid=func_id: criar_args_funcao(fid))
-        for func_id in obter_combo_box_options_ids()
+        for func_id in obter_catalogo_de_comandos_ids()
     }
 
 
@@ -56,7 +56,7 @@ def test_pipeline():
     system = collect_static_system_info()
     funcs = obter_funcoes_benchmark()
 
-    assert funcs, "Nenhuma função encontrada em combo_box_options.json"
+    assert funcs, "Nenhuma função encontrada em catalogo_de_comandos.json"
 
     resultados_time = []
     resultados_cpu = []

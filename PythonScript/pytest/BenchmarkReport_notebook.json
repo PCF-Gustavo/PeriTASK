@@ -3,7 +3,7 @@
         "overhead_contrato_s": 0.000553
     },
     "test_benchmark_comunicacao_UI_PythonScript": {
-        "overhead_comunicacao_ui_pythonscript_s": 0.4313
+        "overhead_comunicacao_ui_pythonscript_s": 0.429
     },
     "test_benchmark_inicializacao": {
         "run_info": {
@@ -13,9 +13,9 @@
         "results": {
             "statistics": {
                 "time_s": {
-                    "mean": 0.0449,
-                    "min": 0.0423,
-                    "max": 0.0526
+                    "mean": 0.0451,
+                    "min": 0.0418,
+                    "max": 0.0523
                 }
             }
         }
@@ -29,35 +29,35 @@
             "lista_caminhos_txt": {
                 "statistics": {
                     "time_s": {
-                        "mean": 0.0046,
-                        "min": 0.0036,
-                        "max": 0.0083
+                        "mean": 0.0047,
+                        "min": 0.0035,
+                        "max": 0.0091
                     }
                 }
             },
             "videos_csv_simplificado": {
                 "statistics": {
                     "time_s": {
-                        "mean": 1.3438,
-                        "min": 1.3238,
-                        "max": 1.3603
+                        "mean": 1.4621,
+                        "min": 1.3589,
+                        "max": 2.1394
                     }
                 }
             },
             "videos_csv_completo": {
                 "statistics": {
                     "time_s": {
-                        "mean": 1.4576,
-                        "min": 1.4337,
-                        "max": 1.4854
+                        "mean": 1.511,
+                        "min": 1.4773,
+                        "max": 1.6037
                     }
                 }
             },
             "teste_id": {
                 "statistics": {
                     "time_s": {
-                        "mean": 0.0022,
-                        "min": 0.0019,
+                        "mean": 0.0025,
+                        "min": 0.0022,
                         "max": 0.0028
                     }
                 }
@@ -73,9 +73,9 @@
             "lista_caminhos_txt": {
                 "statistics": {
                     "time_s": {
-                        "mean": 0.0801,
-                        "min": 0.0768,
-                        "max": 0.0822
+                        "mean": 0.081,
+                        "min": 0.0761,
+                        "max": 0.0888
                     },
                     "cpu_peak": {
                         "mean": 0,
@@ -114,40 +114,40 @@
             "videos_csv_simplificado": {
                 "statistics": {
                     "time_s": {
-                        "mean": 1.5646,
-                        "min": 1.5335,
-                        "max": 1.6441
+                        "mean": 1.5863,
+                        "min": 1.5633,
+                        "max": 1.6284
                     },
                     "cpu_peak": {
-                        "mean": 120.76,
-                        "min": 108.6,
-                        "max": 154.6
+                        "mean": 110.4,
+                        "min": 108.4,
+                        "max": 123.8
                     },
                     "ram_peak_mb": {
-                        "mean": 65.08,
-                        "min": 54.86,
-                        "max": 74.84
+                        "mean": 68.07,
+                        "min": 59.2,
+                        "max": 74.59
                     },
                     "io": {
                         "read_iops": {
-                            "mean": 70193.92,
-                            "min": 61695.66,
-                            "max": 77426.32
+                            "mean": 74096.04,
+                            "min": 72162.66,
+                            "max": 76767.43
                         },
                         "write_iops": {
-                            "mean": 51.82,
-                            "min": 49.42,
-                            "max": 59.86
+                            "mean": 52.88,
+                            "min": 49.24,
+                            "max": 59.67
                         },
                         "read_throughput_bps": {
-                            "mean": 1337852250.31,
-                            "min": 1212201616.4,
-                            "max": 1478448702.44
+                            "mean": 1393231560.86,
+                            "min": 1217904293.36,
+                            "max": 1490187680.44
                         },
                         "write_throughput_bps": {
-                            "mean": 4915.3,
-                            "min": 1670.41,
-                            "max": 16199.61
+                            "mean": 1718.62,
+                            "min": 1664.17,
+                            "max": 1809.96
                         }
                     }
                 }
@@ -155,40 +155,40 @@
             "videos_csv_completo": {
                 "statistics": {
                     "time_s": {
-                        "mean": 1.6637,
-                        "min": 1.6464,
-                        "max": 1.6921
+                        "mean": 1.7231,
+                        "min": 1.6907,
+                        "max": 1.7503
                     },
                     "cpu_peak": {
-                        "mean": 108.63,
+                        "mean": 113.91,
                         "min": 108.3,
-                        "max": 108.8
+                        "max": 154.7
                     },
                     "ram_peak_mb": {
-                        "mean": 81.13,
-                        "min": 77.93,
-                        "max": 84.32
+                        "mean": 80.24,
+                        "min": 74.38,
+                        "max": 87.88
                     },
                     "io": {
                         "read_iops": {
-                            "mean": 35229.88,
-                            "min": 34330.18,
-                            "max": 37095.36
+                            "mean": 35714.52,
+                            "min": 32416.21,
+                            "max": 37190.97
                         },
                         "write_iops": {
-                            "mean": 39.7,
-                            "min": 39.52,
-                            "max": 39.9
+                            "mean": 39.71,
+                            "min": 39.59,
+                            "max": 39.87
                         },
                         "read_throughput_bps": {
-                            "mean": 1417017201.8,
-                            "min": 1373537365.34,
-                            "max": 1458344177.51
+                            "mean": 1421507519.7,
+                            "min": 1384577914.03,
+                            "max": 1461622634.71
                         },
                         "write_throughput_bps": {
-                            "mean": 5974.42,
-                            "min": 1462.23,
-                            "max": 42017.26
+                            "mean": 10507.33,
+                            "min": 1464.75,
+                            "max": 42232.38
                         }
                     }
                 }
@@ -196,9 +196,9 @@
             "teste_id": {
                 "statistics": {
                     "time_s": {
-                        "mean": 0.0762,
-                        "min": 0.0735,
-                        "max": 0.0784
+                        "mean": 0.0765,
+                        "min": 0.0731,
+                        "max": 0.0813
                     },
                     "cpu_peak": {
                         "mean": 0,

@@ -6,17 +6,17 @@ namespace UserInterface
 {
     public static class ComboBoxOptions
     {
-        public static ComboBoxOptionsConfig Carregar()
+        public static ComandosConfig Carregar()
         {
             string path = Path.Combine(
                 System.AppDomain.CurrentDomain.BaseDirectory,
                 "Compartilhado",
-                "combo_box_options.json"
+                "catalogo_de_comandos.json"
             );
 
             var json = File.ReadAllText(path);
 
-            return JsonSerializer.Deserialize<ComboBoxOptionsConfig>(json);
+            return JsonSerializer.Deserialize<ComandosConfig>(json);
         }
     }
 
@@ -56,8 +56,8 @@ namespace UserInterface
     }
 
 
-    public class ComboBoxOptionsConfig
+    public class ComandosConfig
     {
-        public List<ComboBoxOption> combo_box_options { get; set; }
+        public List<ComboBoxOption> comandos { get; set; }
     }
 }

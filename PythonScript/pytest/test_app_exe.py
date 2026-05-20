@@ -14,12 +14,12 @@ from utilitario_pytest import (
     executar_subprocess,
     exigir_pythonscript_exe,
     limpar_pasta_saida_pytest,
-    obter_combo_box_options_ids,
+    obter_catalogo_de_comandos_ids,
     validar_saidas_genericas,
 )
 
 
-@pytest.mark.parametrize("func_id", obter_combo_box_options_ids())
+@pytest.mark.parametrize("func_id", obter_catalogo_de_comandos_ids())
 def test_exe_execucao_generica(func_id):
     exigir_pythonscript_exe()
     limpar_pasta_saida_pytest()

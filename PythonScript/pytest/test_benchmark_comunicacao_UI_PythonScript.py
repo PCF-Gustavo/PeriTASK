@@ -16,7 +16,7 @@ from utilitario_pytest import (
     criar_args_ui_benchmark,
     criar_arquivo_txt_temporario_para_ui,
     executar_subprocess,
-    obter_combo_box_options_ids,
+    obter_catalogo_de_comandos_ids,
 )
 
 
@@ -77,8 +77,8 @@ def medir_overhead_medio_rota(rota, arquivo_teste):
 # BENCHMARK
 # ===========================
 def test_benchmark_comunicacao_UI_PythonScript():
-    rotas = obter_combo_box_options_ids()
-    assert rotas, "Nenhuma rota encontrada no combo_box_options.json"
+    rotas = obter_catalogo_de_comandos_ids()
+    assert rotas, "Nenhuma rota encontrada no catalogo_de_comandos.json"
 
     arquivo_teste = criar_arquivo_txt_temporario_para_ui()
 

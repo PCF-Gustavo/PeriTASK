@@ -5,11 +5,9 @@ import os
 import json
 import base64
 from pathlib import Path
-from benchmark import modo_benchmark_pytest, emitir_evento_pytest
-
-# utilitario
+from utilitario.benchmark import modo_benchmark_pytest, emitir_evento_pytest
 from utilitario.outros import coletar_arquivos_e_pasta_saida, obter_videos
-from processador_argumento_ui import executar_argumento_ui
+from utilitario.executor_comando import executar_argumento_ui
 
 def main():
     # =========================
@@ -23,7 +21,7 @@ def main():
     if len(sys.argv) < 3:
         pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
         arquivos = obter_videos(list(Path(r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK").iterdir()))
-        argumento_ui = base64.b64encode(json.dumps({"combo_box_options_id": "videos_csv_completo"}).encode("utf-8")).decode("utf-8")
+        argumento_ui = base64.b64encode(json.dumps({"comando_id": "videos_csv_completo"}).encode("utf-8")).decode("utf-8")
         
     # =========================
     # MODO NORMAL
