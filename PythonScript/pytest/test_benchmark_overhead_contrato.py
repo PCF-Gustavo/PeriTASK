@@ -6,8 +6,10 @@ Mede apenas o overhead interno do contrato UI -> PythonScript,
 sem executar UserInterface.exe, sem abrir janela e sem processar mídia.
 
 Este benchmark chama diretamente:
-
     executar_argumento_ui(argumento_ui, arquivos, pasta_saida)
+
+Durante o benchmark, os comandos reais são substituídos por uma função noop,
+para medir apenas o custo do contrato/roteamento.
 """
 
 import base64
@@ -15,7 +17,6 @@ import json
 import statistics
 import sys
 import time
-
 import pytest
 
 from utilitario_pytest import (
@@ -28,7 +29,7 @@ from utilitario_pytest import (
 sys.path.append(str(ROOT))
 
 from processador_argumento_ui import executar_argumento_ui
-import roteamento
+import comandos
 
 
 # ===========================
@@ -41,9 +42,9 @@ USED_RUNS = 50
 # ===========================
 # HELPERS
 # ===========================
-def criar_argumento_ui_base64(rota, controls=None):
+def criar_argumento_ui_base64(comando_id, controls=None):
     payload = {
-        "combo_box_options_id": rota,
+        "combo_box_options_id": comando_id,
         "controls": controls or {},
     }
 
@@ -53,10 +54,12 @@ def criar_argumento_ui_base64(rota, controls=None):
         separators=(",", ":"),
     )
 
-    return base64.b64encode(payload_json.encode("utf-8")).decode("ascii")
+    return base64.b64encode(
+        payload_json.encode("utf-8")
+    ).decode("ascii")
 
 
-def rota_noop(arquivos, ui_state, pasta_saida):
+def comando_noop(arquivos, ui_state, pasta_saida):
     return None
 
 
@@ -67,9 +70,11 @@ def medir_overhead_medio(func, rodadas, ignorar):
         inicio = time.perf_counter()
         func()
         fim = time.perf_counter()
+
         tempos.append(fim - inicio)
 
     tempos_validos = tempos[ignorar:]
+
     return statistics.mean(tempos_validos)
 
 
@@ -77,23 +82,28 @@ def medir_overhead_medio(func, rodadas, ignorar):
 # BENCHMARK
 # ===========================
 def test_benchmark_overhead_contrato(monkeypatch):
-    rotas = obter_combo_box_options_ids()
-    assert rotas, "Nenhuma rota encontrada no combo_box_options.json"
+    comandos_ids = obter_combo_box_options_ids()
+
+    assert comandos_ids, "Nenhum comando encontrado no combo_box_options.json"
 
     pasta_saida = BASE_DIR
     arquivos = []
 
-    # As rotas continuam existindo/validando normalmente, mas não executam
-    # processamento real durante este benchmark.
-    for rota in rotas:
-        monkeypatch.setattr(roteamento, rota, rota_noop, raising=False)
+    # Substitui a resolução dinâmica real por uma função noop.
+    # Assim o benchmark mede apenas:
+    # Base64 -> JSON -> validação do ID -> chamada do executor.
+    monkeypatch.setattr(
+        comandos,
+        "obter_funcao_comando",
+        lambda comando_id: comando_noop,
+    )
 
-    overheads_por_rota = []
+    overheads_por_comando = []
 
-    for rota in rotas:
-        argumento_ui = criar_argumento_ui_base64(rota)
+    for comando_id in comandos_ids:
+        argumento_ui = criar_argumento_ui_base64(comando_id)
 
-        overhead_rota = medir_overhead_medio(
+        overhead_comando = medir_overhead_medio(
             lambda arg=argumento_ui: executar_argumento_ui(
                 arg,
                 arquivos,
@@ -103,9 +113,12 @@ def test_benchmark_overhead_contrato(monkeypatch):
             WARMUP_RUNS,
         )
 
-        overheads_por_rota.append(overhead_rota)
+        overheads_por_comando.append(overhead_comando)
 
-    overhead_contrato_s = round(statistics.mean(overheads_por_rota), 6)
+    overhead_contrato_s = round(
+        statistics.mean(overheads_por_comando),
+        6,
+    )
 
     output = {
         "overhead_contrato_s": overhead_contrato_s

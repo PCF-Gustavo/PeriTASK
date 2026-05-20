@@ -2,8 +2,8 @@
 	"_comentario": [
 		"Para adicionar uma nova funcionalidade:",
 		"1. Adicione um novo item em combo_box_options",
-		"2. O campo 'id' deve ser igual ao nome da função Python",
-		"3. A função deve ser implementada em roteamento.py"
+		"2. O campo 'id' deve ser igual ao nome do arquivo Python em PythonScript/comandos",
+		"3. O arquivo deve conter uma função executar(arquivos, ui_state, pasta_saida)"
 	],
 
 	"version": "1.0",

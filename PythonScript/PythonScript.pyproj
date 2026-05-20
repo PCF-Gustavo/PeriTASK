@@ -27,6 +27,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="benchmark.py" />
+    <Compile Include="comandos\teste_id.py" />
+    <Compile Include="comandos\lista_caminhos_txt.py" />
+    <Compile Include="comandos\videos_csv_completo.py" />
+    <Compile Include="comandos\videos_csv_simplificado.py" />
+    <Compile Include="comandos\__init__.py" />
     <Compile Include="processador_argumento_ui.py" />
     <Compile Include="pytest\conftest.py" />
     <Compile Include="pytest\test_benchmark_comunicacao_UI_PythonScript.py" />
@@ -38,12 +43,7 @@
     <Compile Include="pytest\utilitario_pytest.py" />
     <Compile Include="pytest\gerar_relatorio.py" />
     <Compile Include="pytest\test_benchmark_inicializacao.py" />
-    <Compile Include="roteamento.py" />
-    <Compile Include="saida\imprimir_lista_caminhos_txt.py" />
-    <Compile Include="saida\imprimir_tabela_completa_infos_csv.py" />
-    <Compile Include="saida\imprimir_tabela_simplificada_infos_csv.py" />
     <Compile Include="main.py" />
-    <Compile Include="saida\__init__.py" />
     <Compile Include="utilitario\mediainfo.py" />
     <Compile Include="utilitario\caminhos.py" />
     <Compile Include="utilitario\pyav.py" />
@@ -77,9 +77,9 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="comandos\" />
     <Folder Include="pytest\recursos\" />
     <Folder Include="utilitario\" />
-    <Folder Include="saida\" />
     <Folder Include="pytest\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

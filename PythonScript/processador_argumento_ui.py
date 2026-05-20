@@ -3,6 +3,7 @@ from utilitario.caminhos import obter_pasta_raiz
 from benchmark import emitir_evento_pytest
 import base64
 import binascii
+from comandos import executar_comando
 
 combo_box_options_path = obter_pasta_raiz() / "Compartilhado" / "combo_box_options.json"
 
@@ -42,15 +43,6 @@ def executar_argumento_ui(argumento_ui, arquivos, pasta_saida):
     # -------------------------
     # routing dinâmico
     # -------------------------
-    import roteamento
-    funcao = getattr(roteamento, selecao_id, None)
-        
-    if funcao is None:
-        raise NotImplementedError(f"Função '{selecao_id}' ainda não implementada em roteamento.py")
-
     emitir_evento_pytest(f"ROTA:{selecao_id}")
 
-    # -------------------------
-    # executa função final
-    # -------------------------
-    funcao(arquivos, ui_state, pasta_saida)
+    executar_comando(selecao_id, arquivos, ui_state, pasta_saida)

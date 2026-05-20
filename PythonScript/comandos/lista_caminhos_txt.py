@@ -1,7 +1,7 @@
 ﻿import os
 from utilitario.outros import replace_com_incremento
 
-def imprimir_lista_caminhos_txt(arquivos, pasta_saida):
+def executar(arquivos, ui_state, pasta_saida):
     arquivo_saida = "caminho_dos_arquivos.txt"
     caminho_saida = os.path.join(pasta_saida, arquivo_saida)
     caminho_tmp = os.path.join(os.getenv("TEMP"), arquivo_saida + ".tmp")
