@@ -39,7 +39,17 @@ namespace UserInterface
         public string text { get; set; }
         public bool? enabled { get; set; }
         public bool? @checked { get; set; }
+        public string screenTip { get; set; }
+        public PositionConfig position { get; set; }
+
     }
+
+    public class PositionConfig
+    {
+        public int? row { get; set; }
+        public int? column { get; set; }
+    }
+
 
     public class ComboBoxOptionsConfig
     {

@@ -28,20 +28,30 @@
 				"controls": [
 					{
 						"type": "checkbox",
-						"id": "checkbox_teste_alerta",
-						"text": "Ativar alerta",
+						"id": "checkbox_teste_alerta1",
+						"text": "Ativar alerta1",
 						"enabled": true,
 						"checked": false,
-						"description": "Ativa uma mensagem de alerta ao marcar o checkbox",
-						"screenTip": "Mostra um MessageBox quando marcado",
+						"screenTip": "Mostra um MessageBox quando marcado 1",
 						"position": {
 							"row": 0,
+							"column": 0
+						}
+					},
+					{
+						"type": "checkbox",
+						"id": "checkbox_teste_alerta2",
+						"text": "Ativar alerta2",
+						"enabled": true,
+						"checked": false,
+						"screenTip": "Mostra um MessageBox quando marcado 2",
+						"position": {
+							"row": 1,
 							"column": 0
 						}
 					}
 				]
 			}
-	
 		}
 	]
 }

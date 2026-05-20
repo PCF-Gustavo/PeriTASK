@@ -21,5 +21,7 @@ def videos_csv_completo(arquivos, _, pasta_saida):
     imprimir_tabela_completa_infos_csv(arquivos_videos, pasta_saida)
     
 def teste_id(arquivos, ui_state, pasta_saida):
-    if ui_state.get("checkbox_teste_alerta"):
-        pausar_para_usuario("Checkbox marcado")
+    if ui_state.get("checkbox_teste_alerta1"):
+        pausar_para_usuario("Checkbox marcado1")
+    if ui_state.get("checkbox_teste_alerta2"):
+        pausar_para_usuario("Checkbox marcado2")

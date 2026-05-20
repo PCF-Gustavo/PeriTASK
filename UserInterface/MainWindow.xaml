@@ -18,8 +18,7 @@
                   SelectedIndex="0" SelectionChanged="ComboBox1_SelectionChanged"
                   >
         </ComboBox>
-        <StackPanel x:Name="DynamicPanel"
-                Orientation="Vertical"
+        <Grid x:Name="DynamicPanel"
                 Margin="0,30,5,5"/>
     </Grid>
 </Window>

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace UserInterface
@@ -7,16 +10,52 @@ namespace UserInterface
     {
         public static void Renderizar(
             ComboBoxOption option,
-            StackPanel dynamicPanel,
+            Grid dynamicPanel,
             Dictionary<string, Control> renderedControls
         )
         {
             renderedControls.Clear();
+
             dynamicPanel.Children.Clear();
+            dynamicPanel.RowDefinitions.Clear();
+            dynamicPanel.ColumnDefinitions.Clear();
 
             var controls = option?.ui?.controls;
-            if (controls == null)
+
+            if (controls == null || controls.Count == 0)
                 return;
+
+            int maxRow = controls
+                .Where(c => c.position?.row != null)
+                .Select(c => c.position.row.Value)
+                .DefaultIfEmpty(0)
+                .Max();
+
+            int maxColumn = controls
+                .Where(c => c.position?.column != null)
+                .Select(c => c.position.column.Value)
+                .DefaultIfEmpty(0)
+                .Max();
+
+            for (int i = 0; i <= maxRow; i++)
+            {
+                dynamicPanel.RowDefinitions.Add(
+                    new RowDefinition
+                    {
+                        Height = GridLength.Auto
+                    }
+                );
+            }
+
+            for (int i = 0; i <= maxColumn; i++)
+            {
+                dynamicPanel.ColumnDefinitions.Add(
+                    new ColumnDefinition
+                    {
+                        Width = GridLength.Auto
+                    }
+                );
+            }
 
             foreach (var control in controls)
             {
@@ -28,8 +67,16 @@ namespace UserInterface
                     Name = control.id,
                     Content = control.text,
                     IsEnabled = control.enabled ?? true,
-                    IsChecked = control.@checked ?? false
+                    IsChecked = control.@checked ?? false,
+                    ToolTip = control.screenTip,
+                    Margin = new Thickness(0, 0, 15, 5)
                 };
+
+                int row = control.position?.row ?? 0;
+                int column = control.position?.column ?? 0;
+
+                Grid.SetRow(checkbox, row);
+                Grid.SetColumn(checkbox, column);
 
                 renderedControls[control.id] = checkbox;
                 dynamicPanel.Children.Add(checkbox);
