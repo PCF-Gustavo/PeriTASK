@@ -12,14 +12,14 @@ def carregar_catalogo_de_comandos():
         return json.load(f)
 
 
-def executar_argumento_ui(argumento_ui, arquivos, pasta_saida):
+def processar_payload(arquivos, payload_base64_from_ui, pasta_saida):
 
     # -------------------------
     # parse do JSON
     # -------------------------
     try:
-        decoded = base64.b64decode(argumento_ui).decode("utf-8")
-        ui_payload = json.loads(decoded)
+        decoded = base64.b64decode(payload_base64_from_ui).decode("utf-8")
+        payload_from_ui = json.loads(decoded)
 
     except (binascii.Error, UnicodeDecodeError, json.JSONDecodeError):
         raise ValueError("UI payload inválido (Base64 ou JSON corrompido)")
@@ -29,20 +29,20 @@ def executar_argumento_ui(argumento_ui, arquivos, pasta_saida):
     # -------------------------
     # extrai dados
     # -------------------------
-    selecao_id = ui_payload.get("comando_id")
-    ui_state = ui_payload.get("controls", {})
+    comando_id = payload_from_ui.get("comando_id")
+    controls = payload_from_ui.get("controls", {})
 
     # -------------------------
     # validação de Ids
     # -------------------------
     ids_validos = {comando["id"] for comando in catalogo_de_comandos["comandos"]}
 
-    if selecao_id not in ids_validos:
-        raise ValueError(f"Opção inválida: {selecao_id}")
+    if comando_id not in ids_validos:
+        raise ValueError(f"Opção inválida: {comando_id}")
 
     # -------------------------
     # routing dinâmico
     # -------------------------
-    emitir_evento_pytest(f"ROTA:{selecao_id}")
+    emitir_evento_pytest(f"ROTA:{comando_id}")
 
-    executar_comando(selecao_id, arquivos, ui_state, pasta_saida)
+    executar_comando(arquivos, comando_id, controls, pasta_saida)

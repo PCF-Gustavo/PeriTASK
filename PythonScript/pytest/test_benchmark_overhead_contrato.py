@@ -28,7 +28,7 @@ from utilitario_pytest import (
 
 sys.path.append(str(ROOT))
 
-from utilitario.executor_comando import executar_argumento_ui
+from utilitario.executor_comando import processar_payload
 import comandos
 
 
@@ -104,7 +104,7 @@ def test_benchmark_overhead_contrato(monkeypatch):
         argumento_ui = criar_argumento_ui_base64(comando_id)
 
         overhead_comando = medir_overhead_medio(
-            lambda arg=argumento_ui: executar_argumento_ui(
+            lambda arg=argumento_ui: processar_payload(
                 arg,
                 arquivos,
                 pasta_saida,

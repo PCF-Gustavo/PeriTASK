@@ -32,10 +32,10 @@ def obter_funcao_comando(comando_id):
     return funcao
 
 
-def executar_comando(comando_id, arquivos, ui_state, pasta_saida):
+def executar_comando(arquivos, comando_id, controls, pasta_saida):
     """
     Executa dinamicamente um comando pelo ID recebido da UI.
     """
 
     funcao = obter_funcao_comando(comando_id)
-    return funcao(arquivos, ui_state, pasta_saida)
+    return funcao(arquivos, controls, pasta_saida)
