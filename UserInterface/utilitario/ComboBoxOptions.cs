@@ -39,8 +39,13 @@ namespace UserInterface
         public string text { get; set; }
         public bool? enabled { get; set; }
         public bool? @checked { get; set; }
+        public string @default { get; set; }
+        public string regex { get; set; }
+        public int? displayWidth { get; set; }
+        public int? stringsize { get; set; }
         public string screenTip { get; set; }
         public PositionConfig position { get; set; }
+
 
     }
 

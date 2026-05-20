@@ -49,6 +49,22 @@
 							"row": 1,
 							"column": 0
 						}
+					},
+
+					{
+						"type": "editbox",
+						"id": "editbox_quantidade",
+						"text": "Quantidade:",
+						"default": "10",
+						"enabled": true,
+						"regex": "^[1-9]\\d*$",
+						"stringsize": 3,
+						"displayWidth": 3,
+						"screenTip": "Informe um número inteiro positivo.",
+						"position": {
+							"row": 2,
+							"column": 0
+						}
 					}
 				]
 			}

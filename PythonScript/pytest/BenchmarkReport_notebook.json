@@ -1,0 +1,270 @@
+﻿{
+    "test_benchmark_overhead_contrato": {
+        "overhead_contrato_s": 0.000767
+    },
+    "test_benchmark_comunicacao_UI_PythonScript": {
+        "overhead_comunicacao_ui_pythonscript_s": 0.5097
+    },
+    "test_benchmark_inicializacao": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "statistics": {
+                "time_s": {
+                    "mean": 0.0524,
+                    "min": 0.0493,
+                    "max": 0.0643
+                }
+            }
+        }
+    },
+    "test_benchmark_engine_python": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "lista_caminhos_txt": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0072,
+                        "min": 0.0039,
+                        "max": 0.0261
+                    }
+                }
+            },
+            "videos_csv_simplificado": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 1.701,
+                        "min": 1.6215,
+                        "max": 1.795
+                    }
+                }
+            },
+            "videos_csv_completo": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 1.7122,
+                        "min": 1.688,
+                        "max": 1.7347
+                    }
+                }
+            },
+            "teste_id": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0025,
+                        "min": 0.0023,
+                        "max": 0.0028
+                    }
+                }
+            }
+        }
+    },
+    "test_benchmark_app_exe": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "lista_caminhos_txt": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.1395,
+                        "min": 0.117,
+                        "max": 0.1519
+                    },
+                    "cpu_peak": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "ram_peak_mb": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "read_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        }
+                    }
+                }
+            },
+            "videos_csv_simplificado": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 2.2058,
+                        "min": 1.7925,
+                        "max": 5.1907
+                    },
+                    "cpu_peak": {
+                        "mean": 108.68,
+                        "min": 108.3,
+                        "max": 109.1
+                    },
+                    "ram_peak_mb": {
+                        "mean": 61.13,
+                        "min": 53.46,
+                        "max": 70.97
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 65287.33,
+                            "min": 60500.65,
+                            "max": 69620.33
+                        },
+                        "write_iops": {
+                            "mean": 39.72,
+                            "min": 39.57,
+                            "max": 39.86
+                        },
+                        "read_throughput_bps": {
+                            "mean": 1227277588.57,
+                            "min": 1166776339.2,
+                            "max": 1290584820.43
+                        },
+                        "write_throughput_bps": {
+                            "mean": 1549.03,
+                            "min": 1543.21,
+                            "max": 1554.59
+                        }
+                    }
+                }
+            },
+            "videos_csv_completo": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 1.9533,
+                        "min": 1.935,
+                        "max": 2.0004
+                    },
+                    "cpu_peak": {
+                        "mean": 112.24,
+                        "min": 108.7,
+                        "max": 139.4
+                    },
+                    "ram_peak_mb": {
+                        "mean": 81.08,
+                        "min": 78.17,
+                        "max": 83.29
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 29862.23,
+                            "min": 28691.31,
+                            "max": 31089.76
+                        },
+                        "write_iops": {
+                            "mean": 39.49,
+                            "min": 37.04,
+                            "max": 39.91
+                        },
+                        "read_throughput_bps": {
+                            "mean": 1228515664.53,
+                            "min": 1155887081.33,
+                            "max": 1319139496.93
+                        },
+                        "write_throughput_bps": {
+                            "mean": 24044.82,
+                            "min": 1370.58,
+                            "max": 42314.97
+                        }
+                    }
+                }
+            },
+            "teste_id": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0905,
+                        "min": 0.0872,
+                        "max": 0.0942
+                    },
+                    "cpu_peak": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "ram_peak_mb": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "read_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        }
+                    }
+                }
+            }
+        },
+        "input_files": [
+            "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+            "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv",
+            "MHDX_ch5_main_20210913112600_20210913112900.dav",
+            "MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav",
+            "video_corrompido.mp4",
+            "video_original.mp4",
+            "video_whatsapp.mp4"
+        ],
+        "system": {
+            "cpu": {
+                "name": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+                "physical_cores": 6,
+                "logical_cores": 12,
+                "freq_mhz": 2100.0
+            },
+            "ram": {
+                "total_gb": 15.39
+            },
+            "disk": {
+                "type": "NVME SSD"
+            },
+            "gpu": {
+                "name": "AMD Radeon(TM) Graphics",
+                "vram_gb": 0.5
+            },
+            "os": "Windows",
+            "os_version": "10.0.19045",
+            "machine": "ma2023127403",
+            "machine_alias": "notebook"
+        }
+    }
+}
