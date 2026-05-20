@@ -6,7 +6,7 @@ from utilitario.pyav import obter_duracao_ms_pyav, obter_fps_pyav, obter_cfr_vfr
 from utilitario.formatacao import formatar_duracao_hh_mm_ssss, formata_tamanho, formata_bitrate
 from utilitario.outros import replace_com_incremento, obter_videos
 
-def executar(arquivos, ui_state, pasta_saida):
+def executar(arquivos, controls, pasta_saida):
     arquivos_videos = obter_videos(arquivos)
     arquivo_saida = "tabela_completa_de_informacoes.csv"
     caminho_saida = os.path.join(pasta_saida, arquivo_saida)

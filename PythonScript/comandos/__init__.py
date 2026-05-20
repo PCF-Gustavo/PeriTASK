@@ -21,7 +21,7 @@ def obter_funcao_comando(comando_id):
     if funcao is None:
         raise NotImplementedError(
             f"O arquivo comandos/{comando_id}.py precisa definir "
-            f"a função executar(arquivos, ui_state, pasta_saida)"
+            f"a função executar(arquivos, controls, pasta_saida)"
         )
 
     if not callable(funcao):

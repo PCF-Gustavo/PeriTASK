@@ -3,11 +3,11 @@
     input()
 
 
-def executar(arquivos, ui_state, pasta_saida):
-    if ui_state.get("checkbox_teste_alerta1"):
+def executar(arquivos, controls, pasta_saida):
+    if controls.get("checkbox_teste_alerta1"):
         pausar_para_usuario(
-            f"Checkbox marcado1. editbox: {ui_state.get('editbox_quantidade')}"
+            f"Checkbox marcado1. editbox: {controls.get('editbox_quantidade')}"
         )
 
-    if ui_state.get("checkbox_teste_alerta2"):
+    if controls.get("checkbox_teste_alerta2"):
         pausar_para_usuario("Checkbox marcado2")
