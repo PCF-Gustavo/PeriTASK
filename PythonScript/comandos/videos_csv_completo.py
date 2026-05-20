@@ -14,8 +14,6 @@ def executar(arquivos, ui_state, pasta_saida):
 
     total = len(arquivos_videos)
 
-    print("STATUS:Vídeos -> tabela completa de informações em .csv", flush=True)
-
     if total == 0:
         print("PROGRESS:100", flush=True)
         return

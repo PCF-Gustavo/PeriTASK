@@ -6,8 +6,6 @@ def executar(arquivos, ui_state, pasta_saida):
     caminho_saida = os.path.join(pasta_saida, arquivo_saida)
     caminho_tmp = os.path.join(os.getenv("TEMP"), arquivo_saida + ".tmp")
 
-    print("STATUS:Imprimindo caminhos dos arquivos em .txt", flush=True)
-
     total = len(arquivos)
     ultimo_progresso = -1
 
