@@ -105,8 +105,8 @@ def test_benchmark_overhead_contrato(monkeypatch):
 
         overhead_comando = medir_overhead_medio(
             lambda arg=argumento_ui: processar_payload(
-                arg,
                 arquivos,
+                arg,
                 pasta_saida,
             ),
             WARMUP_RUNS + USED_RUNS,
