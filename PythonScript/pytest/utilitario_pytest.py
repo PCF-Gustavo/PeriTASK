@@ -225,9 +225,14 @@ def validar_saidas_genericas(pasta_saida: Path = PASTA_SAIDA_PYTEST):
 # BENCHMARK OUTPUT PATHS
 # =========================
 
+def benchmark_overhead_contrato_path():
+    return BASE_DIR / f"test_benchmark_overhead_contrato_{machine_name}.json"
+
+def benchmark_comunicacao_UI_PythonScript_path():
+    return BASE_DIR / f"test_benchmark_comunicacao_UI_PythonScript_{machine_name}.json"
+
 def benchmark_inicializacao_path():
     return BASE_DIR / f"test_benchmark_inicializacao_{machine_name}.json"
-
 
 def benchmark_app_exe_path():
     return BASE_DIR / f"test_benchmark_app_exe_{machine_name}.json"
@@ -235,7 +240,6 @@ def benchmark_app_exe_path():
 
 def benchmark_engine_python_path():
     return BASE_DIR / f"test_benchmark_engine_python_{machine_name}.json"
-
 
 def benchmark_report_path():
     return BASE_DIR / f"BenchmarkReport_{machine_name}.json"

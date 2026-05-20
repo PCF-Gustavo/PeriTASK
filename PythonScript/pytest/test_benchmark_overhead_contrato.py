@@ -1,0 +1,123 @@
+"""
+===========================================================
+BENCHMARK: CONTRATO PURO PYTHON
+===========================================================
+Mede apenas o overhead interno do contrato UI -> PythonScript,
+sem executar UserInterface.exe, sem abrir janela e sem processar mídia.
+
+Este benchmark chama diretamente:
+
+    executar_argumento_ui(argumento_ui, arquivos, pasta_saida)
+"""
+
+import base64
+import json
+import statistics
+import sys
+import time
+
+import pytest
+
+from utilitario_pytest import (
+    BASE_DIR,
+    ROOT,
+    machine_name,
+    obter_combo_box_options_ids,
+)
+
+sys.path.append(str(ROOT))
+
+from processador_argumento_ui import executar_argumento_ui
+import roteamento
+
+
+# ===========================
+# CONFIG RUNS
+# ===========================
+WARMUP_RUNS = 1
+USED_RUNS = 50
+
+
+# ===========================
+# HELPERS
+# ===========================
+def criar_argumento_ui_base64(rota, controls=None):
+    payload = {
+        "combo_box_options_id": rota,
+        "controls": controls or {},
+    }
+
+    payload_json = json.dumps(
+        payload,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
+
+    return base64.b64encode(payload_json.encode("utf-8")).decode("ascii")
+
+
+def rota_noop(arquivos, ui_state, pasta_saida):
+    return None
+
+
+def medir_overhead_medio(func, rodadas, ignorar):
+    tempos = []
+
+    for _ in range(rodadas):
+        inicio = time.perf_counter()
+        func()
+        fim = time.perf_counter()
+        tempos.append(fim - inicio)
+
+    tempos_validos = tempos[ignorar:]
+    return statistics.mean(tempos_validos)
+
+
+# ===========================
+# BENCHMARK
+# ===========================
+def test_benchmark_overhead_contrato(monkeypatch):
+    rotas = obter_combo_box_options_ids()
+    assert rotas, "Nenhuma rota encontrada no combo_box_options.json"
+
+    pasta_saida = BASE_DIR
+    arquivos = []
+
+    # As rotas continuam existindo/validando normalmente, mas não executam
+    # processamento real durante este benchmark.
+    for rota in rotas:
+        monkeypatch.setattr(roteamento, rota, rota_noop, raising=False)
+
+    overheads_por_rota = []
+
+    for rota in rotas:
+        argumento_ui = criar_argumento_ui_base64(rota)
+
+        overhead_rota = medir_overhead_medio(
+            lambda arg=argumento_ui: executar_argumento_ui(
+                arg,
+                arquivos,
+                pasta_saida,
+            ),
+            WARMUP_RUNS + USED_RUNS,
+            WARMUP_RUNS,
+        )
+
+        overheads_por_rota.append(overhead_rota)
+
+    overhead_contrato_s = round(statistics.mean(overheads_por_rota), 6)
+
+    output = {
+        "overhead_contrato_s": overhead_contrato_s
+    }
+
+    output_path = BASE_DIR / f"test_benchmark_overhead_contrato_{machine_name}.json"
+
+    with open(output_path, "w", encoding="utf-8-sig") as f:
+        json.dump(output, f, indent=4, ensure_ascii=False)
+
+    assert output_path.exists(), f"Falha ao gerar benchmark: {output_path}"
+
+
+if __name__ == "__main__":
+    pytest.main([__file__])
