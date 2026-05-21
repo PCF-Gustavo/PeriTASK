@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.IO;
+﻿using System.Windows;
 using System.Windows.Controls;
-using static UserInterface.MainWindow;
-using Microsoft.VisualBasic;
 
 namespace UserInterface
 {
