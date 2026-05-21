@@ -1,0 +1,172 @@
+50 DIRETRIZES ARQUITETURAIS PARA EVOLUÇÃO DO PERITASK
+Divididas em 5 blocos de maturidade para suportar crescimento com imagem, vídeo, áudio, comparação facial, CUDA, ONNX, DCNN, paralelismo e cálculos pesados.
+
+================================================================================
+BLOCO 1 — INFRAESTRUTURA DE EXECUÇÃO E CONTRATO BASE
+================================================================================
+
+1. CommandContext
+Objeto único passado ao comando com arquivos, parâmetros, pasta de saída, job_id, logger, progresso, cancelamento, recursos disponíveis e temporários. Evita funções com muitos argumentos soltos e prepara o sistema para comandos complexos.
+
+2. CommandResult
+Resultado padronizado da execução: sucesso, falha, arquivos gerados, mensagens, estatísticas, avisos e erros. Facilita UI, testes, logs, relatórios e automação futura sem depender de retornos improvisados por comando.
+
+3. Eventos JSONL
+Substitui mensagens simples como PROGRESS: por eventos estruturados em JSON por linha. Permite progresso por etapa, logs, warnings, erros, artefatos, telemetria e compatibilidade futura sem quebrar a comunicação UI-Python.
+
+4. Cancelamento cooperativo
+Em vez de matar o processo diretamente, a UI solicita cancelamento e o comando para com segurança, limpando temporários, fechando arquivos/modelos e preservando saídas válidas. O kill fica apenas como último recurso.
+
+5. Pasta temporária por job
+Cada execução ganha uma pasta temporária isolada. Evita conflito entre comandos, facilita limpeza, auditoria, retomada, debug e proteção contra arquivos parciais misturados em execuções simultâneas ou interrompidas.
+
+6. Schema do catálogo
+Define formalmente quais campos o catálogo aceita: id, label, UI, parâmetros, requisitos e execução. Impede erros silenciosos por JSON malformado, propriedades digitadas incorretamente ou comandos incompletos.
+
+7. Logging estruturado
+Logs passam a ter nível, timestamp, comando, job_id, arquivo afetado e mensagem. Melhora diagnóstico, auditoria, suporte, testes e rastreabilidade de erros em lotes grandes ou comandos longos.
+
+8. Resource detection CPU/RAM/GPU
+Detecta núcleos, memória, GPU, VRAM, CUDA/ONNX e espaço em disco antes da execução. Permite escolher CPU/GPU, limitar paralelismo e avisar quando o ambiente é insuficiente.
+
+9. Fechamento seguro de recursos nativos
+Garante encerramento correto de vídeos, imagens, modelos, sessões ONNX, handles, arquivos e processos externos. Evita vazamento de memória, arquivos travados e instabilidade em lotes grandes.
+
+10. Testes de stress/cancelamento/falha
+Testa muitos arquivos, arquivos corrompidos, cancelamento no meio, falta de GPU/RAM, erro de modelo e execução longa. Valida robustez real antes de expandir comandos pesados.
+
+================================================================================
+BLOCO 2 — ORGANIZAÇÃO MODULAR, ENTRADAS, SAÍDAS E REQUISITOS
+================================================================================
+
+11. Separação por domínios de comandos
+Organizar comandos em pastas por área: arquivos, vídeo, imagem, áudio, IA e relatórios. Evita diretório único gigante e melhora manutenção conforme o catálogo crescer.
+
+12. Manifesto de execução do job
+Cada execução deve gerar um manifesto com comando, parâmetros, arquivos de entrada, saídas, horários, versão do sistema e status. Isso facilita auditoria, repetição, debug e rastreabilidade pericial.
+
+13. Manifesto de saídas/artifacts
+Padronizar como cada comando declara arquivos gerados: CSV, TXT, imagens, vídeos, logs, JSONs e relatórios. A UI e os testes podem validar resultados sem depender de nomes fixos.
+
+14. Validação formal de entradas
+Antes de executar, validar extensões, existência dos arquivos, permissões, tamanho, tipo MIME, integridade básica e compatibilidade com o comando. Evita falhas tardias em processamento pesado.
+
+15. Validação formal dos parâmetros da UI
+Cada controle do catálogo deve ter tipo, obrigatório/opcional, valor padrão, regex, faixa numérica e mensagem de erro. Reduz falhas por parâmetros inválidos enviados da interface ao processamento.
+
+16. Sistema de requisitos por comando
+Cada comando deve declarar RAM mínima, GPU opcional/obrigatória, espaço temporário, dependências, modelos e paralelismo permitido. Isso impede executar tarefas incompatíveis com a máquina.
+
+17. Versionamento interno do contrato
+Adicionar versão ao payload UI-Python e aos eventos Python-UI. Assim mudanças futuras não quebram comandos antigos nem a interface, permitindo evolução gradual e compatibilidade retroativa.
+
+18. Compatibilidade retroativa de comandos
+Criar adaptador para comandos antigos com executar(arquivos, controls, pasta_saida). Permite evoluir para CommandContext sem reescrever tudo imediatamente e sem interromper comandos já funcionais.
+
+19. Centralização de paths
+Padronizar resolução de raiz, pasta instalada, temporários, modelos, logs e saída. Remove caminhos hardcoded, reduz bugs de ambiente e facilita instalação, testes e distribuição.
+
+20. Política de nomes de saída
+Padronizar nomes, incrementos, subpastas, sobrescrita e colisões. Evita inconsistência entre comandos e melhora previsibilidade para usuário, testes automatizados e auditoria.
+
+================================================================================
+BLOCO 3 — IA, GPU, MODELOS E DEPENDÊNCIAS PESADAS
+================================================================================
+
+21. Estratégia de fallback CPU/GPU
+Comandos de IA devem tentar GPU quando disponível e cair para CPU quando possível. A decisão precisa ser registrada, previsível e visível ao usuário para evitar comportamento obscuro.
+
+22. Registry de modelos
+Modelos ONNX/DCNN devem ser versionados, identificados por nome, hash, tamanho, finalidade e compatibilidade. Evita comandos apontando diretamente para arquivos soltos de modelo.
+
+23. Verificação de integridade de modelos
+Antes da inferência, validar existência, hash, versão e compatibilidade do modelo. Isso evita resultados inválidos por modelo errado, corrompido ou substituído indevidamente.
+
+24. Camada própria para ONNX/CUDA
+Criar módulo isolado para carregar runtime, sessão ONNX, providers, CUDA e fallback. Não deixe cada comando implementar sua própria inicialização de IA ou lógica de dispositivo.
+
+25. Isolamento de dependências pesadas
+Dependências como ONNX Runtime GPU, OpenCV, Torch, CUDA e modelos não devem contaminar comandos simples. Separar por pacotes, plugins, runtimes opcionais ou instalação seletiva.
+
+26. Estratégia de distribuição de modelos
+Modelos grandes não precisam necessariamente ir dentro do MSI principal. Pode haver pacote separado, instalação opcional, pasta corporativa padronizada ou mecanismo controlado de atualização.
+
+27. Modo diagnóstico do ambiente
+Criar comando interno “Diagnóstico” para listar runtime, versões, FFmpeg/PyAV, MediaInfo, GPU, CUDA, ONNX, modelos disponíveis, permissões e espaço em disco. Facilita suporte e validação.
+
+28. Cache controlado
+Para comandos caros, cachear resultados intermediários, hashes, metadados e embeddings faciais. Deve ser versionado e invalidado corretamente para não gerar resultado obsoleto ou inconsistente.
+
+29. Auditoria de reprodutibilidade
+Registrar versões de bibliotecas, modelo, parâmetros, hash dos arquivos e ambiente. Em tarefas periciais, isso ajuda a explicar e repetir resultados posteriormente.
+
+30. Política de privacidade e dados sensíveis
+Para comandos com faces, imagens, vídeos e áudio, definir onde dados temporários ficam, quando são apagados e como evitar vazamento por logs, nomes de arquivos ou caches.
+
+================================================================================
+BLOCO 4 — PARALELISMO, ROBUSTEZ OPERACIONAL E PERFORMANCE
+================================================================================
+
+31. Executor comum de tarefas
+Criar um executor reutilizável para processar arquivos sequencialmente ou em paralelo, com progresso, cancelamento, tratamento de erro e agregação de resultados padronizados.
+
+32. Política de paralelismo por tipo de carga
+Separar cargas I/O-bound, CPU-bound e GPU-bound. Vídeo, hash, leitura de metadados e inferência não devem usar a mesma regra de número de workers.
+
+33. Agregação segura de resultados
+Em processamento paralelo, workers não devem escrever diretamente no mesmo CSV/JSON final. Cada worker produz resultado parcial, e uma etapa final agrega tudo com segurança.
+
+34. Progresso por etapa e por arquivo
+A barra única de 0-100 deve evoluir para etapas: preparação, validação, processamento, agregação e gravação. Para lotes grandes, também mostrar arquivo atual e quantidade concluída.
+
+35. Política de erro parcial
+Definir quando o comando deve parar tudo ou continuar ignorando arquivos problemáticos. Em perícia, é importante registrar arquivos corrompidos, inacessíveis ou incompatíveis sem perder o lote inteiro.
+
+36. Relatório de falhas por execução
+Ao final, gerar resumo com arquivos processados, ignorados, corrompidos, erros, avisos e saídas criadas. Complementa logs técnicos com visão operacional clara.
+
+37. Testes com datasets grandes
+Além de recursos pequenos de benchmark, criar massa com centenas/milhares de arquivos, diretórios profundos, nomes Unicode, arquivos grandes, corrompidos e formatos raros.
+
+38. Métricas de performance por etapa
+Além do tempo total, medir preparação, leitura, inferência, escrita, agregação, CPU, RAM, I/O, GPU e VRAM. Isso permite encontrar gargalos reais.
+
+39. Limites de segurança operacional
+Definir limites para número de arquivos, tamanho total, uso de RAM, espaço temporário e workers. Se ultrapassar, a UI deve avisar antes da execução.
+
+40. Retenção e limpeza de logs/jobs
+Criar política para apagar logs, temporários e jobs antigos após X dias ou quando ocuparem muito espaço. Evita crescimento silencioso em máquinas de produção.
+
+================================================================================
+BLOCO 5 — USABILIDADE, AUTOMAÇÃO, DOCUMENTAÇÃO E GOVERNANÇA
+================================================================================
+
+41. Configuração global do PeriTASK
+Criar arquivo de configuração para preferências globais: pasta temporária, paralelismo padrão, uso de GPU, idioma, retenção de logs e modo avançado.
+
+42. Perfis/presets por comando
+Permitir salvar combinações de parâmetros frequentes. Exemplo: comparação facial conservadora, extração rápida de frames ou metadados completos de vídeo.
+
+43. Tratamento robusto de Unicode e caminhos longos
+Garantir suporte a acentos, caracteres especiais, caminhos longos, UNC paths e nomes de arquivo incomuns. Isso é essencial para contexto pericial real.
+
+44. Submenu inteligente no Explorer
+Em vez de uma entrada genérica para tudo, evoluir para submenu PeriTASK com filtros por tipo. Mantém a shell extension simples, mas melhora a experiência do usuário.
+
+45. Modo headless/CLI oficial
+Padronizar execução sem UI para automação, testes e uso em lote. O modo benchmark/CLI pode evoluir para interface oficial documentada e estável.
+
+46. Documentação de criação de comandos
+Criar guia formal: estrutura, contrato, eventos, progresso, cancelamento, testes, parâmetros, outputs e boas práticas. Reduz erro quando novos comandos forem adicionados.
+
+47. Template de novo comando
+Fornecer esqueleto pronto para novos comandos com validação, progresso, cancelamento, logs e resultado. Evita que cada novo comando nasça com padrões diferentes.
+
+48. Classificação de comandos por risco/custo
+Marcar comandos como leves, médios, pesados, GPU, experimentais ou periciais críticos. A UI pode avisar tempo estimado, consumo provável e requisitos.
+
+49. Internacionalização/localização
+Separar textos da UI, logs e mensagens de erro em recursos. O projeto está majoritariamente em português, mas crescerá melhor com textos centralizados.
+
+50. Testes de compatibilidade do instalador
+Testar instalação limpa, atualização, desinstalação, registro do menu de contexto, presença do PythonScript.exe, catálogo, DLLs nativas e chave InstallPath. Evita falhas em ambiente real.
