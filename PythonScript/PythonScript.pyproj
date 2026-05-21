@@ -26,6 +26,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="pytest\gerar_comparacao.py" />
     <Compile Include="utilitario\benchmark.py" />
     <Compile Include="comandos\teste_id.py" />
     <Compile Include="comandos\lista_caminhos_txt.py" />

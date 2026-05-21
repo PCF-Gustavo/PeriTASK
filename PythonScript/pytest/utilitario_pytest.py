@@ -244,6 +244,12 @@ def benchmark_engine_python_path():
 def benchmark_report_path():
     return BASE_DIR / f"BenchmarkReport_{machine_name}.json"
 
+def benchmark_report_referencia_path():
+    return BASE_DIR / f"BenchmarkReport_{machine_name}_referencia.json"
+
+def benchmark_report_comparacao_path():
+    return BASE_DIR / f"BenchmarkReport_{machine_name}_comparacao.json"
+
 
 # =========================
 # SISTEMA
