@@ -16,7 +16,10 @@ Etapa benchmark:
 - test_benchmark_engine_python.py
 - test_benchmark_app_exe.py
 
+Etapa relatório:
 - gerar_relatorio.py
+- gerar_comparacao.py
+
 """
 
 import pytest
@@ -35,6 +38,7 @@ BENCHMARK_FILES = {
     "test_benchmark_app_exe.py",
     
     "gerar_relatorio.py",
+    "gerar_comparacao.py",
 }
 
 _pre_status = {}
@@ -68,15 +72,15 @@ def pytest_collection_modifyitems(session, config, items):
     prioridade_por_arquivo = {
         "test_app_exe.py": 10,
         "test_comunicacao_UI_PythonScript.py": 20,
-
+        
         "test_benchmark_overhead_contrato.py": 80,
         "test_benchmark_comunicacao_UI_PythonScript.py": 90,
         "test_benchmark_inicializacao.py": 100,
         "test_benchmark_engine_python.py": 110,
         "test_benchmark_app_exe.py": 120,
         
-        
         "gerar_relatorio.py": 200,
+        "gerar_comparacao.py": 300,
     }
 
     def prioridade(item):
