@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Text.RegularExpressions;
+using System.Globalization;
+using System.Windows.Media;
 
 namespace UserInterface
 {
@@ -78,7 +80,66 @@ namespace UserInterface
 
                     continue;
                 }
+                if (control.type == "dropdown")
+                {
+                    var container = new StackPanel
+                    {
+                        Orientation = Orientation.Horizontal,
+                        Margin = new Thickness(0, 0, 15, 5),
+                        ToolTip = string.IsNullOrWhiteSpace(control.screenTip)
+                            ? null
+                            : control.screenTip
+                    };
 
+                    var label = new TextBlock
+                    {
+                        Text = control.text,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(0, 0, 5, 0)
+                    };
+
+                    var comboBox = new ComboBox
+                    {
+                        Name = control.id,
+                        IsEnabled = control.enabled ?? true,
+                        MinWidth = 0,
+                        Padding = new Thickness(2, 0, 2, 0),
+                        VerticalAlignment = VerticalAlignment.Center,
+                        ToolTip = string.IsNullOrWhiteSpace(control.screenTip)
+                            ? null
+                            : control.screenTip
+                    };
+
+                    comboBox.Width = CalcularLarguraDropdown(control, comboBox);
+
+                    if (control.items != null)
+                    {
+                        foreach (var item in control.items)
+                        {
+                            comboBox.Items.Add(item);
+                        }
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(control.@default))
+                    {
+                        comboBox.SelectedItem = control.@default;
+                    }
+
+                    if (comboBox.SelectedItem == null && comboBox.Items.Count > 0)
+                    {
+                        comboBox.SelectedIndex = 0;
+                    }
+
+                    container.Children.Add(label);
+                    container.Children.Add(comboBox);
+
+                    PosicionarNoGrid(container, control);
+
+                    renderedControls[control.id] = comboBox;
+                    dynamicPanel.Children.Add(container);
+
+                    continue;
+                }
                 if (control.type == "editbox")
                 {
                     var container = new StackPanel
@@ -107,12 +168,18 @@ namespace UserInterface
                             ? valorInicial
                             : "",
                         IsEnabled = control.enabled ?? true,
-                        Width = CalcularLarguraEditBoxEmCaracteres(control.displayWidth),
+                        MinWidth = 0,
+                        Padding = new Thickness(2, 0, 2, 0),
                         VerticalAlignment = VerticalAlignment.Center,
                         ToolTip = string.IsNullOrWhiteSpace(control.screenTip)
                             ? null
                             : control.screenTip
                     };
+
+                    textBox.Width = CalcularLarguraEditBoxEmCaracteres(
+                        control.displayWidth,
+                        textBox
+                    );
 
                     if (control.stringsize.HasValue && control.stringsize.Value > 0)
                     {
@@ -139,19 +206,88 @@ namespace UserInterface
                 }
             }
         }
-        private static double CalcularLarguraEditBoxEmCaracteres(int? displayWidth)
+        private static double CalcularLarguraDropdown(
+    ControlConfig control,
+    ComboBox comboBox
+)
+        {
+            IEnumerable<string> textos = control.items ?? Enumerable.Empty<string>();
+
+            if (!string.IsNullOrWhiteSpace(control.@default))
+            {
+                textos = textos.Append(control.@default);
+            }
+
+            string maiorTexto = textos
+                .Where(texto => texto != null)
+                .OrderByDescending(texto => MedirTextoEmPixels(texto, comboBox))
+                .FirstOrDefault() ?? "";
+
+            if (string.IsNullOrEmpty(maiorTexto))
+            {
+                maiorTexto = "0";
+            }
+
+            double larguraTexto = MedirTextoEmPixels(maiorTexto, comboBox);
+
+            // Espaço para padding, borda e botão/seta do ComboBox.
+            const double extraComboBox = 24.0;
+
+            return Math.Ceiling(larguraTexto + extraComboBox);
+        }
+
+        private static double CalcularLarguraEditBoxEmCaracteres(
+            int? displayWidth,
+            TextBox textBox
+        )
+        {
+            string textoMedicao = CriarTextoMedicao(displayWidth);
+
+            double larguraTexto = MedirTextoEmPixels(textoMedicao, textBox);
+
+            // Espaço interno mínimo para borda e padding do TextBox.
+            const double extraTextBox = 8.0;
+
+            return Math.Ceiling(larguraTexto + extraTextBox);
+        }
+
+        private static double MedirTextoEmPixels(
+    string texto,
+    Control controleReferencia
+)
+        {
+            var typeface = new Typeface(
+                controleReferencia.FontFamily,
+                controleReferencia.FontStyle,
+                controleReferencia.FontWeight,
+                controleReferencia.FontStretch
+            );
+
+            var formattedText = new FormattedText(
+                texto,
+                CultureInfo.CurrentUICulture,
+                FlowDirection.LeftToRight,
+                typeface,
+                controleReferencia.FontSize,
+                Brushes.Black,
+                VisualTreeHelper.GetDpi(controleReferencia).PixelsPerDip
+            );
+
+            return formattedText.WidthIncludingTrailingWhitespace;
+        }
+
+        private static string CriarTextoMedicao(int? displayWidth)
         {
             const int larguraPadraoEmCaracteres = 10;
-            const double larguraMediaCaractere = 8.0;
-            const double paddingHorizontalTextBox = 18.0;
 
             int quantidadeCaracteres = displayWidth ?? larguraPadraoEmCaracteres;
 
             if (quantidadeCaracteres < 1)
                 quantidadeCaracteres = 1;
 
-            return (quantidadeCaracteres * larguraMediaCaractere) + paddingHorizontalTextBox;
+            return new string('0', quantidadeCaracteres);
         }
+
         private static void PosicionarNoGrid(FrameworkElement element, ControlConfig control)
         {
             int row = control.position?.row ?? 0;
@@ -200,6 +336,10 @@ namespace UserInterface
 
                     case TextBox tb:
                         result[kvp.Key] = tb.Text;
+                        break;
+
+                    case ComboBox comboBox:
+                        result[kvp.Key] = comboBox.SelectedItem?.ToString() ?? "";
                         break;
                 }
             }

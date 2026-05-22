@@ -39,6 +39,7 @@ namespace UserInterface
         public bool? enabled { get; set; }
         public bool? @checked { get; set; }
         public string @default { get; set; }
+        public List<string> items { get; set; }
         public string regex { get; set; }
         public int? displayWidth { get; set; }
         public int? stringsize { get; set; }

@@ -6,8 +6,5 @@
 def executar(arquivos, controls, pasta_saida):
     if controls.get("checkbox_teste_alerta1"):
         pausar_para_usuario(
-            f"Checkbox marcado1. editbox: {controls.get('editbox_quantidade')}"
+            f"Checkbox marcado1. editbox: {controls.get('editbox_quantidade')} dropdown: {controls.get('dropdown_id')}"
         )
-
-    if controls.get("checkbox_teste_alerta2"):
-        pausar_para_usuario("Checkbox marcado2")
