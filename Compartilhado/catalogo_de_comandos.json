@@ -14,12 +14,28 @@
 			"label": "Arquivos -> lista de caminhos em .txt"
 		},
 		{
-			"id": "videos_csv_simplificado",
-			"label": "Vídeos -> tabela simplificada de informações em .csv"
-		},
-		{
-			"id": "videos_csv_completo",
-			"label": "Vídeos -> tabela completa de informações em .csv"
+			"id": "videos_csv",
+			"label": "Vídeos -> tabela de informações em .csv",
+			"ui": {
+				"controls": [
+					{
+						"type": "dropdown",
+						"id": "tipo_tabela",
+						"text": "Tabela:",
+						"items": [
+							"simplificada",
+							"completa"
+						],
+						"default": "tabela simplificada",
+						"enabled": true,
+						"screenTip": "",
+						"position": {
+							"row": 0,
+							"column": 0
+						}
+					}
+				]
+			}
 		},
 		{
 			"id": "teste_id",

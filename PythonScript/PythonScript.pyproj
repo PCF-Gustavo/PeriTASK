@@ -26,6 +26,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="comandos\videos_csv.py" />
     <Compile Include="pytest\gerar_comparacao.py" />
     <Compile Include="pytest\teste_app_exe.py" />
     <Compile Include="pytest\teste_benchmark_app_exe.py" />
@@ -38,8 +39,6 @@
     <Compile Include="utilitario\benchmark.py" />
     <Compile Include="comandos\teste_id.py" />
     <Compile Include="comandos\lista_caminhos_txt.py" />
-    <Compile Include="comandos\videos_csv_completo.py" />
-    <Compile Include="comandos\videos_csv_simplificado.py" />
     <Compile Include="comandos\__init__.py" />
     <Compile Include="utilitario\executor_comando.py" />
     <Compile Include="pytest\conftest.py" />

@@ -1,0 +1,46 @@
+﻿{
+    "diferencas": [
+        {
+            "métrica": "teste_benchmark_app_exe.lista_caminhos_txt.cpu_peak.mean",
+            "referencia": 106.6,
+            "atual": 123.8556,
+            "diferenca_percentual": 16.19
+        },
+        {
+            "métrica": "teste_benchmark_app_exe.lista_caminhos_txt.io.read_iops.mean",
+            "referencia": 26.2667,
+            "atual": 13.1833,
+            "diferenca_percentual": -49.81
+        },
+        {
+            "métrica": "teste_benchmark_app_exe.lista_caminhos_txt.io.read_throughput_bps.mean",
+            "referencia": 26647.9967,
+            "atual": 13276.2967,
+            "diferenca_percentual": -50.18
+        },
+        {
+            "métrica": "teste_benchmark_app_exe.lista_caminhos_txt.io.write_iops.mean",
+            "referencia": 183.9011,
+            "atual": 109.7678,
+            "diferenca_percentual": -40.31
+        },
+        {
+            "métrica": "teste_benchmark_app_exe.lista_caminhos_txt.io.write_throughput_bps.mean",
+            "referencia": 16293.0467,
+            "atual": 6530.3478,
+            "diferenca_percentual": -59.92
+        },
+        {
+            "métrica": "teste_benchmark_build.time_s",
+            "referencia": 52.89,
+            "atual": 78.19,
+            "diferenca_percentual": 47.84
+        },
+        {
+            "métrica": "teste_benchmark_comunicacao_UI_PythonScript.overhead_comunicacao_ui_pythonscript_s",
+            "referencia": 0.4344,
+            "atual": 0.4962,
+            "diferenca_percentual": 14.23
+        }
+    ]
+}

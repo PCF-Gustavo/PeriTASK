@@ -9,7 +9,7 @@ import platform
 import statistics
 import subprocess
 from pathlib import Path
-
+from itertools import product
 import psutil
 
 # ===========================
@@ -535,3 +535,181 @@ def medir_cpu_ram_io(nome, args_factory, rodadas, ignorar):
             "write_throughput_bps": estatisticas_float(runs_write_bytes, casas=2),
         },
     }
+
+
+
+
+def normalizar_valor_para_id(valor):
+    valor = str(valor)
+    valor = valor.strip().lower()
+
+    substituicoes = {
+        " ": "_",
+        "-": "_",
+        "->": "_",
+        "/": "_",
+        "\\": "_",
+        ".": "_",
+        ",": "_",
+        ":": "_",
+        ";": "_",
+        "á": "a",
+        "à": "a",
+        "ã": "a",
+        "â": "a",
+        "é": "e",
+        "ê": "e",
+        "í": "i",
+        "ó": "o",
+        "ô": "o",
+        "õ": "o",
+        "ú": "u",
+        "ç": "c",
+    }
+
+    for antigo, novo in substituicoes.items():
+        valor = valor.replace(antigo, novo)
+
+    while "__" in valor:
+        valor = valor.replace("__", "_")
+
+    return valor.strip("_")
+
+
+def obter_valores_benchmark_do_control(control):
+    tipo = control.get("type")
+    control_id = control.get("id")
+
+    if tipo == "dropdown":
+        items = control.get("items") or []
+
+        if items:
+            return [
+                {
+                    "id": control_id,
+                    "value": str(item),
+                    "label": normalizar_valor_para_id(item),
+                }
+                for item in items
+            ]
+
+        valor_default = str(control.get("default", ""))
+        return [
+            {
+                "id": control_id,
+                "value": valor_default,
+                "label": normalizar_valor_para_id(valor_default),
+            }
+        ]
+
+    if tipo == "checkbox":
+        return [
+            {
+                "id": control_id,
+                "value": False,
+                "label": "false",
+            },
+            {
+                "id": control_id,
+                "value": True,
+                "label": "true",
+            },
+        ]
+
+    if tipo == "editbox":
+        valor_default = str(control.get("default", ""))
+        return [
+            {
+                "id": control_id,
+                "value": valor_default,
+                "label": normalizar_valor_para_id(valor_default),
+            }
+        ]
+
+    return [
+        {
+            "id": control_id,
+            "value": control.get("default"),
+            "label": normalizar_valor_para_id(control.get("default", "")),
+        }
+    ]
+
+
+def montar_benchmark_id(comando_id, combinacao):
+    partes = [comando_id]
+
+    for item in combinacao:
+        control_id = item["id"]
+        label = item["label"]
+
+        if label:
+            partes.append(f"{control_id}='{label}'")
+        else:
+            partes.append(f"{control_id}=''")
+
+    return "|".join(partes)
+
+
+def expandir_comando_em_cenarios_benchmark(comando):
+    comando_id = comando["id"]
+
+    controls_config = (
+        comando
+        .get("ui", {})
+        .get("controls", [])
+    )
+
+    if not controls_config:
+        return [
+            {
+                "benchmark_id": comando_id,
+                "comando_id": comando_id,
+                "controls": {},
+            }
+        ]
+
+    listas_de_valores = [
+        obter_valores_benchmark_do_control(control)
+        for control in controls_config
+    ]
+
+    cenarios = []
+
+    for combinacao in product(*listas_de_valores):
+        controls = {
+            item["id"]: item["value"]
+            for item in combinacao
+        }
+
+        benchmark_id = montar_benchmark_id(
+            comando_id,
+            combinacao,
+        )
+
+        cenarios.append(
+            {
+                "benchmark_id": benchmark_id,
+                "comando_id": comando_id,
+                "controls": controls,
+            }
+        )
+
+    return cenarios
+
+
+def obter_cenarios_benchmark():
+    catalogo_de_comandos = carregar_catalogo_de_comandos()
+
+    cenarios = []
+
+    for comando in catalogo_de_comandos.get("comandos", []):
+        comando_id = comando.get("id", "")
+
+        if comando_id.startswith("teste_"):
+            continue
+
+        cenarios.extend(
+            expandir_comando_em_cenarios_benchmark(comando)
+        )
+
+    return cenarios

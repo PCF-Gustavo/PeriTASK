@@ -112,6 +112,22 @@ namespace UserInterface
             }
         }
 
+        private string _status_Python_ScreenTip;
+
+        public string Status_Python_ScreenTip
+        {
+            get => _status_Python_ScreenTip;
+            set
+            {
+                if (_status_Python_ScreenTip != value)
+                {
+                    _status_Python_ScreenTip = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+
         public bool AguardandoContinuar
         {
             get => _aguardandoContinuar;

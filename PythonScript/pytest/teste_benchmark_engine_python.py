@@ -17,7 +17,7 @@ from utilitario_pytest import (
     criar_argumento_ui,
     medir_time_funcao,
     obter_arquivos_argumentos_teste,
-    obter_catalogo_de_comandos_ids,
+    obter_cenarios_benchmark,
 )
 
 sys.path.append(str(ROOT))
@@ -27,11 +27,11 @@ from main import main
 # ARGUMENTOS GENÉRICOS
 # ===========================
 
-def criar_argv_funcao(func_id):
+def criar_argv_funcao(func_id, controls):
     return [
         "PythonScript.exe",
         obter_arquivos_argumentos_teste(),
-        criar_argumento_ui(func_id),
+        criar_argumento_ui(func_id, controls),
         "--benchmark",
     ]
 
@@ -47,10 +47,19 @@ def executar_main_com_argv(argv):
 
 
 def obter_funcoes_benchmark():
-    return {
-        func_id: (lambda fid=func_id: executar_main_com_argv(criar_argv_funcao(fid)))
-        for func_id in obter_catalogo_de_comandos_ids()
-    }
+    funcs = {}
+
+    for cenario in obter_cenarios_benchmark():
+        benchmark_id = cenario["benchmark_id"]
+        comando_id = cenario["comando_id"]
+        controls = cenario["controls"]
+
+        funcs[benchmark_id] = (
+            lambda cid=comando_id, ctrls=controls:
+            executar_main_com_argv(criar_argv_funcao(cid, ctrls))
+        )
+
+    return funcs
 
 
 def teste_benchmark_engine_python():
@@ -96,4 +105,4 @@ def teste_benchmark_engine_python():
 
 if __name__ == "__main__":
     if "--run-once" in sys.argv:
-        test_pipeline()
+        teste_benchmark_engine_python()

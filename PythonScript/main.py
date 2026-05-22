@@ -16,7 +16,8 @@ def main():
         import json, base64
         pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
         arquivos = list(Path(r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK").iterdir())
-        payload_base64_from_ui = base64.b64encode(json.dumps({"comando_id": "videos_csv_completo"}).encode("utf-8")).decode("utf-8")
+        payload_debug = {"comando_id": "videos_csv","controls": {"qual_tabela": "tabela completa"}}
+        payload_base64_from_ui = base64.b64encode(json.dumps(payload_debug).encode("utf-8")).decode("utf-8")
         
     # =========================
     # MODO NORMAL

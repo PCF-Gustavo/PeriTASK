@@ -55,6 +55,7 @@
                 <TextBlock
                 Grid.Column="0"
                 Text="{Binding Status_Python}"
+                ToolTip="{Binding Status_Python_ScreenTip}"
                 TextWrapping="Wrap"
                 TextTrimming="CharacterEllipsis"
                 MaxHeight="40"

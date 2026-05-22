@@ -4,7 +4,12 @@
 
 
 def executar(arquivos, controls, pasta_saida):
-    if controls.get("checkbox_teste_alerta1"):
+    checkbox_teste_alerta1 = controls.get("checkbox_teste_alerta1")
+    editbox_quantidade = controls.get("editbox_quantidade")
+    dropdown_id = controls.get("dropdown_id")
+    
+
+    if checkbox_teste_alerta1:
         pausar_para_usuario(
-            f"Checkbox marcado1. editbox: {controls.get('editbox_quantidade')} dropdown: {controls.get('dropdown_id')}"
+            f"Checkbox marcado1. editbox: {editbox_quantidade} dropdown: {dropdown_id}"
         )
