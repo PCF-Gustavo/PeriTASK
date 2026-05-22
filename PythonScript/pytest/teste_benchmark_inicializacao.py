@@ -12,19 +12,12 @@ import statistics
 import subprocess
 
 from utilitario_pytest import (
+    WARMUP_RUNS,
+    USED_RUNS,
     EXE_PATH,
     benchmark_inicializacao_path,
     exigir_pythonscript_exe,
 )
-
-
-# ===========================
-# CONFIG RUNS
-# ===========================
-
-WARMUP_RUNS = 1
-USED_RUNS = 9
-
 
 # ===========================
 # BENCHMARK (INICIALIZAÇÃO)
@@ -54,11 +47,7 @@ def medir_startup():
     raise RuntimeError("PERITASK_READY não encontrado")
 
 
-# ===========================
-# TEST
-# ===========================
-
-def test_startup_benchmark():
+def teste_benchmark_inicializacao():
     exigir_pythonscript_exe()
 
     results = []

@@ -20,7 +20,7 @@ from utilitario_pytest import (
 
 
 @pytest.mark.parametrize("func_id", obter_catalogo_de_comandos_ids())
-def test_exe_execucao_generica(func_id):
+def teste_app_exe(func_id):
     exigir_pythonscript_exe()
     limpar_pasta_saida_pytest()
 

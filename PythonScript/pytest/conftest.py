@@ -6,15 +6,16 @@ Objetivos:
 2. Impedir benchmarks se a etapa básica falhar.
 
 Etapa básica:
-- test_app_exe.py
-- test_comunicacao_UI_PythonScript.py
+- teste_app_exe.py
+- teste_comunicacao_UI_PythonScript.py
 
 Etapa benchmark:
-- test_benchmark_overhead_contrato.py
-- test_benchmark_comunicacao_UI_PythonScript.py
-- test_benchmark_inicializacao.py
-- test_benchmark_engine_python.py
-- test_benchmark_app_exe.py
+- teste_benchmark_build.py
+- teste_benchmark_overhead_contrato.py
+- teste_benchmark_comunicacao_UI_PythonScript.py
+- teste_benchmark_inicializacao.py
+- teste_benchmark_engine_python.py
+- teste_benchmark_app_exe.py
 
 Etapa relatório:
 - gerar_relatorio.py
@@ -26,16 +27,17 @@ import pytest
 
 
 PRE_TEST_FILES = {
-    "test_app_exe.py",
-    "test_comunicacao_UI_PythonScript.py",
+    "teste_app_exe.py",
+    "teste_comunicacao_UI_PythonScript.py",
 }
 
 BENCHMARK_FILES = {
-    "test_benchmark_overhead_contrato.py",
-    "test_benchmark_comunicacao_UI_PythonScript.py",
-    "test_benchmark_inicializacao.py",
-    "test_benchmark_engine_python.py",
-    "test_benchmark_app_exe.py",
+    "teste_benchmark_build.py",
+    "teste_benchmark_overhead_contrato.py",
+    "teste_benchmark_comunicacao_UI_PythonScript.py",
+    "teste_benchmark_inicializacao.py",
+    "teste_benchmark_engine_python.py",
+    "teste_benchmark_app_exe.py",
     
     "gerar_relatorio.py",
     "gerar_comparacao.py",
@@ -70,14 +72,15 @@ def pytest_collection_modifyitems(session, config, items):
     """
 
     prioridade_por_arquivo = {
-        "test_app_exe.py": 10,
-        "test_comunicacao_UI_PythonScript.py": 20,
+        "teste_app_exe.py": 10,
+        "teste_comunicacao_UI_PythonScript.py": 20,
         
-        "test_benchmark_overhead_contrato.py": 80,
-        "test_benchmark_comunicacao_UI_PythonScript.py": 90,
-        "test_benchmark_inicializacao.py": 100,
-        "test_benchmark_engine_python.py": 110,
-        "test_benchmark_app_exe.py": 120,
+        "teste_benchmark_build.py": 50,
+        "teste_benchmark_overhead_contrato.py": 80,
+        "teste_benchmark_comunicacao_UI_PythonScript.py": 90,
+        "teste_benchmark_inicializacao.py": 100,
+        "teste_benchmark_engine_python.py": 110,
+        "teste_benchmark_app_exe.py": 120,
         
         "gerar_relatorio.py": 200,
         "gerar_comparacao.py": 300,
@@ -150,6 +153,6 @@ def pytest_runtest_setup(item):
 
     if not _pre_tests_ok():
         pytest.skip(
-            "Benchmark ignorado: test_app_exe.py e "
-            "test_comunicacao_UI_PythonScript.py precisam concluir com êxito primeiro."
+            "Benchmark ignorado: teste_app_exe.py e "
+            "teste_comunicacao_UI_PythonScript.py precisam concluir com êxito primeiro."
         )

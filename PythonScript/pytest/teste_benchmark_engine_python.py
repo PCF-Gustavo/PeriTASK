@@ -10,6 +10,8 @@ import sys
 import json
 
 from utilitario_pytest import (
+    WARMUP_RUNS,
+    USED_RUNS,
     ROOT,
     benchmark_engine_python_path,
     criar_argumento_ui,
@@ -20,15 +22,6 @@ from utilitario_pytest import (
 
 sys.path.append(str(ROOT))
 from main import main
-
-
-# ===========================
-# CONFIG RUNS
-# ===========================
-
-WARMUP_RUNS = 1
-USED_RUNS = 9
-
 
 # ===========================
 # ARGUMENTOS GENÉRICOS
@@ -60,11 +53,7 @@ def obter_funcoes_benchmark():
     }
 
 
-# ===========================
-# TEST PIPELINE
-# ===========================
-
-def test_pipeline():
+def teste_benchmark_engine_python():
     funcs = obter_funcoes_benchmark()
     assert funcs, "Nenhuma função encontrada em catalogo_de_comandos.json"
 

@@ -1,0 +1,275 @@
+﻿{
+    "teste_benchmark_build": {
+        "time_s": 68.73,
+        "size_mb": 37.48
+    },
+    "teste_benchmark_overhead_contrato": {
+        "overhead_contrato_s": 0.00107
+    },
+    "teste_benchmark_comunicacao_UI_PythonScript": {
+        "overhead_comunicacao_ui_pythonscript_s": 0.4247
+    },
+    "teste_benchmark_inicializacao": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "statistics": {
+                "time_s": {
+                    "mean": 0.0335,
+                    "min": 0.0322,
+                    "max": 0.0353
+                }
+            }
+        }
+    },
+    "teste_benchmark_engine_python": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "lista_caminhos_txt": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0059,
+                        "min": 0.0048,
+                        "max": 0.0115
+                    }
+                }
+            },
+            "videos_csv_simplificado": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 1.3111,
+                        "min": 1.2953,
+                        "max": 1.3426
+                    }
+                }
+            },
+            "videos_csv_completo": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 1.4254,
+                        "min": 1.4091,
+                        "max": 1.4429
+                    }
+                }
+            },
+            "teste_id": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0033,
+                        "min": 0.0029,
+                        "max": 0.0037
+                    }
+                }
+            }
+        }
+    },
+    "teste_benchmark_app_exe": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "lista_caminhos_txt": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0814,
+                        "min": 0.0788,
+                        "max": 0.0847
+                    },
+                    "cpu_peak": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "ram_peak_mb": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "read_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        }
+                    }
+                }
+            },
+            "videos_csv_simplificado": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 1.5282,
+                        "min": 1.5121,
+                        "max": 1.5453
+                    },
+                    "cpu_peak": {
+                        "mean": 139.21,
+                        "min": 108.3,
+                        "max": 154.7
+                    },
+                    "ram_peak_mb": {
+                        "mean": 60.29,
+                        "min": 49.27,
+                        "max": 67.73
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 74660.98,
+                            "min": 72710.67,
+                            "max": 76905.12
+                        },
+                        "write_iops": {
+                            "mean": 52.99,
+                            "min": 49.39,
+                            "max": 59.85
+                        },
+                        "read_throughput_bps": {
+                            "mean": 1272849521.08,
+                            "min": 1206566648.1,
+                            "max": 1452962700.0
+                        },
+                        "write_throughput_bps": {
+                            "mean": 1721.92,
+                            "min": 1669.49,
+                            "max": 1815.33
+                        }
+                    }
+                }
+            },
+            "videos_csv_completo": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 1.6333,
+                        "min": 1.6143,
+                        "max": 1.6563
+                    },
+                    "cpu_peak": {
+                        "mean": 108.69,
+                        "min": 108.3,
+                        "max": 108.9
+                    },
+                    "ram_peak_mb": {
+                        "mean": 80.26,
+                        "min": 74.38,
+                        "max": 87.33
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 37154.88,
+                            "min": 35753.77,
+                            "max": 37701.38
+                        },
+                        "write_iops": {
+                            "mean": 39.65,
+                            "min": 39.52,
+                            "max": 39.85
+                        },
+                        "read_throughput_bps": {
+                            "mean": 1478365794.22,
+                            "min": 1469391472.82,
+                            "max": 1491471394.1
+                        },
+                        "write_throughput_bps": {
+                            "mean": 19509.46,
+                            "min": 1462.33,
+                            "max": 42180.97
+                        }
+                    }
+                }
+            },
+            "teste_id": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0778,
+                        "min": 0.076,
+                        "max": 0.0809
+                    },
+                    "cpu_peak": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "ram_peak_mb": {
+                        "mean": 0,
+                        "min": 0,
+                        "max": 0
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_iops": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "read_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        },
+                        "write_throughput_bps": {
+                            "mean": 0,
+                            "min": 0,
+                            "max": 0
+                        }
+                    }
+                }
+            }
+        },
+        "input_files": [
+            "6 - Anexo do Ofício 7251-FNDE.mp3",
+            "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+            "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv",
+            "MHDX_ch5_main_20210913112600_20210913112900.dav",
+            "MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav",
+            "video_corrompido.mp4",
+            "video_original.mp4",
+            "video_whatsapp.mp4"
+        ],
+        "system": {
+            "cpu": {
+                "name": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+                "physical_cores": 6,
+                "logical_cores": 12,
+                "freq_mhz": 2100.0
+            },
+            "ram": {
+                "total_gb": 15.39
+            },
+            "disk": {
+                "type": "NVME SSD"
+            },
+            "gpu": {
+                "name": "AMD Radeon(TM) Graphics",
+                "vram_gb": 0.5
+            },
+            "os": "Windows",
+            "os_version": "10.0.19045",
+            "machine": "ma2023127403",
+            "machine_alias": "notebook"
+        }
+    }
+}

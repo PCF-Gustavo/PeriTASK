@@ -4,12 +4,6 @@ BENCHMARK: CONTRATO PURO PYTHON
 ===========================================================
 Mede apenas o overhead interno do contrato UI -> PythonScript,
 sem executar UserInterface.exe, sem abrir janela e sem processar mídia.
-
-Este benchmark chama diretamente:
-    executar_argumento_ui(argumento_ui, arquivos, pasta_saida)
-
-Durante o benchmark, os comandos reais são substituídos por uma função noop,
-para medir apenas o custo do contrato/roteamento.
 """
 
 import base64
@@ -20,24 +14,18 @@ import time
 import pytest
 
 from utilitario_pytest import (
+    WARMUP_RUNS,
+    USED_RUNS,
     BASE_DIR,
     ROOT,
-    machine_name,
     obter_catalogo_de_comandos_ids,
+    benchmark_overhead_contrato_path
 )
 
 sys.path.append(str(ROOT))
 
 from utilitario.executor_comando import processar_payload
 import comandos
-
-
-# ===========================
-# CONFIG RUNS
-# ===========================
-WARMUP_RUNS = 1
-USED_RUNS = 50
-
 
 # ===========================
 # HELPERS
@@ -78,10 +66,7 @@ def medir_overhead_medio(func, rodadas, ignorar):
     return statistics.mean(tempos_validos)
 
 
-# ===========================
-# BENCHMARK
-# ===========================
-def test_benchmark_overhead_contrato(monkeypatch):
+def teste_benchmark_overhead_contrato(monkeypatch):
     comandos_ids = obter_catalogo_de_comandos_ids()
 
     assert comandos_ids, "Nenhum comando encontrado no catalogo_de_comandos.json"
@@ -124,7 +109,7 @@ def test_benchmark_overhead_contrato(monkeypatch):
         "overhead_contrato_s": overhead_contrato_s
     }
 
-    output_path = BASE_DIR / f"test_benchmark_overhead_contrato_{machine_name}.json"
+    output_path = benchmark_overhead_contrato_path()
 
     with open(output_path, "w", encoding="utf-8-sig") as f:
         json.dump(output, f, indent=4, ensure_ascii=False)

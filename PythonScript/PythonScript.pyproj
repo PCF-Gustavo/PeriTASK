@@ -13,7 +13,7 @@
     <RootNamespace>PythonScript</RootNamespace>
     <InterpreterId>MSBuild|venv|$(MSBuildProjectFullPath)</InterpreterId>
     <TestFramework>pytest</TestFramework>
-    <UnitTestPattern>test*.py</UnitTestPattern>
+    <UnitTestPattern>teste_*.py</UnitTestPattern>
     <UnitTestRootDirectory>.</UnitTestRootDirectory>
     <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
@@ -27,6 +27,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="pytest\gerar_comparacao.py" />
+    <Compile Include="pytest\teste_app_exe.py" />
+    <Compile Include="pytest\teste_benchmark_app_exe.py" />
+    <Compile Include="pytest\teste_benchmark_comunicacao_UI_PythonScript.py" />
+    <Compile Include="pytest\teste_benchmark_engine_python.py" />
+    <Compile Include="pytest\teste_benchmark_inicializacao.py" />
+    <Compile Include="pytest\teste_benchmark_overhead_contrato.py" />
+    <Compile Include="pytest\teste_benchmark_build.py" />
+    <Compile Include="pytest\teste_comunicacao_UI_PythonScript.py" />
     <Compile Include="utilitario\benchmark.py" />
     <Compile Include="comandos\teste_id.py" />
     <Compile Include="comandos\lista_caminhos_txt.py" />
@@ -35,15 +43,8 @@
     <Compile Include="comandos\__init__.py" />
     <Compile Include="utilitario\executor_comando.py" />
     <Compile Include="pytest\conftest.py" />
-    <Compile Include="pytest\test_benchmark_comunicacao_UI_PythonScript.py" />
-    <Compile Include="pytest\test_benchmark_overhead_contrato.py" />
-    <Compile Include="pytest\test_comunicacao_UI_PythonScript.py" />
-    <Compile Include="pytest\test_app_exe.py" />
-    <Compile Include="pytest\test_benchmark_app_exe.py" />
-    <Compile Include="pytest\test_benchmark_engine_python.py" />
     <Compile Include="pytest\utilitario_pytest.py" />
     <Compile Include="pytest\gerar_relatorio.py" />
-    <Compile Include="pytest\test_benchmark_inicializacao.py" />
     <Compile Include="main.py" />
     <Compile Include="utilitario\mediainfo.py" />
     <Compile Include="utilitario\caminhos.py" />
@@ -68,28 +69,23 @@
       <Link>catalogo_de_comandos.json</Link>
     </Content>
     <Content Include="pytest.ini" />
-    <Content Include="pytest\recursos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv" />
-    <Content Include="pytest\recursos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv" />
-    <Content Include="pytest\recursos\MHDX_ch5_main_20210913112600_20210913112900.dav" />
-    <Content Include="pytest\recursos\MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav" />
-    <Content Include="pytest\recursos\video_corrompido.mp4" />
-    <Content Include="pytest\recursos\video_original.mp4" />
-    <Content Include="pytest\recursos\video_whatsapp.mp4" />
+    <Content Include="pytest\recursos\audios\6 - Anexo do Ofício 7251-FNDE.mp3" />
+    <Content Include="pytest\recursos\videos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv" />
+    <Content Include="pytest\recursos\videos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv" />
+    <Content Include="pytest\recursos\videos\MHDX_ch5_main_20210913112600_20210913112900.dav" />
+    <Content Include="pytest\recursos\videos\MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav" />
+    <Content Include="pytest\recursos\videos\video_corrompido.mp4" />
+    <Content Include="pytest\recursos\videos\video_original.mp4" />
+    <Content Include="pytest\recursos\videos\video_whatsapp.mp4" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="comandos\" />
     <Folder Include="pytest\recursos\" />
+    <Folder Include="pytest\recursos\audios\" />
+    <Folder Include="pytest\recursos\videos\" />
     <Folder Include="utilitario\" />
     <Folder Include="pytest\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
-  <!-- Uncomment the CoreCompile target to enable the Build command in
-       Visual Studio and specify your pre- and post-build commands in
-       the BeforeBuild and AfterBuild targets below. -->
-  <!--<Target Name="CoreCompile" />-->
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
 </Project>

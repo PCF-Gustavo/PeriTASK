@@ -14,7 +14,7 @@ from utilitario_pytest import (
 )
 
 
-def test_comunicacao_UI_PythonScript():
+def teste_comunicacao_UI_PythonScript():
     rotas = obter_catalogo_de_comandos_ids()
     assert rotas, "Nenhuma rota encontrada no catalogo_de_comandos.json"
 

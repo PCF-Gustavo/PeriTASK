@@ -67,8 +67,8 @@ def caminho_eh_overhead_direto(caminho: tuple[str, ...]) -> bool:
     Overheads diretos não possuem mean/min/max.
 
     Exemplos:
-        test_benchmark_overhead_contrato.overhead_contrato_s
-        test_benchmark_comunicacao_UI_PythonScript.overhead_comunicacao_ui_pythonscript_s
+        teste_benchmark_overhead_contrato.overhead_contrato_s
+        teste_benchmark_comunicacao_UI_PythonScript.overhead_comunicacao_ui_pythonscript_s
     """
     if not caminho:
         return False
@@ -84,8 +84,8 @@ def caminho_eh_metrica_tempo_s(caminho: tuple[str, ...]) -> bool:
 
     Exemplos:
         ...statistics.time_s.mean
-        test_benchmark_overhead_contrato.overhead_contrato_s
-        test_benchmark_comunicacao_UI_PythonScript.overhead_comunicacao_ui_pythonscript_s
+        teste_benchmark_overhead_contrato.overhead_contrato_s
+        teste_benchmark_comunicacao_UI_PythonScript.overhead_comunicacao_ui_pythonscript_s
     """
     if not caminho:
         return False
@@ -213,10 +213,10 @@ def formatar_nome_metrica(caminho: tuple[str, ...]) -> str:
     que não agregam muito no relatório.
 
     Exemplo:
-        test_benchmark_engine_python.results.videos_csv_simplificado.statistics.time_s.mean
+        teste_benchmark_engine_python.results.videos_csv_simplificado.statistics.time_s.mean
 
     Vira:
-        test_benchmark_engine_python.videos_csv_simplificado.time_s.mean
+        teste_benchmark_engine_python.videos_csv_simplificado.time_s.mean
     """
     partes_removidas = {
         "results",
@@ -299,7 +299,7 @@ def comparar_benchmark_reports(
     }
 
 
-def test_generate_benchmark_report_comparacao():
+def teste_gerar_comparacao():
     referencia_path = benchmark_report_referencia_path()
     atual_path = benchmark_report_path()
     output_path = benchmark_report_comparacao_path()

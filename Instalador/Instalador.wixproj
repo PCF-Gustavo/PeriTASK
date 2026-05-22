@@ -49,14 +49,6 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
-    <ProjectReference Include="..\PythonScript\PythonScript.pyproj">
-      <Name>PythonScript</Name>
-      <Project>{22286225-b8e5-4d4c-9be2-9dfc39e7bffe}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
     <ProjectReference Include="..\UserInterface\UserInterface.csproj">
       <Name>UserInterface</Name>
       <Project>{58915db0-3d7b-421e-8ced-fa2f91f2e400}</Project>

@@ -12,6 +12,8 @@ import json
 from pathlib import Path
 
 from utilitario_pytest import (
+    WARMUP_RUNS,
+    USED_RUNS,
     benchmark_app_exe_path,
     collect_static_system_info,
     criar_args_pythonscript_exe,
@@ -21,15 +23,6 @@ from utilitario_pytest import (
     obter_arquivos_recursos_teste,
     obter_catalogo_de_comandos_ids,
 )
-
-
-# ===========================
-# CONFIG RUNS
-# ===========================
-
-WARMUP_RUNS = 1
-USED_RUNS = 9
-
 
 # ===========================
 # ARGUMENTOS GENÉRICOS
@@ -46,11 +39,7 @@ def obter_funcoes_benchmark():
     }
 
 
-# ===========================
-# TEST PIPELINE
-# ===========================
-
-def test_pipeline():
+def teste_benchmark_app_exe():
     exigir_pythonscript_exe()
 
     system = collect_static_system_info()
@@ -109,7 +98,6 @@ def test_pipeline():
         "input_files": [Path(v).name for v in arquivos],
         "system": system,
     }
-
     output_path = benchmark_app_exe_path()
 
     with open(output_path, "w", encoding="utf-8-sig") as f:
@@ -120,4 +108,4 @@ def test_pipeline():
 
 if __name__ == "__main__":
     if "--run-once" in sys.argv:
-        test_pipeline()
+        teste_benchmark_app_exe()

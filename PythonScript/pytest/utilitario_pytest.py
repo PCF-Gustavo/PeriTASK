@@ -12,6 +12,12 @@ from pathlib import Path
 
 import psutil
 
+# ===========================
+# CONFIG RUNS
+# ===========================
+WARMUP_RUNS = 1
+USED_RUNS = 9
+
 # =========================
 # PATHS
 # =========================
@@ -72,10 +78,9 @@ def criar_argumento_ui(comando_id, controls=None):
 # =========================
 # INPUTS DE TESTE
 # =========================
-
 def obter_arquivos_recursos_teste():
     pasta_recursos = BASE_DIR / "recursos"
-    arquivos = [str(p) for p in pasta_recursos.iterdir() if p.is_file()]
+    arquivos = [str(p) for p in pasta_recursos.rglob("*") if p.is_file()]
     assert arquivos, f"Nenhum arquivo encontrado em: {pasta_recursos}"
     return arquivos
 
@@ -226,20 +231,22 @@ def validar_saidas_genericas(pasta_saida: Path = PASTA_SAIDA_PYTEST):
 # =========================
 
 def benchmark_overhead_contrato_path():
-    return BASE_DIR / f"test_benchmark_overhead_contrato_{machine_name}.json"
+    return BASE_DIR / f"teste_benchmark_overhead_contrato_{machine_name}.json"
 
 def benchmark_comunicacao_UI_PythonScript_path():
-    return BASE_DIR / f"test_benchmark_comunicacao_UI_PythonScript_{machine_name}.json"
+    return BASE_DIR / f"teste_benchmark_comunicacao_UI_PythonScript_{machine_name}.json"
+
+def benchmark_build_path():
+    return BASE_DIR / f"teste_benchmark_build_{machine_name}.json"
 
 def benchmark_inicializacao_path():
-    return BASE_DIR / f"test_benchmark_inicializacao_{machine_name}.json"
+    return BASE_DIR / f"teste_benchmark_inicializacao_{machine_name}.json"
 
 def benchmark_app_exe_path():
-    return BASE_DIR / f"test_benchmark_app_exe_{machine_name}.json"
-
+    return BASE_DIR / f"teste_benchmark_app_exe_{machine_name}.json"
 
 def benchmark_engine_python_path():
-    return BASE_DIR / f"test_benchmark_engine_python_{machine_name}.json"
+    return BASE_DIR / f"teste_benchmark_engine_python_{machine_name}.json"
 
 def benchmark_report_path():
     return BASE_DIR / f"BenchmarkReport_{machine_name}.json"

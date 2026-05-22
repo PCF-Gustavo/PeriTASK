@@ -11,21 +11,14 @@ import statistics
 import time
 
 from utilitario_pytest import (
-    BASE_DIR,
-    machine_name,
+    WARMUP_RUNS,
+    USED_RUNS,
     criar_args_ui_benchmark,
     criar_arquivo_txt_temporario_para_ui,
     executar_subprocess,
     obter_catalogo_de_comandos_ids,
+    benchmark_comunicacao_UI_PythonScript_path
 )
-
-
-# ===========================
-# CONFIG RUNS
-# ===========================
-WARMUP_RUNS = 1
-USED_RUNS = 9
-
 
 # ===========================
 # HELPERS
@@ -73,10 +66,7 @@ def medir_overhead_medio_rota(rota, arquivo_teste):
     return statistics.mean(tempos_validos)
 
 
-# ===========================
-# BENCHMARK
-# ===========================
-def test_benchmark_comunicacao_UI_PythonScript():
+def teste_benchmark_comunicacao_UI_PythonScript():
     rotas = obter_catalogo_de_comandos_ids()
     assert rotas, "Nenhuma rota encontrada no catalogo_de_comandos.json"
 
@@ -93,9 +83,8 @@ def test_benchmark_comunicacao_UI_PythonScript():
     output = {
         "overhead_comunicacao_ui_pythonscript_s": overhead_comunicacao_s
     }
-
-    output_path = BASE_DIR / f"test_benchmark_comunicacao_UI_PythonScript_{machine_name}.json"
-
+    output_path = benchmark_comunicacao_UI_PythonScript_path()
+    
     with open(output_path, "w", encoding="utf-8-sig") as f:
         json.dump(output, f, indent=4, ensure_ascii=False)
 
@@ -103,4 +92,4 @@ def test_benchmark_comunicacao_UI_PythonScript():
 
 
 if __name__ == "__main__":
-    test_benchmark_comunicacao_UI_PythonScript()
+    teste_benchmark_comunicacao_UI_PythonScript()
