@@ -10,12 +10,12 @@ Ferramenta modular para automatizar e agilizar tarefas periciais.
 
 ## 📌 Visão Geral
 
-O **PeriTASK** é um sistema modular desenvolvido para facilitar o processamento de arquivos e a execução de rotinas técnicas em Python.
+O **PeriTASK** é um sistema modular desenvolvido para facilitar o processamento de arquivos e a execução de rotinas em Python.
 
 O projeto combina:
 
-- Interface gráfica (C#)
 - Scripts de processamento (Python)
+- Interface gráfica (C#)
 - Integração com o Windows (menu de contexto)
 - Instalador automatizado
 
@@ -28,7 +28,7 @@ Fluxo típico de uso:
 1. Usuário clica com botão direito em um arquivo
 2. Seleciona opção do PeriTASK
 3. Interface é iniciada
-4. Usuário interage com a interface (configurações, opções, etc.)
+4. Usuário interage com a interface (comandos, opções, etc.)
 5. Script Python é executado
 6. Resultado é gerado/apresentado
 
@@ -42,7 +42,7 @@ Fluxo típico de uso:
 
 ## 🚀 Instalação
 
-1. Baixe a versão mais recente na aba **Releases**
+1. Baixe a versão mais recente na aba [Releases do GitHub](https://github.com/PCF-Gustavo/PeriTASK/releases/latest)
 2. Execute o instalador
 
 ---
