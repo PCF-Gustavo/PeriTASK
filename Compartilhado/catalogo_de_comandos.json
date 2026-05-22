@@ -26,7 +26,7 @@
 							"simplificada",
 							"completa"
 						],
-						"default": "tabela simplificada",
+						"default": "simplificada",
 						"enabled": true,
 						"screenTip": "",
 						"position": {
