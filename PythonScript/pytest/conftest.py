@@ -4,6 +4,7 @@ Configuração global dos testes pytest do PeriTASK.
 Objetivos:
 1. Ordenar a execução quando todos os testes forem rodados pelo Test Explorer/pytest.
 2. Impedir benchmarks se a etapa básica falhar.
+3. Permitir rodar testes/benchmarks isolados pelo Test Explorer sem bloqueio dos pré-testes.
 
 Etapa básica:
 - teste_app_exe.py
@@ -38,12 +39,13 @@ BENCHMARK_FILES = {
     "teste_benchmark_inicializacao.py",
     "teste_benchmark_engine_python.py",
     "teste_benchmark_app_exe.py",
-    
+
     "gerar_relatorio.py",
     "gerar_comparacao.py",
 }
 
 _pre_status = {}
+_pre_tests_coletados_na_sessao = False
 
 
 def pytest_sessionstart(session):
@@ -51,6 +53,9 @@ def pytest_sessionstart(session):
     Inicializa o estado dos pré-testes no começo da sessão.
     """
     global _pre_status
+    global _pre_tests_coletados_na_sessao
+
+    _pre_tests_coletados_na_sessao = False
 
     _pre_status = {
         file_name: {
@@ -69,19 +74,34 @@ def pytest_collection_modifyitems(session, config, items):
     2. Teste de comunicação UI -> PythonScript
     3. Benchmarks
     4. Relatório final
+
+    Flexibilização:
+    - Se os pré-testes não foram coletados nesta sessão, entende-se que
+      o usuário está rodando teste isolado, então os benchmarks não serão
+      bloqueados por ausência dos pré-testes.
     """
+    global _pre_tests_coletados_na_sessao
+
+    arquivos_coletados = {
+        item.path.name
+        for item in items
+    }
+
+    _pre_tests_coletados_na_sessao = bool(
+        arquivos_coletados & PRE_TEST_FILES
+    )
 
     prioridade_por_arquivo = {
         "teste_app_exe.py": 10,
         "teste_comunicacao_UI_PythonScript.py": 20,
-        
+
         "teste_benchmark_build.py": 50,
         "teste_benchmark_overhead_contrato.py": 80,
         "teste_benchmark_comunicacao_UI_PythonScript.py": 90,
         "teste_benchmark_inicializacao.py": 100,
         "teste_benchmark_engine_python.py": 110,
         "teste_benchmark_app_exe.py": 120,
-        
+
         "gerar_relatorio.py": 200,
         "gerar_comparacao.py": 300,
     }
@@ -143,12 +163,20 @@ def _pre_tests_ok():
 
 def pytest_runtest_setup(item):
     """
-    Benchmarks só rodam se os dois testes básicos tiverem passado
-    na mesma sessão pytest.
+    Benchmarks só exigem os dois testes básicos quando os pré-testes
+    foram coletados na mesma sessão pytest.
+
+    Isso permite rodar um benchmark/teste isolado pelo Test Explorer
+    sem ser bloqueado pelo conftest.py.
     """
     file_name = item.path.name
 
     if file_name not in BENCHMARK_FILES:
+        return
+
+    # Execução isolada:
+    # Se nenhum pré-teste foi coletado nesta sessão, não bloqueia.
+    if not _pre_tests_coletados_na_sessao:
         return
 
     if not _pre_tests_ok():

@@ -77,6 +77,27 @@ def caminho_eh_overhead_direto(caminho: tuple[str, ...]) -> bool:
 
     return nome_campo.startswith("overhead_")
 
+def caminho_eh_build_direto(caminho: tuple[str, ...]) -> bool:
+    """
+    Métricas diretas do benchmark de build.
+
+    Exemplos:
+        teste_benchmark_build.time_s
+        teste_benchmark_build.size_mb
+    """
+    if len(caminho) != 2:
+        return False
+
+    nome_benchmark = caminho[0]
+    nome_campo = caminho[1]
+
+    return (
+        nome_benchmark == "teste_benchmark_build"
+        and nome_campo in {
+            "time_s",
+            "size_mb",
+        }
+    )
 
 def caminho_eh_metrica_tempo_s(caminho: tuple[str, ...]) -> bool:
     """
@@ -99,18 +120,21 @@ def caminho_eh_metrica_tempo_s(caminho: tuple[str, ...]) -> bool:
     # Exemplo: overhead_contrato_s
     return nome_campo.endswith("_s")
 
-
 def caminho_parece_benchmark(caminho: tuple[str, ...]) -> bool:
     """
     Mantém somente métricas que fazem sentido para comparação final:
 
     - métricas mean dentro de results/statistics;
-    - overheads diretos.
+    - overheads diretos;
+    - métricas diretas do benchmark de build.
     """
     if caminho_deve_ser_ignorado(caminho):
         return False
 
     if caminho_eh_overhead_direto(caminho):
+        return True
+
+    if caminho_eh_build_direto(caminho):
         return True
 
     if "results" in caminho and caminho_eh_mean(caminho):

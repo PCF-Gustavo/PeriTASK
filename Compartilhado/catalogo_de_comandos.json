@@ -42,11 +42,13 @@
 						"type": "dropdown",
 						"id": "dropdown_id",
 						"text": "Escolha apenas 1:",
-						"default": "10",
+						"items": [
+							"0",
+							"1",
+							"2"
+						],
+						"default": "1",
 						"enabled": true,
-						"regex": "^[1-9]\\d*$",
-						"stringsize": 3,
-						"displayWidth": 3,
 						"screenTip": "Escolha uma opção.",
 						"position": {
 							"row": 1,
