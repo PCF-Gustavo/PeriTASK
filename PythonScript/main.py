@@ -15,7 +15,7 @@ def main():
         from pathlib import Path
         import json, base64
         pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
-        arquivos = list(Path(r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK").iterdir())
+        arquivos = list(Path(pasta_saida).iterdir())
         payload_debug = {"comando_id": "videos_csv","controls": {"tipo_tabela": "completa"}}
         payload_base64_from_ui = base64.b64encode(json.dumps(payload_debug).encode("utf-8")).decode("utf-8")
         

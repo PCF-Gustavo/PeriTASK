@@ -1,0 +1,225 @@
+﻿{
+    "teste_benchmark_build": {
+        "time_s": 60.09,
+        "size_mb": 37.48
+    },
+    "teste_benchmark_overhead_contrato": {
+        "overhead_contrato_s": 0.000903
+    },
+    "teste_benchmark_comunicacao_UI_PythonScript": {
+        "overhead_comunicacao_ui_pythonscript_s": 0.6176
+    },
+    "teste_benchmark_inicializacao": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "statistics": {
+                "time_s": {
+                    "mean": 0.056,
+                    "min": 0.0437,
+                    "max": 0.0781
+                }
+            }
+        }
+    },
+    "teste_benchmark_engine_python": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "lista_caminhos_txt": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.0041,
+                        "min": 0.0036,
+                        "max": 0.005
+                    }
+                }
+            },
+            "videos_csv|tipo_tabela='simplificada'": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 2.2688,
+                        "min": 2.2416,
+                        "max": 2.2985
+                    }
+                }
+            },
+            "videos_csv|tipo_tabela='completa'": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 2.1724,
+                        "min": 2.1116,
+                        "max": 2.2232
+                    }
+                }
+            }
+        }
+    },
+    "teste_benchmark_app_exe": {
+        "run_info": {
+            "warmup_runs": 1,
+            "used_runs": 9
+        },
+        "results": {
+            "lista_caminhos_txt": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 0.1602,
+                        "min": 0.1479,
+                        "max": 0.1936
+                    },
+                    "cpu_peak": {
+                        "mean": 99.9222,
+                        "min": 62.0,
+                        "max": 154.8
+                    },
+                    "ram_peak_mb": {
+                        "mean": 15.7244,
+                        "min": 12.0,
+                        "max": 16.7
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 0.0,
+                            "min": 0.0,
+                            "max": 0.0
+                        },
+                        "write_iops": {
+                            "mean": 26.3644,
+                            "min": 0.0,
+                            "max": 39.73
+                        },
+                        "read_throughput_bps": {
+                            "mean": 0.0,
+                            "min": 0.0,
+                            "max": 0.0
+                        },
+                        "write_throughput_bps": {
+                            "mean": 725.0333,
+                            "min": 0.0,
+                            "max": 1092.64
+                        }
+                    }
+                }
+            },
+            "videos_csv|tipo_tabela='simplificada'": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 2.655,
+                        "min": 2.5825,
+                        "max": 2.7916
+                    },
+                    "cpu_peak": {
+                        "mean": 172.4222,
+                        "min": 124.5,
+                        "max": 217.7
+                    },
+                    "ram_peak_mb": {
+                        "mean": 70.9456,
+                        "min": 59.83,
+                        "max": 76.2
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 13548.9311,
+                            "min": 12858.24,
+                            "max": 13869.08
+                        },
+                        "write_iops": {
+                            "mean": 4.6678,
+                            "min": 4.26,
+                            "max": 5.13
+                        },
+                        "read_throughput_bps": {
+                            "mean": 495160057.3756,
+                            "min": 469278900.46,
+                            "max": 507364421.84
+                        },
+                        "write_throughput_bps": {
+                            "mean": 380.3344,
+                            "min": 96.11,
+                            "max": 746.64
+                        }
+                    }
+                }
+            },
+            "videos_csv|tipo_tabela='completa'": {
+                "statistics": {
+                    "time_s": {
+                        "mean": 3.1241,
+                        "min": 2.5338,
+                        "max": 7.4262
+                    },
+                    "cpu_peak": {
+                        "mean": 176.0889,
+                        "min": 124.6,
+                        "max": 217.7
+                    },
+                    "ram_peak_mb": {
+                        "mean": 86.4944,
+                        "min": 78.47,
+                        "max": 92.48
+                    },
+                    "io": {
+                        "read_iops": {
+                            "mean": 9296.0089,
+                            "min": 3988.61,
+                            "max": 10143.67
+                        },
+                        "write_iops": {
+                            "mean": 4.6278,
+                            "min": 2.1,
+                            "max": 5.34
+                        },
+                        "read_throughput_bps": {
+                            "mean": 505925661.1711,
+                            "min": 217075722.78,
+                            "max": 552057727.06
+                        },
+                        "write_throughput_bps": {
+                            "mean": 1114.5844,
+                            "min": 98.17,
+                            "max": 1839.89
+                        }
+                    }
+                }
+            }
+        },
+        "input_files": [
+            "6 - Anexo do Ofício 7251-FNDE.mp3",
+            "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv",
+            "00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv",
+            "MHDX_ch5_main_20210913112600_20210913112900.dav",
+            "MHDX_ch5_main_20210913112600_20210913112900_corrompido.dav",
+            "video_corrompido.mp4",
+            "video_original.mp4",
+            "video_whatsapp.mp4"
+        ],
+        "system": {
+            "cpu": {
+                "name": "Intel64 Family 6 Model 85 Stepping 7, GenuineIntel",
+                "physical_cores": 24,
+                "logical_cores": 48,
+                "freq_mhz": 2195.0
+            },
+            "ram": {
+                "total_gb": 94.7
+            },
+            "disk": {
+                "type": "SSD SATA"
+            },
+            "gpu": {
+                "name": "NVIDIA RTX A2000",
+                "vram_gb": 5.99
+            },
+            "os": "Windows",
+            "os_version": "10.0.26200",
+            "machine": "MASETEC31224",
+            "machine_alias": "workstation"
+        }
+    }
+}

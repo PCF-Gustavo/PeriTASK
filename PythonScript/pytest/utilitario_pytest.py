@@ -42,6 +42,7 @@ from utilitario.executor_comando import carregar_catalogo_de_comandos
 
 ALIASES = {
     "MA2023127403": "notebook",
+    "MASETEC31224": "workstation",
 }
 
 
