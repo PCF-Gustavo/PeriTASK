@@ -119,7 +119,7 @@ O projeto segue versionamento semântico:
 	- [WiX Toolset v3 Build Tools](https://github.com/wixtoolset/wix3/releases/latest)
 	- Python em PythonScript\venv com as bibliotecas listadas em PythonScript\requirements.txt
 - O desenvolvimento foi realizado em:
-	- Visual Studio 2022
+	- Visual Studio 2026
 	- Python 3.13
    	- WiX Toolset v3.14
 
