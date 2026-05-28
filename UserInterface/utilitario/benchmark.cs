@@ -5,7 +5,7 @@ using System.Text.Json;
 
 namespace UserInterface
 {
-    public static class benchmark
+    public static class Benchmark
     {
         public static int ExecutarBenchmarkCli(string[] args)
         {
@@ -32,7 +32,7 @@ namespace UserInterface
                 }
 
                 string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                string solutionRoot = caminhos.EncontrarRaizSolucao(baseDir);
+                string solutionRoot = Caminhos.EncontrarRaizSolucao(baseDir);
 
                 string comboPath = Path.Combine(
                     solutionRoot,

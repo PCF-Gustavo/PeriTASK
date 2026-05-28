@@ -38,6 +38,30 @@
 			}
 		},
 		{
+			"id": "espectrograma",
+			"label": "Vídeos/Áudios -> espectrograma em .png",
+			"ui": {
+				"controls": [
+					{
+						"type": "dropdown",
+						"id": "escala_y",
+						"text": "Escala do eixo Y:",
+						"items": [
+							"linear",
+							"logaritmica"
+						],
+						"default": "linear",
+						"enabled": true,
+						"screenTip": "",
+						"position": {
+							"row": 0,
+							"column": 0
+						}
+					}
+				]
+			}
+		},
+		{
 			"id": "teste_id",
 			"label": "teste",
 			"ui": {
@@ -80,7 +104,6 @@
 						"enabled": true,
 						"regex": "^[1-9]\\d*$",
 						"stringsize": 3,
-						"displayWidth": 3,
 						"screenTip": "Informe um número inteiro positivo.",
 						"position": {
 							"row": 2,

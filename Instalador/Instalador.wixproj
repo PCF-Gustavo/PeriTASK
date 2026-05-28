@@ -66,31 +66,13 @@
   <Target Name="EnsurePythonEnv" Condition="!Exists('$(SolutionDir)PythonScript\venv\Scripts\python.exe')">
 	<Error Text="Python virtual environment not found in PythonScript\venv." />
   </Target>
-	
 	<Target Name="BeforeBuild">
 		<Exec Command='"$(WixToolPath)heat.exe" dir "$(PythonDist)" -cg PythonScriptGroup -dr INSTALLFOLDER -var var.PythonDist -gg -scom -sreg -sfrag -srd -out "$(ProjectDir)PythonScriptFragment.wxs"' />
 	</Target>
-
-	<Target Name="CleanPythonBuild" BeforeTargets="BeforeBuild">
-		<RemoveDir Directories="$(SolutionDir)Instalador\bin" />
-		<RemoveDir Directories="$(SolutionDir)Instalador\build" />
-		<RemoveDir Directories="$(SolutionDir)Instalador\obj" />
-	</Target>
-
 	<Target Name="CleanHeat" BeforeTargets="BeforeBuild">
 		<Delete Files="$(ProjectDir)PythonScriptFragment.wxs" ContinueOnError="true" />
 	</Target>
-
-
 	<Target Name="BuildPython" BeforeTargets="BeforeBuild" DependsOnTargets="EnsurePythonEnv">
-	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --include-data-dir=&quot;$(SolutionDir)Compartilhado=Compartilhado&quot; --include-package=comandos --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --remove-output &quot;$(SolutionDir)PythonScript\main.py&quot;" />
+	  <Exec Command="&quot;$(SolutionDir)PythonScript\venv\Scripts\python.exe&quot; -m nuitka --standalone --include-data-dir=&quot;$(SolutionDir)Compartilhado=Compartilhado&quot; --include-package=comandos --assume-yes-for-downloads --output-dir=&quot;$(SolutionDir)Instalador\build&quot; --output-filename=PythonScript.exe --include-module=av --include-module=pymediainfo --enable-plugin=tk-inter --no-prefer-source-code --remove-output &quot;$(SolutionDir)PythonScript\main.py&quot;" />
   </Target>
-  <!--<Target Name="AfterBuild">
-	--><!-- Instala PeriTASK --><!--
-	<Exec Command='cmd /c "start &quot;&quot; /wait msiexec /i &quot;$(SolutionDir)Instalador\bin\x64\Debug\PeriTASK_Setup.msi&quot;"' />
-	--><!-- Mata o Explorer --><!--
-	<Exec Command='taskkill /F /IM explorer.exe' />
-	--><!-- Abre Explorer  --><!--
-	<Exec Command='powershell -NoProfile -ExecutionPolicy Bypass -Command "Start-Process explorer.exe"' />
-  </Target>-->
 </Project>

@@ -214,6 +214,55 @@ def validar_txt(path: Path):
     assert content, "TXT vazio"
     assert len(content.splitlines()) > 0, "TXT sem linhas válidas"
 
+# utilitario_pytest.py
+
+from pathlib import Path
+from PIL import Image
+
+
+def validar_png(
+    caminho_png,
+    largura_minima=500,
+    altura_minima=300,
+    tamanho_minimo_bytes=1000,
+    exigir_nao_branco=True,
+):
+    caminho_png = Path(caminho_png)
+
+    assert caminho_png.exists(), f"PNG não foi criado: {caminho_png}"
+    assert caminho_png.is_file(), f"Caminho não é arquivo: {caminho_png}"
+    assert caminho_png.suffix.lower() == ".png", f"Arquivo não é .png: {caminho_png}"
+    assert caminho_png.stat().st_size >= tamanho_minimo_bytes, (
+        f"PNG muito pequeno: {caminho_png.stat().st_size} bytes"
+    )
+
+    # Verifica integridade estrutural do PNG
+    with Image.open(caminho_png) as img:
+        assert img.format == "PNG", f"Formato detectado não é PNG: {img.format}"
+        img.verify()
+
+    # Reabre porque img.verify() invalida o objeto para leitura posterior
+    with Image.open(caminho_png) as img:
+        largura, altura = img.size
+
+        assert largura >= largura_minima, f"Largura insuficiente: {largura}"
+        assert altura >= altura_minima, f"Altura insuficiente: {altura}"
+
+        assert img.mode in ("RGB", "RGBA", "P", "L"), f"Modo inesperado: {img.mode}"
+
+        if exigir_nao_branco:
+            img_rgb = img.convert("RGB")
+            extrema = img_rgb.getextrema()
+
+            # extrema é algo como ((minR, maxR), (minG, maxG), (minB, maxB))
+            variacoes = [maximo - minimo for minimo, maximo in extrema]
+
+            assert any(v > 10 for v in variacoes), (
+                "PNG parece vazio/branco ou sem variação visual suficiente"
+            )
+
+    return True
+
 
 def validar_saidas_genericas(pasta_saida: Path = PASTA_SAIDA_PYTEST):
     arquivos = list(pasta_saida.glob("*"))
@@ -225,6 +274,8 @@ def validar_saidas_genericas(pasta_saida: Path = PASTA_SAIDA_PYTEST):
             validar_csv(f)
         elif f.suffix == ".txt":
             validar_txt(f)
+        elif f.suffix == ".png":
+            validar_png(f)
 
 
 # =========================

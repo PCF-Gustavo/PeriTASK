@@ -10,7 +10,7 @@ namespace UserInterface
 
             if (e.Args.Contains("--benchmark"))
             {
-                int exitCode = benchmark.ExecutarBenchmarkCli(e.Args);
+                int exitCode = Benchmark.ExecutarBenchmarkCli(e.Args);
                 Shutdown(exitCode);
                 return;
             }

@@ -26,6 +26,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="comandos\espectrograma.py" />
     <Compile Include="comandos\videos_csv.py" />
     <Compile Include="pytest\gerar_comparacao.py" />
     <Compile Include="pytest\teste_app_exe.py" />

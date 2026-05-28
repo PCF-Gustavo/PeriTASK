@@ -21,30 +21,29 @@ namespace UserInterface
 
     public class ComboBoxOption
     {
-        public string id { get; set; }
-        public string label { get; set; }
-        public UiConfig ui { get; set; }
+        public string? id { get; set; }
+        public string? label { get; set; }
+        public UiConfig ui { get; set; } = new();
     }
 
     public class UiConfig
     {
-        public List<ControlConfig> controls { get; set; }
+        public List<ControlConfig> controls { get; set; } = new();
     }
 
     public class ControlConfig
     {
-        public string type { get; set; }
-        public string id { get; set; }
-        public string text { get; set; }
+        public string? type { get; set; }
+        public string? id { get; set; }
+        public string? text { get; set; }
         public bool? enabled { get; set; }
         public bool? @checked { get; set; }
-        public string @default { get; set; }
-        public List<string> items { get; set; }
-        public string regex { get; set; }
-        public int? displayWidth { get; set; }
+        public string? @default { get; set; }
+        public List<string> items { get; set; } = new();
+        public string? regex { get; set; }
         public int? stringsize { get; set; }
-        public string screenTip { get; set; }
-        public PositionConfig position { get; set; }
+        public string? screenTip { get; set; }
+        public PositionConfig position { get; set; } = new();
 
 
     }
@@ -58,6 +57,6 @@ namespace UserInterface
 
     public class ComandosConfig
     {
-        public List<ComboBoxOption> comandos { get; set; }
+        public List<ComboBoxOption> comandos { get; set; } = new();
     }
 }

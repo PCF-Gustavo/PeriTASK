@@ -177,7 +177,7 @@ namespace UserInterface
                     };
 
                     textBox.Width = CalcularLarguraEditBoxEmCaracteres(
-                        control.displayWidth,
+                        control.stringsize,
                         textBox
                     );
 
@@ -237,11 +237,11 @@ namespace UserInterface
         }
 
         private static double CalcularLarguraEditBoxEmCaracteres(
-            int? displayWidth,
+            int? width,
             TextBox textBox
         )
         {
-            string textoMedicao = CriarTextoMedicao(displayWidth);
+            string textoMedicao = CriarTextoMedicao(width);
 
             double larguraTexto = MedirTextoEmPixels(textoMedicao, textBox);
 
@@ -276,11 +276,11 @@ namespace UserInterface
             return formattedText.WidthIncludingTrailingWhitespace;
         }
 
-        private static string CriarTextoMedicao(int? displayWidth)
+        private static string CriarTextoMedicao(int? width)
         {
             const int larguraPadraoEmCaracteres = 10;
 
-            int quantidadeCaracteres = displayWidth ?? larguraPadraoEmCaracteres;
+            int quantidadeCaracteres = width ?? larguraPadraoEmCaracteres;
 
             if (quantidadeCaracteres < 1)
                 quantidadeCaracteres = 1;

@@ -2,7 +2,7 @@
 
 namespace UserInterface
 {
-    public static class caminhos
+    public static class Caminhos
     {
         public static string EncontrarRaizSolucao(string inicio)
         {

@@ -17,6 +17,8 @@ def main():
         pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
         arquivos = list(Path(pasta_saida).iterdir())
         payload_debug = {"comando_id": "videos_csv","controls": {"tipo_tabela": "completa"}}
+        payload_debug = {"comando_id": "espectrograma","controls": {"escala_y": "logaritmica"}}
+        # payload_debug = {"comando_id": "espectrograma","controls": {"escala_y": "linear"}}
         payload_base64_from_ui = base64.b64encode(json.dumps(payload_debug).encode("utf-8")).decode("utf-8")
         
     # =========================

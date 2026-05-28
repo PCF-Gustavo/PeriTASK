@@ -244,7 +244,7 @@ namespace UserInterface
             return tempo.ToString(@"mm\:ss");
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string name = null)
         {
@@ -270,10 +270,10 @@ namespace UserInterface
 
         public RelayCommand(Action execute) => _execute = execute;
 
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(object? parameter) => true;
 
-        public void Execute(object parameter) => _execute();
+        public void Execute(object? parameter) => _execute();
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
     }
 }

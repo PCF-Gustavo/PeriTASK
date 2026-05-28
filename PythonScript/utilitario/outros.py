@@ -81,11 +81,44 @@ def replace_com_incremento(caminho_tmp, caminho_saida):
                 contador += 1
 
 
-def obter_videos(arquivos):
-    extensoes_video = {
+EXTENSOES_POR_TIPO = {
+    "video": {
         ".avi", ".mp4", ".mkv", ".mov", ".wmv", ".flv",
         ".mpeg", ".mpg", ".webm", ".dav", ".m4v",
         ".3gp", ".ts", ".vob"
+    },
+    "audio": {
+        ".mp3", ".wav", ".aac", ".m4a", ".flac", ".ogg",
+        ".wma", ".opus", ".amr", ".aiff", ".aif", ".mka",
+        ".ac3"
+    },
+    "imagem": {
+        ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tif",
+        ".tiff", ".webp", ".heic", ".heif"
     }
-    arquivos_videos = [ arq for arq in arquivos if Path(arq).suffix.lower() in extensoes_video ]
-    return arquivos_videos
+}
+from pathlib import Path
+
+
+EXTENSOES = {
+    "video": {
+        ".avi", ".mp4", ".mkv", ".mov", ".wmv", ".flv",
+        ".mpeg", ".mpg", ".webm", ".dav", ".m4v",
+        ".3gp", ".ts", ".vob"
+    },
+    "audio": {
+        ".mp3", ".wav", ".aac", ".m4a", ".flac", ".ogg",
+        ".wma", ".opus", ".amr", ".aiff", ".aif", ".ac3"
+    },
+    "imagem": {
+        ".jpg", ".jpeg", ".png", ".bmp", ".gif",
+        ".tif", ".tiff", ".webp", ".heic", ".heif"
+    }
+}
+
+
+def filtrar_arquivos(arquivos, tipos):
+    if isinstance(tipos, str):
+        tipos = [tipos]
+    extensoes = set().union(*(EXTENSOES.get(tipo.lower(), set()) for tipo in tipos))
+    return [arq for arq in arquivos if Path(arq).suffix.lower() in extensoes]
