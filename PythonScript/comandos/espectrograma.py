@@ -3,6 +3,8 @@ import av
 import numpy as np
 import matplotlib.pyplot as plt
 
+from scipy.signal import spectrogram
+
 from utilitario.outros import replace_com_incremento, filtrar_arquivos
 
 
@@ -65,37 +67,9 @@ def extrair_audio_pyav(arquivo, sample_rate):
     return audio
 
 
-def calcular_espectrograma_numpy(audio, sample_rate, nfft, noverlap):
-    step = nfft - noverlap
-
-    if len(audio) < nfft:
-        audio = np.pad(audio, (0, nfft - len(audio)))
-
-    n_frames = 1 + (len(audio) - nfft) // step
-
-    shape = (n_frames, nfft)
-    strides = (audio.strides[0] * step, audio.strides[0])
-
-    frames = np.lib.stride_tricks.as_strided(
-        audio,
-        shape=shape,
-        strides=strides
-    ).copy()
-
-    window = np.hanning(nfft)
-    frames *= window
-
-    fft = np.fft.rfft(frames, n=nfft)
-    Sxx = (np.abs(fft) ** 2).T
-
-    f = np.fft.rfftfreq(nfft, d=1 / sample_rate)
-    t = (np.arange(n_frames) * step + nfft / 2) / sample_rate
-
-    return f, t, Sxx
-
-
 def executar(arquivos, controls, pasta_saida):
     arquivos_audios_e_videos = filtrar_arquivos(arquivos, ["audio", "video"])
+
     escala_y = controls.get("escala_y") or "linear"
 
     if escala_y == "logaritmica":
@@ -109,11 +83,16 @@ def executar(arquivos, controls, pasta_saida):
     nfft = 2048
     noverlap = 1024
     cmap = "inferno"
+
     freq_min = 20
     freq_max = sample_rate / 2
+
+    vmin = -120
+    vmax = -20
     # =========================
 
     total = len(arquivos_audios_e_videos)
+
     if total == 0:
         print("PROGRESS:100", flush=True)
         return
@@ -129,7 +108,6 @@ def executar(arquivos, controls, pasta_saida):
         arquivo_tmp = f"Espectrograma_{file_name}_{i}.tmp.png"
         caminho_tmp = os.path.join(os.getenv("TEMP"), arquivo_tmp)
 
-        # Extrai áudio com PyAV
         try:
             audio = extrair_audio_pyav(arquivo, sample_rate)
         except Exception as exc:
@@ -147,41 +125,56 @@ def executar(arquivos, controls, pasta_saida):
         else:
             # Normaliza sem risco de divisão por zero
             max_amp = np.max(np.abs(audio))
-            if max_amp > 0:
-                audio /= max_amp
 
-            # Calcula espectrograma
-            f, t, Sxx = calcular_espectrograma_numpy(
+            if max_amp > 0:
+                audio = audio / max_amp
+
+            # Calcula espectrograma usando SciPy,
+            # equivalente ao código que gerou a imagem de referência
+            f, t, Sxx = spectrogram(
                 audio,
-                sample_rate,
-                nfft,
-                noverlap
+                fs=sample_rate,
+                window=("tukey", 0.25),
+                nperseg=nfft,
+                noverlap=noverlap,
+                nfft=nfft,
+                detrend="constant",
+                return_onesided=True,
+                scaling="density",
+                mode="psd"
             )
 
             Sxx_db = 10 * np.log10(Sxx + 1e-10)
 
             mascara_freq = (f >= freq_min) & (f <= freq_max)
+
             f_plot = f[mascara_freq]
             Sxx_db_plot = Sxx_db[mascara_freq, :]
 
-            # Cria a figura com Matplotlib
             plt.figure(figsize=(10, 5))
 
-            plt.pcolormesh(
-                t,
-                f_plot,
+            plt.imshow(
                 Sxx_db_plot,
-                shading="auto",
+                aspect="auto",
+                origin="lower",
+                extent=[
+                    t.min(),
+                    t.max(),
+                    f_plot.min(),
+                    f_plot.max()
+                ],
                 cmap=cmap,
-                vmin=-120,
-                vmax=-20
+                vmin=vmin,
+                vmax=vmax
             )
 
             plt.yscale(escala_y)
             plt.ylim(freq_min, freq_max)
+
             plt.xlabel("Tempo (s)")
             plt.ylabel("Frequência (Hz)")
-            plt.xlim(0, len(audio) / sample_rate)
+
+            plt.xlim(0, t[-1])
 
             plt.savefig(caminho_tmp, dpi=200, bbox_inches="tight")
             plt.close()
@@ -189,6 +182,7 @@ def executar(arquivos, controls, pasta_saida):
             replace_com_incremento(caminho_tmp, caminho_saida)
 
         progresso = int((i / total) * 100)
+
         if progresso != ultimo_progresso:
             print(f"PROGRESS:{progresso}", flush=True)
             ultimo_progresso = progresso
