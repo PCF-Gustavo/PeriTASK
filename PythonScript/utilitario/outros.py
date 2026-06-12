@@ -106,6 +106,9 @@ EXTENSOES = {
         ".mpeg", ".mpg", ".webm", ".dav", ".m4v",
         ".3gp", ".ts", ".vob"
     },
+    "video_mp4": {
+        ".mp4",  ".mov", ".m4v", ".3gp"
+    },
     "audio": {
         ".mp3", ".wav", ".aac", ".m4a", ".flac", ".ogg",
         ".wma", ".opus", ".amr", ".aiff", ".aif", ".ac3"
@@ -113,12 +116,67 @@ EXTENSOES = {
     "imagem": {
         ".jpg", ".jpeg", ".png", ".bmp", ".gif",
         ".tif", ".tiff", ".webp", ".heic", ".heif"
+    },
+    "imagem_png": {
+        ".png"
     }
 }
 
 
-def filtrar_arquivos(arquivos, tipos):
+def selecionar_arquivos(arquivos, tipos):
     if isinstance(tipos, str):
         tipos = [tipos]
     extensoes = set().union(*(EXTENSOES.get(tipo.lower(), set()) for tipo in tipos))
     return [arq for arq in arquivos if Path(arq).suffix.lower() in extensoes]
+
+def filtrar_arquivos(
+    arquivos,
+    prefixo=None,
+    sufixo=None,
+    extensao=None
+):
+    """
+    Remove arquivos que satisfaçam TODOS os filtros informados.
+
+    Os parâmetros são opcionais:
+    - prefixo: início do nome do arquivo
+    - sufixo: final do nome do arquivo (sem extensão)
+    - extensao: extensão do arquivo
+
+    Exemplos:
+    prefixo="tmp_"
+    sufixo="_editada"
+    extensao=".jpg"
+    """
+
+    if extensao:
+        extensao = extensao.lower()
+        if not extensao.startswith("."):
+            extensao = "." + extensao
+
+    resultado = []
+
+    for arq in arquivos:
+        path = Path(arq)
+
+        nome = path.stem.lower()
+        ext = path.suffix.lower()
+
+        filtros = []
+
+        if prefixo is not None:
+            filtros.append(nome.startswith(prefixo.lower()))
+
+        if sufixo is not None:
+            filtros.append(nome.endswith(sufixo.lower()))
+
+        if extensao is not None:
+            filtros.append(ext == extensao)
+
+        # Remove somente se TODOS os filtros forem satisfeitos
+        if filtros and all(filtros):
+            continue
+
+        resultado.append(arq)
+
+    return resultado

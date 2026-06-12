@@ -11,11 +11,11 @@
 	"comandos": [
 		{
 			"id": "lista_caminhos_txt",
-			"label": "Arquivos -> lista de caminhos em .txt"
+			"label": "Arquivos -> lista de caminhos (txt)"
 		},
 		{
 			"id": "videos_csv",
-			"label": "Vídeos -> tabela de informações em .csv",
+			"label": "Vídeos -> tabela de informações (csv)",
 			"ui": {
 				"controls": [
 					{
@@ -39,7 +39,7 @@
 		},
 		{
 			"id": "espectrograma",
-			"label": "Vídeos/Áudios -> espectrograma em .png",
+			"label": "Vídeos/Áudios -> espectrograma (png)",
 			"ui": {
 				"controls": [
 					{
@@ -62,56 +62,178 @@
 			}
 		},
 		{
-			"id": "teste_id",
-			"label": "teste",
+			"id": "detector_copia_cola_cantugba",
+			"label": "Imagens -> detectar cópia/cola SIFT / AKAZE (png)",
 			"ui": {
 				"controls": [
 					{
-						"type": "checkbox",
-						"id": "checkbox_teste_alerta1",
-						"text": "Ativar alerta1",
+						"type": "dropdown",
+						"id": "detectores",
+						"text": "Detector:",
+						"items": [
+							"AKAZE",
+							"SIFT",
+							"AKAZE e SIFT"
+						],
+						"default": "AKAZE",
 						"enabled": true,
-						"checked": false,
-						"screenTip": "Mostra um MessageBox quando marcado 1",
+						"screenTip": "Detector de pontos-chave usado na análise.",
 						"position": {
 							"row": 0,
 							"column": 0
 						}
 					},
 					{
-						"type": "dropdown",
-						"id": "dropdown_id",
-						"text": "Escolha apenas 1:",
-						"items": [
-							"0",
-							"1",
-							"2"
-						],
-						"default": "1",
+						"type": "editbox",
+						"id": "lowe_ratio",
+						"text": "Lowe ratio:",
+						"default": "0.85",
 						"enabled": true,
-						"screenTip": "Escolha uma opção.",
+						"regex": "^0([,.][0-9]+)?|1([,.]0+)?$",
+						"stringsize": 5,
+						"screenTip": "Razão de Lowe para filtrar matches. Valores maiores aumentam sensibilidade e falsos positivos.",
 						"position": {
 							"row": 1,
 							"column": 0
 						}
 					},
-
 					{
 						"type": "editbox",
-						"id": "editbox_quantidade",
-						"text": "Quantidade:",
+						"id": "ransac_reproj_threshold",
+						"text": "RANSAC reproj.:",
+						"default": "5.0",
+						"enabled": true,
+						"regex": "^[0-9]+([,.][0-9]+)?$",
+						"stringsize": 4,
+						"screenTip": "Limiar de reprojeção do RANSAC. Valores maiores aceitam mais matches, mas podem aumentar falsos positivos.",
+						"position": {
+							"row": 2,
+							"column": 0
+						}
+					},
+					{
+						"type": "editbox",
+						"id": "knn_k",
+						"text": "KNN k:",
 						"default": "10",
 						"enabled": true,
 						"regex": "^[1-9]\\d*$",
-						"stringsize": 3,
-						"screenTip": "Informe um número inteiro positivo.",
+						"stringsize": 2,
+						"screenTip": "Número de pontos semelhantes avaliados para cada ponto detectado. Valores maiores podem encontrar mais cópias, mas podem aumentar falsos positivos.",
 						"position": {
-							"row": 2,
+							"row": 3,
 							"column": 0
 						}
 					}
 				]
 			}
-		}
-	]
-}
+		},
+		{
+			"id": "detector_copia_cola_peritus",
+			"label": "Imagens -> detectar cópia/cola PCA (png)",
+			"ui": {
+				"controls": [
+					{
+						"type": "editbox",
+						"id": "nComp",
+						"text": "Componentes PCA:",
+						"default": "0.75",
+						"enabled": true,
+						"regex": "^(0([,.][0-9]+)?|1([,.]0+)?)$",
+						"stringsize": 4,
+						"screenTip": "Percentual de componentes principais usados na PCA. Valores maiores preservam mais informação dos blocos, mas podem aumentar sensibilidade e falsos positivos.",
+						"position": {
+							"row": 0,
+							"column": 0
+						}
+					},
+					{
+						"type": "editbox",
+						"id": "Q",
+						"text": "Quantização:",
+						"default": "256",
+						"enabled": true,
+						"regex": "^[1-9]\\d*$",
+						"stringsize": 4,
+						"screenTip": "Fator de quantização dos vetores PCA. Valores menores aumentam sensibilidade; valores maiores agrupam blocos de forma mais grosseira.",
+						"position": {
+							"row": 1,
+							"column": 0
+						}
+					}
+				]
+			}
+		},
+			{
+				"id": "detector_copia_cola_patchmatch",
+				"label": "Imagens -> detectar cópia/cola PatchMatch (png)",
+				"ui": {
+					"controls": [
+						{
+							"type": "editbox",
+							"id": "p",
+							"text": "Raio do patch:",
+							"default": "5",
+							"enabled": true,
+							"regex": "^[1-9]\\d*$",
+							"stringsize": 2,
+							"screenTip": "Define o raio do patch. Valores maiores tendem a gerar regiões mais estáveis, mas podem perder cópias pequenas.",
+							"position": {
+								"row": 0,
+								"column": 0
+							}
+						},
+						{
+							"type": "editbox",
+							"id": "n_iter",
+							"text": "Iterações:",
+							"default": "5",
+							"enabled": true,
+							"regex": "^[1-9]\\d*$",
+							"stringsize": 2,
+							"screenTip": "Número de iterações do PatchMatch. Valores maiores podem melhorar a convergência, mas aumentam o tempo de processamento.",
+							"position": {
+								"row": 1,
+								"column": 0
+							}
+						},
+						{
+							"type": "editbox",
+							"id": "n_rs_candidates",
+							"text": "Candidatos busca aleatória:",
+							"default": "5",
+							"enabled": true,
+							"regex": "^[1-9]\\d*$",
+							"stringsize": 2,
+							"screenTip": "Número de candidatos testados na fase de busca aleatória. Valores maiores podem aumentar sensibilidade, mas tornam o processamento mais lento.",
+							"position": {
+								"row": 2,
+								"column": 0
+							}
+						}
+					]
+				}
+			},
+			{
+				"id": "mp4_atoms",
+				"label": "Vídeos MP4 -> Estrutura de atoms (png)",
+				"ui": {
+					"controls": [
+						{
+							"type": "editbox",
+							"id": "grau_hierarquia",
+							"text": "Grau de abertura da hierarquia",
+							"default": "0",
+							"regex": "^[0-9]\\d*$",
+							"stringsize": 2,
+							"screenTip": "O valor 0 (zero) abre tudo."
+						}
+					]
+				}
+			},
+			{
+				"id": "atoms_comparacao",
+				"label": "Atoms (png) -> Relatório de comparação (txt)"
+			}
+				]
+			}

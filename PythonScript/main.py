@@ -15,10 +15,16 @@ def main():
         from pathlib import Path
         import json, base64
         pasta_saida = r"C:\Users\gustavo.gvs\Desktop\teste_PeriTASK"
-        arquivos = list(Path(pasta_saida).iterdir())
-        payload_debug = {"comando_id": "videos_csv","controls": {"tipo_tabela": "completa"}}
-        payload_debug = {"comando_id": "espectrograma","controls": {"escala_y": "logaritmica"}}
+        arquivos = list(Path(pasta_saida).rglob("*"))
+        # payload_debug = {"comando_id": "videos_csv","controls": {"tipo_tabela": "completa"}}
+        # payload_debug = {"comando_id": "espectrograma","controls": {"escala_y": "logaritmica"}}
         # payload_debug = {"comando_id": "espectrograma","controls": {"escala_y": "linear"}}
+        # payload_debug = {"comando_id": "detector_copia_cola_cantugba","controls": {"detectores": "AKAZE e SIFT"}}
+        payload_debug = {"comando_id": "detector_copia_cola_peritus","controls": {}}
+        # payload_debug = {"comando_id": "detector_copia_cola_patchmatch","controls": {}}
+        # payload_debug = {"comando_id": "mp4_atoms","controls": {}}
+        # payload_debug = {"comando_id": "mp4_atoms","controls": {"grau_hierarquia": "0"}}
+        # payload_debug = {"comando_id": "atoms_comparacao","controls": {}}
         payload_base64_from_ui = base64.b64encode(json.dumps(payload_debug).encode("utf-8")).decode("utf-8")
         
     # =========================

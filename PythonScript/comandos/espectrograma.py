@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from scipy.signal import spectrogram
 
-from utilitario.outros import replace_com_incremento, filtrar_arquivos
+from utilitario.outros import replace_com_incremento, selecionar_arquivos
 
 
 def extrair_audio_pyav(arquivo, sample_rate):
@@ -68,7 +68,7 @@ def extrair_audio_pyav(arquivo, sample_rate):
 
 
 def executar(arquivos, controls, pasta_saida):
-    arquivos_audios_e_videos = filtrar_arquivos(arquivos, ["audio", "video"])
+    arquivos_audios_e_videos = selecionar_arquivos(arquivos, ["audio", "video"])
 
     escala_y = controls.get("escala_y") or "linear"
 

@@ -15,7 +15,7 @@ namespace UserInterface
 
             var json = File.ReadAllText(path);
 
-            return JsonSerializer.Deserialize<ComandosConfig>(json);
+            return JsonSerializer.Deserialize<ComandosConfig>(json) ?? throw new JsonException("Falha ao desserializar o arquivo catalogo_de_comandos.json."); ;
         }
     }
 

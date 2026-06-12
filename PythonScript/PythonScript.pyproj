@@ -26,7 +26,12 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="comandos\atoms_comparacao.py" />
+    <Compile Include="comandos\detector_copia_cola_peritus.py" />
+    <Compile Include="comandos\detector_copia_cola_cantugba.py" />
+    <Compile Include="comandos\detector_copia_cola_patchmatch.py" />
     <Compile Include="comandos\espectrograma.py" />
+    <Compile Include="comandos\mp4_atoms.py" />
     <Compile Include="comandos\videos_csv.py" />
     <Compile Include="pytest\gerar_comparacao.py" />
     <Compile Include="pytest\teste_app_exe.py" />
@@ -38,7 +43,6 @@
     <Compile Include="pytest\teste_benchmark_build.py" />
     <Compile Include="pytest\teste_comunicacao_UI_PythonScript.py" />
     <Compile Include="utilitario\benchmark.py" />
-    <Compile Include="comandos\teste_id.py" />
     <Compile Include="comandos\lista_caminhos_txt.py" />
     <Compile Include="comandos\__init__.py" />
     <Compile Include="utilitario\executor_comando.py" />
@@ -58,7 +62,7 @@
       <Id>venv</Id>
       <Version>3.13</Version>
       <Description>venv (Python 3.13 (64-bit))</Description>
-      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <InterpreterPath>Scripts\pythonw.exe</InterpreterPath>
       <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
       <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
       <Architecture>X64</Architecture>
@@ -70,6 +74,12 @@
     </Content>
     <Content Include="pytest.ini" />
     <Content Include="pytest\recursos\audios\6 - Anexo do Ofício 7251-FNDE.mp3" />
+    <Content Include="pytest\recursos\imagens\dataset_example_blur.png" />
+    <Content Include="pytest\recursos\imagens\ducks.jpeg" />
+    <Content Include="pytest\recursos\imagens\ducks3.jpeg" />
+    <Content Include="pytest\recursos\imagens\lena3.png" />
+    <Content Include="pytest\recursos\imagens\money.jpeg" />
+    <Content Include="pytest\recursos\imagens\tea.jpeg" />
     <Content Include="pytest\recursos\videos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677.mkv" />
     <Content Include="pytest\recursos\videos\00_43_10_2023_04_19_CAM00_e109850_p0_pos000231558902677_corrompido.mkv" />
     <Content Include="pytest\recursos\videos\MHDX_ch5_main_20210913112600_20210913112900.dav" />
@@ -83,6 +93,7 @@
     <Folder Include="comandos\" />
     <Folder Include="pytest\recursos\" />
     <Folder Include="pytest\recursos\audios\" />
+    <Folder Include="pytest\recursos\imagens\" />
     <Folder Include="pytest\recursos\videos\" />
     <Folder Include="utilitario\" />
     <Folder Include="pytest\" />
