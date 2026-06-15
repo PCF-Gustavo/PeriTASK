@@ -32,6 +32,7 @@
     <Compile Include="comandos\detector_copia_cola_patchmatch.py" />
     <Compile Include="comandos\espectrograma.py" />
     <Compile Include="comandos\mp4_atoms.py" />
+    <Compile Include="comandos\pdf_fontmap.py" />
     <Compile Include="comandos\videos_csv.py" />
     <Compile Include="comandos\wavelet_noise_residue.py" />
     <Compile Include="pytest\gerar_comparacao.py" />

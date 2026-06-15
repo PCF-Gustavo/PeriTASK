@@ -2,7 +2,7 @@
 Comando baseado no filtro Wavelets Noise Residue.
 MAHDIAN, B.; SAIC, S. Using noise inconsistencies for blind image forensics. Image and Vision Computing, v. 27, n. 10, p. 1497-1503, set. 2009
 Implementação de referência: https://github.com/SEPAEL/Peritus
-imagem RGB -> escala de cinza -> DWT db8 (Daubechies 8) -> reconstrução suavizada -> resíduo de ruído -> variância local por blocos -> pós-processamento -> regiões suspeitas coloridas
+imagem RGB -> escala de cinza -> DWT db8 (Daubechies 8) -> reconstrução suavizada -> resíduo de ruído → variância com janela deslizante -> pós-processamento -> regiões suspeitas coloridas
 """
 
 from __future__ import annotations
@@ -39,9 +39,6 @@ WAVELET_NOME = f"db{DAUBECHIES_ORDEM}"
 WAVELET_MODE = "symmetric"
 
 NIVEIS_DWT = 1
-POST_PROCESSAMENTO = True
-ALPHA_OVERLAY = 0.45
-
 
 # ============================================================
 # Comunicação PeriTASK
@@ -58,21 +55,6 @@ def _status_etapa(etapa: int, total: int, mensagem: str) -> None:
 def _progress(valor: int) -> None:
     valor = max(0, min(100, int(valor)))
     print(f"PROGRESS:{valor}", flush=True)
-
-
-def _get_int(
-    controls: Dict[str, Any],
-    chave: str,
-    padrao: int,
-    minimo: int,
-    maximo: int,
-) -> int:
-    try:
-        valor = int(float(str(controls.get(chave, padrao)).replace(",", ".").strip()))
-    except Exception:
-        valor = padrao
-
-    return max(minimo, min(maximo, valor))
 
 
 def _odd(valor: int) -> int:
@@ -123,22 +105,28 @@ def _normalizar_uint8(matriz: np.ndarray) -> np.ndarray:
     normalizada = (matriz - minimo) / (maximo - minimo)
     normalizada = np.clip(normalizada, 0.0, 1.0)
 
-    # Gamma levemente menor que 1 para levantar o azul/ciano sem saturar
-    # tanto em amarelo/vermelho.
-    gamma = 0.90
-    normalizada = np.power(normalizada, gamma)
-
     return np.clip(normalizada * 255.0, 0, 255).astype(np.uint8)
 
+def aplicar_sensibilidade_uint8(img_uint8, sensibilidade):
+    """
+    Ajuste de sensibilidade controlando contraste via gamma.
+
+    sensibilidade:
+        0 → imagem mais escura (menos destaque)
+        10 → imagem mais clara (mais hotspots)
+    """
+    gamma = 2.0 * (0.3 / 2.0) ** (sensibilidade / 10.0)
+
+    tabela = np.array([
+        ((i / 255.0) ** gamma) * 255 for i in range(256)
+    ], dtype=np.uint8)
+
+    return cv2.LUT(img_uint8, tabela)
 
 def _reconstruir_aproximacao_wavelet(gray: np.ndarray) -> np.ndarray:
     """
     Aplica DWT 2D com Daubechies 8 e reconstrói a imagem mantendo apenas
     a aproximação.
-
-    Esta função fica mantida por compatibilidade/depuração, mas o resíduo
-    usado no pipeline é calculado em _calcular_residuo_wavelet() a partir
-    dos detalhes high-pass.
     """
     gray_float = gray.astype(np.float32)
 
@@ -277,47 +265,6 @@ def _mapa_variancia_local(residuo: np.ndarray, block_size: int) -> np.ndarray:
     return mapa.astype(np.float32)
 
 
-def _estimar_threshold(mapa_variancia: np.ndarray) -> float:
-    """
-    Threshold automático robusto.
-
-    Mantido para geração da máscara interna/pós-processamento, embora
-    a visualização atual use diretamente o mapa colorizado.
-    """
-    valores = mapa_variancia[np.isfinite(mapa_variancia)]
-
-    if valores.size == 0:
-        return 0.0
-
-    mediana = float(np.median(valores))
-    mad = float(np.median(np.abs(valores - mediana)))
-
-    return mediana + 3.0 * (mad + 1e-6)
-
-
-def _criar_mascara_suspeita(mapa_variancia: np.ndarray) -> np.ndarray:
-    threshold = _estimar_threshold(mapa_variancia)
-    return mapa_variancia >= threshold
-
-
-def _pos_processar_mascara(mask: np.ndarray, block_size: int) -> np.ndarray:
-    """
-    Pós-processamento sempre ativado.
-
-    Mantido para compatibilidade com o pipeline e eventual uso futuro,
-    mas a visualização atual retorna o mapa colorizado completo.
-    """
-    k = _odd(max(3, min(15, int(round(block_size * 1.5)))))
-
-    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (k, k))
-    mask_uint8 = mask.astype(np.uint8)
-
-    mask_uint8 = cv2.morphologyEx(mask_uint8, cv2.MORPH_OPEN, kernel)
-    mask_uint8 = cv2.morphologyEx(mask_uint8, cv2.MORPH_CLOSE, kernel)
-
-    return mask_uint8.astype(bool)
-
-
 # ============================================================
 # Visualização
 # ============================================================
@@ -325,15 +272,16 @@ def _pos_processar_mascara(mask: np.ndarray, block_size: int) -> np.ndarray:
 def _criar_visualizacao(
     imagem_rgb: np.ndarray,
     mapa_variancia: np.ndarray,
-    mask_suspeita: np.ndarray,
+    sensibilidade: float
 ) -> np.ndarray:
-    """
-    Gera a visualização do mapa de variância local do resíduo de ruído.
 
-    Mantém como saída apenas o mapa colorizado, sem sobrepor regiões
-    na imagem original.
-    """
     variancia_uint8 = _normalizar_uint8(mapa_variancia)
+
+    # ✅ AQUI entra a sensibilidade (ANTES do colormap)
+    variancia_uint8 = aplicar_sensibilidade_uint8(
+        variancia_uint8,
+        sensibilidade
+    )
 
     heat_bgr = cv2.applyColorMap(variancia_uint8, cv2.COLORMAP_JET)
     heat_rgb = cv2.cvtColor(heat_bgr, cv2.COLOR_BGR2RGB)
@@ -353,13 +301,8 @@ def _processar_imagem(
 
     nome_base = Path(caminho_imagem).stem
 
-    block_size = _get_int(
-        controls,
-        "block_size",
-        BLOCK_SIZE_PADRAO,
-        3,
-        255,
-    )
+    block_size = float(controls.get("block_size", 5.0))
+    sensibilidade = float(controls.get("sensitivity", 5.0))
 
     block_size = _odd(block_size)
 
@@ -389,23 +332,14 @@ def _processar_imagem(
     )
     mapa_variancia = _mapa_variancia_local(residuo, block_size)
 
-    _progress(65)
-
-    _status_etapa(5, 7, "Aplicando threshold automático.")
-    mask_suspeita = _criar_mascara_suspeita(mapa_variancia)
-
-    _progress(75)
-
-    _status_etapa(6, 7, "Aplicando pós-processamento.")
-    mask_suspeita = _pos_processar_mascara(mask_suspeita, block_size)
-
     _progress(85)
 
     _status_etapa(7, 7, "Gerando visualização.")
+
     resultado = _criar_visualizacao(
         imagem_rgb=imagem_rgb,
         mapa_variancia=mapa_variancia,
-        mask_suspeita=mask_suspeita,
+        sensibilidade=sensibilidade
     )
 
     nome_saida = f"{PREFIXO_SAIDA}{nome_base}.{EXTENSAO_SAIDA}"
@@ -492,11 +426,13 @@ if __name__ == "__main__":
     parser.add_argument("imagens", nargs="+")
     parser.add_argument("--saida", default=".")
     parser.add_argument("--block_size", type=int, default=BLOCK_SIZE_PADRAO)
+    parser.add_argument("--sensitivity", type=float, default=5.0)
 
     args = parser.parse_args()
 
     controls = {
         "block_size": args.block_size,
+        "sensitivity": args.sensitivity
     }
 
     executar(args.imagens, controls, args.saida)
