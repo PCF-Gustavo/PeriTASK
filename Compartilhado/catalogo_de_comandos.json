@@ -164,76 +164,98 @@
 				]
 			}
 		},
-			{
-				"id": "detector_copia_cola_patchmatch",
-				"label": "Imagens -> detectar cópia/cola PatchMatch (png)",
-				"ui": {
-					"controls": [
-						{
-							"type": "editbox",
-							"id": "p",
-							"text": "Raio do patch:",
-							"default": "5",
-							"enabled": true,
-							"regex": "^[1-9]\\d*$",
-							"stringsize": 2,
-							"screenTip": "Define o raio do patch. Valores maiores tendem a gerar regiões mais estáveis, mas podem perder cópias pequenas.",
-							"position": {
-								"row": 0,
-								"column": 0
-							}
-						},
-						{
-							"type": "editbox",
-							"id": "n_iter",
-							"text": "Iterações:",
-							"default": "5",
-							"enabled": true,
-							"regex": "^[1-9]\\d*$",
-							"stringsize": 2,
-							"screenTip": "Número de iterações do PatchMatch. Valores maiores podem melhorar a convergência, mas aumentam o tempo de processamento.",
-							"position": {
-								"row": 1,
-								"column": 0
-							}
-						},
-						{
-							"type": "editbox",
-							"id": "n_rs_candidates",
-							"text": "Candidatos busca aleatória:",
-							"default": "5",
-							"enabled": true,
-							"regex": "^[1-9]\\d*$",
-							"stringsize": 2,
-							"screenTip": "Número de candidatos testados na fase de busca aleatória. Valores maiores podem aumentar sensibilidade, mas tornam o processamento mais lento.",
-							"position": {
-								"row": 2,
-								"column": 0
-							}
+		{
+			"id": "detector_copia_cola_patchmatch",
+			"label": "Imagens -> detectar cópia/cola PatchMatch (png)",
+			"ui": {
+				"controls": [
+					{
+						"type": "editbox",
+						"id": "p",
+						"text": "Raio do patch:",
+						"default": "5",
+						"enabled": true,
+						"regex": "^[1-9]\\d*$",
+						"stringsize": 2,
+						"screenTip": "Define o raio do patch. Valores maiores tendem a gerar regiões mais estáveis, mas podem perder cópias pequenas.",
+						"position": {
+							"row": 0,
+							"column": 0
 						}
-					]
-				}
-			},
-			{
-				"id": "mp4_atoms",
-				"label": "Vídeos MP4 -> Estrutura de atoms (png)",
-				"ui": {
-					"controls": [
-						{
-							"type": "editbox",
-							"id": "grau_hierarquia",
-							"text": "Grau de abertura da hierarquia",
-							"default": "0",
-							"regex": "^[0-9]\\d*$",
-							"stringsize": 2,
-							"screenTip": "O valor 0 (zero) abre tudo."
+					},
+					{
+						"type": "editbox",
+						"id": "n_iter",
+						"text": "Iterações:",
+						"default": "5",
+						"enabled": true,
+						"regex": "^[1-9]\\d*$",
+						"stringsize": 2,
+						"screenTip": "Número de iterações do PatchMatch. Valores maiores podem melhorar a convergência, mas aumentam o tempo de processamento.",
+						"position": {
+							"row": 1,
+							"column": 0
 						}
-					]
-				}
-			},
-			{
-				"id": "atoms_comparacao",
-				"label": "Atoms (png) -> Relatório de comparação (txt)"
-			}
+					},
+					{
+						"type": "editbox",
+						"id": "n_rs_candidates",
+						"text": "Candidatos busca aleatória:",
+						"default": "5",
+						"enabled": true,
+						"regex": "^[1-9]\\d*$",
+						"stringsize": 2,
+						"screenTip": "Número de candidatos testados na fase de busca aleatória. Valores maiores podem aumentar sensibilidade, mas tornam o processamento mais lento.",
+						"position": {
+							"row": 2,
+							"column": 0
+						}
+					}
 				]
 			}
+		},
+		{
+			"id": "wavelet_noise_residue",
+			"label": "Imagens -> resíduo de ruído Wavelet (png)",
+			"ui": {
+				"controls": [
+					{
+						"type": "editbox",
+						"id": "block_size",
+						"text": "Tamanho do bloco",
+						"default": "5",
+						"enabled": true,
+						"regex": "^[1-9]\\d*$",
+						"stringsize": 2,
+						"screenTip": "Valor que define o tamanho dos blocos processados para avaliação local da variância de ruído.",
+						"position": {
+							"row": 1,
+							"column": 0
+						}
+					}
+				]
+			}
+		},
+		{
+			"id": "mp4_atoms",
+			"label": "Vídeos MP4 -> estrutura de atoms (png)",
+			"ui": {
+				"controls": [
+					{
+						"type": "editbox",
+						"id": "grau_hierarquia",
+						"text": "Grau de abertura da hierarquia",
+						"default": "0",
+						"regex": "^[0-9]\\d*$",
+						"stringsize": 2,
+						"screenTip": "O valor 0 (zero) abre tudo."
+					}
+				]
+			}
+		},
+		{
+			"id": "atoms_comparacao",
+			"label": "Atoms (png) -> relatório de comparação (txt)"
+		}
+	]
+}

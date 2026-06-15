@@ -11,6 +11,7 @@ from __future__ import annotations
 import math
 import os
 import traceback
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -23,15 +24,6 @@ from utilitario.outros import (
     replace_com_incremento,
     selecionar_arquivos,
 )
-
-try:
-    from numba import complex128, float64, int64, njit
-    from numba.experimental import jitclass
-except Exception as exc:  # pragma: no cover
-    complex128 = float64 = int64 = njit = jitclass = None
-    _IMPORT_ERROR = exc
-else:
-    _IMPORT_ERROR = None
 
 # ============================================================
 # Metadados e saída
@@ -47,6 +39,8 @@ EXTENSAO_SAIDA = "png"
 P_PADRAO = 5
 N_RS_CANDIDATES_PADRAO = 5
 N_ITER_PADRAO = 5
+MAX_LADO_PATCHMATCH_PADRAO = 1400
+ZERNIKE_THREADS_PADRAO = max(1, min(4, os.cpu_count() or 1))
 
 # ============================================================
 # Constantes internas
@@ -71,7 +65,7 @@ CORES_REGIOES_RGB = [
     (255, 80, 160),
 ]
 
-_ZERNIKE_FILTERS_CACHE: Dict[Tuple[int, int], np.ndarray] = {}
+_ZERNIKE_FILTERS_CACHE: Dict[Tuple[int, int], Dict[str, np.ndarray]] = {}
 
 # ============================================================
 # Comunicação e controles PeriTASK
@@ -190,255 +184,312 @@ def estima_parametros_visualizacao(largura: int, altura: int, p: int, min_dn: in
     }
 
 # ============================================================
-# PatchMatch/Zernike
+# PatchMatch/Zernike sem Numba
 # ============================================================
 
-if _IMPORT_ERROR is None:
-    np.random.seed(0)
+np.random.seed(0)
 
-    FACTORIALS_LOOKUP_TABLE = np.array([
-        1, 1, 2, 6, 24, 120, 720, 5040, 40320,
-        362880, 3628800, 39916800, 479001600,
-        6227020800, 87178291200, 1307674368000,
-        20922789888000, 355687428096000, 6402373705728000,
-        121645100408832000, 2432902008176640000,
-    ], dtype="int64")
+FACTORIALS_LOOKUP_TABLE = np.array([
+    1, 1, 2, 6, 24, 120, 720, 5040, 40320,
+    362880, 3628800, 39916800, 479001600,
+    6227020800, 87178291200, 1307674368000,
+    20922789888000, 355687428096000, 6402373705728000,
+    121645100408832000, 2432902008176640000,
+], dtype=np.int64)
 
-    @njit
-    def factorial(n):
-        if n > 20:
-            raise ValueError
-        return FACTORIALS_LOOKUP_TABLE[n]
 
-    @njit
-    def h(x):
-        if np.abs(x) <= 1:
-            return 1.5 * np.abs(x) ** 3 - 2.5 * x ** 2 + 1
-        if np.abs(x) <= 2:
-            return -0.5 * np.abs(x) ** 3 + 2.5 * x ** 2 - 4 * np.abs(x) + 2
-        return 0.0
+def factorial(n: int) -> int:
+    if n > 20:
+        raise ValueError
+    return int(FACTORIALS_LOOKUP_TABLE[n])
 
-    @njit
-    def double2single_zernike_index(radial_degree, azimuthal_degree):
-        assert (radial_degree - azimuthal_degree) % 2 == 0
-        assert radial_degree > 0 and azimuthal_degree > 0
-        n_smaller_polynomials = (radial_degree // 2) * ((radial_degree + 1) // 2)
-        if radial_degree % 2 == 0:
-            return n_smaller_polynomials + azimuthal_degree // 2 - 1
-        return n_smaller_polynomials + (azimuthal_degree - 1) // 2
 
-    MAX_ZERNIKE_ORDER = 10
-    C = np.zeros((MAX_ZERNIKE_ORDER + 1, MAX_ZERNIKE_ORDER + 1, MAX_ZERNIKE_ORDER // 2 + 1), dtype=np.float64)
-    for rd in range(1, MAX_ZERNIKE_ORDER + 1):
-        for ad in range(1, rd + 1):
-            if (rd - ad) % 2 == 0:
-                for s in range((rd - ad) // 2 + 1):
-                    num = (-1) ** s * math.factorial(rd - s)
-                    den = (rd - 2 * s + 2) * math.factorial((rd + ad) // 2 - s) * math.factorial((rd - ad) // 2 - s)
-                    C[rd, ad, s] = num / den
+def h(x: float) -> float:
+    x = float(x)
+    ax = abs(x)
+    if ax <= 1:
+        return 1.5 * ax ** 3 - 2.5 * x ** 2 + 1
+    if ax <= 2:
+        return -0.5 * ax ** 3 + 2.5 * x ** 2 - 4 * ax + 2
+    return 0.0
 
-    @njit
-    def _criar_zernike_filters_numba(p, max_zrd):
-        n_filters = double2single_zernike_index(max_zrd + 1, max_zrd % 2 + 1)
-        filtros = np.zeros((2 * p + 1, 2 * p + 1, n_filters), dtype=np.complex128)
-        for rho in range(p):
-            for theta in range(4 * (2 * rho + 1)):
-                for rd in range(1, max_zrd + 1):
-                    for ad in range((rd - 1) % 2 + 1, rd + 1, 2):
-                        idx = double2single_zernike_index(rd, ad)
-                        w = 0.0 + 0.0j
-                        for s in range((rd - ad) // 2 + 1):
-                            w += C[rd, ad, s] * (((rho + 1) / p) ** (rd - 2 * s + 2) - (rho / p) ** (rd - 2 * s + 2))
-                        dtheta = 2 * np.pi / (4 * (2 * rho + 1))
-                        w *= 1j / ad * (np.exp(-1j * ad * (theta + 1) * dtheta) - np.exp(-1j * ad * theta * dtheta))
-                        i0 = rho * np.cos(dtheta * theta)
-                        j0 = rho * np.sin(dtheta * theta)
-                        imin = int(np.floor(i0) - 1)
-                        imax = int(np.floor(i0) + 2)
-                        jmin = int(np.floor(j0) - 1)
-                        jmax = int(np.floor(j0) + 2)
-                        for i in range(imin, min(imax, p) + 1):
-                            for j in range(jmin, min(jmax, p) + 1):
-                                filtros[i + p, j + p, idx] += h(i0 - i) * h(j0 - j) * w
-        return filtros
 
-    def _obter_zernike_filters_cache(p: int, max_zrd: int) -> np.ndarray:
-        chave = (int(p), int(max_zrd))
-        filtros = _ZERNIKE_FILTERS_CACHE.get(chave)
-        if filtros is None:
-            filtros = _criar_zernike_filters_numba(chave[0], chave[1])
-            _ZERNIKE_FILTERS_CACHE[chave] = filtros
-        return filtros
+def double2single_zernike_index(radial_degree: int, azimuthal_degree: int) -> int:
+    assert (radial_degree - azimuthal_degree) % 2 == 0
+    assert radial_degree > 0 and azimuthal_degree > 0
+    n_smaller_polynomials = (radial_degree // 2) * ((radial_degree + 1) // 2)
+    if radial_degree % 2 == 0:
+        return n_smaller_polynomials + azimuthal_degree // 2 - 1
+    return n_smaller_polynomials + (azimuthal_degree - 1) // 2
 
-    spec = [
-        ("im", float64[:, :, :]),
-        ("m", int64),
-        ("n", int64),
-        ("p", int64),
-        ("max_zrd", int64),
-        ("min_dn", int64),
-        ("n_rs_candidates", int64),
-        ("n_performed_iterations", int64),
-        ("n_propagations", int64[:]),
-        ("sum_of_distances", float64[:]),
-        ("zernike_filters", complex128[:, :, :]),
-        ("zernike_moments", float64[:, :, :]),
-        ("vect_field", int64[:, :, :]),
-        ("dist_field", float64[:, :]),
-    ]
 
-    OFFSETS = np.array([(0, -1), (-1, -1), (-1, 0), (-1, 1)])
-    N_OFFSETS = len(OFFSETS)
+MAX_ZERNIKE_ORDER = 10
+C = np.zeros((MAX_ZERNIKE_ORDER + 1, MAX_ZERNIKE_ORDER + 1, MAX_ZERNIKE_ORDER // 2 + 1), dtype=np.float64)
+for rd in range(1, MAX_ZERNIKE_ORDER + 1):
+    for ad in range(1, rd + 1):
+        if (rd - ad) % 2 == 0:
+            for s in range((rd - ad) // 2 + 1):
+                num = (-1) ** s * math.factorial(rd - s)
+                den = (rd - 2 * s + 2) * math.factorial((rd + ad) // 2 - s) * math.factorial((rd - ad) // 2 - s)
+                C[rd, ad, s] = num / den
 
-    @jitclass(spec)
-    class PatchMatch:
-        def __init__(self, im, p, max_zrd, min_dn, n_rs_candidates, zernike_filters):
-            self.im = im
-            self.m, self.n, _ = im.shape
-            self.p = p
-            assert min(self.m, self.n) >= 2 * self.p + 1
-            assert self.p >= 2
-            self.max_zrd = max_zrd
-            self.min_dn = min_dn
-            self.n_rs_candidates = n_rs_candidates
-            self.n_performed_iterations = 0
-            self.n_propagations = np.zeros(MAX_N_ITERATIONS, dtype=np.int64)
-            self.sum_of_distances = np.zeros(MAX_N_ITERATIONS + 1, dtype=np.float64)
-            self.zernike_filters = zernike_filters
-            self.zernike_moments = np.zeros((self.m, self.n, 1), dtype=np.float64)
-            self.create_zernike_moments()
-            self.create_vect_field2()
-            self.create_dist_field()
-            self.update_sum_of_distances()
 
-        def create_zernike_moments(self):
-            n_filters = self.zernike_filters.shape[-1]
-            self.zernike_moments = np.zeros((self.m, self.n, 3 * n_filters), dtype=np.float64)
-            for i in range(self.p, self.m - self.p):
-                for j in range(self.p, self.n - self.p):
-                    for rgb in range(3):
-                        patch = self.im[i - self.p:i + self.p + 1, j - self.p:j + self.p + 1, rgb:rgb + 1]
-                        a = np.sum(np.sum(patch * self.zernike_filters, axis=0), axis=0)
-                        self.zernike_moments[i, j, rgb * n_filters:(rgb + 1) * n_filters] = np.abs(a)
+def _criar_zernike_filters_numpy(p: int, max_zrd: int) -> np.ndarray:
+    n_filters = double2single_zernike_index(max_zrd + 1, max_zrd % 2 + 1)
+    filtros = np.zeros((2 * p + 1, 2 * p + 1, n_filters), dtype=np.complex64)
+    for rho in range(p):
+        dtheta = 2 * np.pi / (4 * (2 * rho + 1))
+        for theta in range(4 * (2 * rho + 1)):
+            ang0 = theta * dtheta
+            ang1 = (theta + 1) * dtheta
+            i0 = rho * np.cos(ang0)
+            j0 = rho * np.sin(ang0)
+            imin = int(np.floor(i0) - 1)
+            imax = int(np.floor(i0) + 2)
+            jmin = int(np.floor(j0) - 1)
+            jmax = int(np.floor(j0) + 2)
+            for rd in range(1, max_zrd + 1):
+                for ad in range((rd - 1) % 2 + 1, rd + 1, 2):
+                    idx = double2single_zernike_index(rd, ad)
+                    w = 0.0 + 0.0j
+                    for s in range((rd - ad) // 2 + 1):
+                        w += C[rd, ad, s] * (((rho + 1) / p) ** (rd - 2 * s + 2) - (rho / p) ** (rd - 2 * s + 2))
+                    w *= 1j / ad * (np.exp(-1j * ad * ang1) - np.exp(-1j * ad * ang0))
+                    for i in range(imin, min(imax, p) + 1):
+                        for j in range(jmin, min(jmax, p) + 1):
+                            filtros[i + p, j + p, idx] += h(i0 - i) * h(j0 - j) * w
+    return filtros
 
-        def create_vect_field2(self):
-            end_points = np.zeros((self.m, self.n, 2), dtype=np.int64)
-            start_points = np.zeros((self.m, self.n, 2), dtype=np.int64)
-            start_points[:, :, 0] = np.arange(self.m).reshape((self.m, 1))
-            start_points[:, :, 1] = np.arange(self.n).reshape((1, self.n))
-            end_points[:, :, 0] = np.random.randint(low=self.p, high=self.m - self.p, size=(self.m, self.n))
-            end_points[:, :, 1] = np.random.randint(low=self.p, high=self.n - self.p, size=(self.m, self.n))
+
+def _obter_zernike_filters_cache(p: int, max_zrd: int) -> Tuple[Dict[str, np.ndarray], bool]:
+    chave = (int(p), int(max_zrd))
+    banco = _ZERNIKE_FILTERS_CACHE.get(chave)
+    if banco is not None:
+        return banco, True
+    filtros = _criar_zernike_filters_numpy(chave[0], chave[1])
+    banco = {
+        "complex": filtros,
+        "real": np.ascontiguousarray(filtros.real.astype(np.float32)),
+        "imag": np.ascontiguousarray(filtros.imag.astype(np.float32)),
+    }
+    _ZERNIKE_FILTERS_CACHE[chave] = banco
+    return banco, False
+
+
+def _filtrar_zernike_um_canal(canal: np.ndarray, filtro_real: np.ndarray, filtro_imag: np.ndarray) -> np.ndarray:
+    resposta_real = cv.filter2D(canal, cv.CV_32F, filtro_real, borderType=cv.BORDER_CONSTANT)
+    resposta_imag = cv.filter2D(canal, cv.CV_32F, filtro_imag, borderType=cv.BORDER_CONSTANT)
+    return np.sqrt(resposta_real * resposta_real + resposta_imag * resposta_imag).astype(np.float32)
+
+
+OFFSETS = np.array([(0, -1), (-1, -1), (-1, 0), (-1, 1)], dtype=np.int64)
+N_OFFSETS = len(OFFSETS)
+
+
+class PatchMatch:
+    def __init__(self, im, p, max_zrd, min_dn, n_rs_candidates, zernike_filters, zernike_threads=1):
+        self.im = im.astype(np.float32, copy=False)
+        self.m, self.n, _ = im.shape
+        self.p = int(p)
+        assert min(self.m, self.n) >= 2 * self.p + 1
+        assert self.p >= 2
+        self.max_zrd = int(max_zrd)
+        self.min_dn = int(min_dn)
+        self.n_rs_candidates = int(n_rs_candidates)
+        self.zernike_threads = max(1, int(zernike_threads))
+        self.n_performed_iterations = 0
+        self.n_propagations = np.zeros(MAX_N_ITERATIONS, dtype=np.int64)
+        self.sum_of_distances = np.zeros(MAX_N_ITERATIONS + 1, dtype=np.float64)
+        self.zernike_filters = zernike_filters
+        self.zernike_moments = np.zeros((self.m, self.n, 1), dtype=np.float32)
+        self.vect_field = np.zeros((self.m, self.n, 2), dtype=np.int64)
+        self.dist_field = np.zeros((self.m, self.n), dtype=np.float32)
+        self._roi_y, self._roi_x = np.mgrid[self.p:self.m - self.p, self.p:self.n - self.p]
+        self._roi = (slice(self.p, self.m - self.p), slice(self.p, self.n - self.p))
+        self.create_zernike_moments()
+        self.create_vect_field2()
+        self.create_dist_field()
+        self.update_sum_of_distances()
+
+    def create_zernike_moments(self):
+        filtros_real = self.zernike_filters["real"]
+        filtros_imag = self.zernike_filters["imag"]
+        n_filters = filtros_real.shape[-1]
+        self.zernike_moments = np.zeros((self.m, self.n, 3 * n_filters), dtype=np.float32)
+        tarefas = []
+        for rgb in range(3):
+            canal = np.ascontiguousarray(self.im[..., rgb].astype(np.float32, copy=False))
+            for idx in range(n_filters):
+                tarefas.append((rgb, idx, canal, filtros_real[..., idx], filtros_imag[..., idx]))
+
+        def executar_tarefa(tarefa):
+            rgb, idx, canal, filtro_real, filtro_imag = tarefa
+            magnitude = _filtrar_zernike_um_canal(canal, filtro_real, filtro_imag)
+            return rgb, idx, magnitude
+
+        if self.zernike_threads > 1 and len(tarefas) > 1:
+            with ThreadPoolExecutor(max_workers=self.zernike_threads) as executor:
+                for rgb, idx, magnitude in executor.map(executar_tarefa, tarefas):
+                    self.zernike_moments[self._roi[0], self._roi[1], rgb * n_filters + idx] = magnitude[self._roi]
+        else:
+            for tarefa in tarefas:
+                rgb, idx, magnitude = executar_tarefa(tarefa)
+                self.zernike_moments[self._roi[0], self._roi[1], rgb * n_filters + idx] = magnitude[self._roi]
+
+    def create_vect_field2(self):
+        end_points = np.zeros((self.m, self.n, 2), dtype=np.int64)
+        start_points = np.zeros((self.m, self.n, 2), dtype=np.int64)
+        start_points[:, :, 0] = np.arange(self.m).reshape((self.m, 1))
+        start_points[:, :, 1] = np.arange(self.n).reshape((1, self.n))
+        end_points[:, :, 0] = np.random.randint(low=self.p, high=self.m - self.p, size=(self.m, self.n))
+        end_points[:, :, 1] = np.random.randint(low=self.p, high=self.n - self.p, size=(self.m, self.n))
+        diff = np.abs(end_points - start_points)
+        too_small = np.maximum(diff[..., 0], diff[..., 1]) < self.min_dn
+        while np.any(too_small):
+            count = int(np.sum(too_small))
+            end_points[..., 0][too_small] = np.random.randint(low=self.p, high=self.m - self.p, size=count)
+            end_points[..., 1][too_small] = np.random.randint(low=self.p, high=self.n - self.p, size=count)
             diff = np.abs(end_points - start_points)
             too_small = np.maximum(diff[..., 0], diff[..., 1]) < self.min_dn
-            while np.any(too_small):
-                for i in range(self.m):
-                    for j in range(self.n):
-                        if too_small[i, j]:
-                            end_points[i, j, 0] = np.random.randint(low=self.p, high=self.m - self.p)
-                            end_points[i, j, 1] = np.random.randint(low=self.p, high=self.n - self.p)
-                diff = np.abs(end_points - start_points)
-                too_small = np.maximum(diff[..., 0], diff[..., 1]) < self.min_dn
-            self.vect_field = end_points - start_points
+        self.vect_field = end_points - start_points
 
-        def create_dist_field(self):
-            self.dist_field = np.zeros((self.m, self.n), dtype=np.float64)
-            for i in range(self.p, self.m - self.p):
-                for j in range(self.p, self.n - self.p):
-                    self.dist_field[i, j] = self.dist2candidate(i, j, i, j)
+    def create_dist_field(self):
+        self.dist_field = np.zeros((self.m, self.n), dtype=np.float32)
+        ys, xs = self._roi_y, self._roi_x
+        yd = ys + self.vect_field[self._roi][..., 0]
+        xd = xs + self.vect_field[self._roi][..., 1]
+        diff = self.zernike_moments[ys, xs] - self.zernike_moments[yd, xd]
+        dist = np.sqrt(np.sum(diff * diff, axis=-1)).astype(np.float32)
+        self.dist_field[self._roi] = dist
 
-        def update_sum_of_distances(self):
-            self.sum_of_distances[self.n_performed_iterations] = self.dist_field[self.p:self.m - self.p, self.p:self.n - self.p].sum()
+    def update_sum_of_distances(self):
+        self.sum_of_distances[self.n_performed_iterations] = float(self.dist_field[self._roi].sum())
 
-        def patch_features(self, i, j):
-            return self.zernike_moments[i:i + 1, j:j + 1]
+    def patch_features(self, i, j):
+        return self.zernike_moments[i:i + 1, j:j + 1]
 
-        def dist(self, i, j, k, l):
-            return np.sqrt(np.sum((self.patch_features(i, j) - self.patch_features(k, l)) ** 2))
+    def dist(self, i, j, k, l):
+        diff = self.zernike_moments[i, j] - self.zernike_moments[k, l]
+        return float(np.sqrt(np.dot(diff, diff)))
 
-        def dist2candidate(self, i, j, k, l):
-            dk, dl = self.vect_field[k, l]
-            return self.dist(i, j, i + dk, j + dl)
+    def dist2candidate(self, i, j, k, l):
+        dk, dl = self.vect_field[k, l]
+        return self.dist(i, j, i + int(dk), j + int(dl))
 
-        def test_min_separation(self, di, dj):
-            return np.abs(di) >= self.min_dn or np.abs(dj) >= self.min_dn
+    def test_min_separation(self, di, dj):
+        return abs(int(di)) >= self.min_dn or abs(int(dj)) >= self.min_dn
 
-        def is_in_inner_image(self, i, j):
-            return i >= self.p and i < self.m - self.p and j >= self.p and j < self.n - self.p
+    def is_in_inner_image(self, i, j):
+        return i >= self.p and i < self.m - self.p and j >= self.p and j < self.n - self.p
 
-        def scan(self):
-            for i in range(self.p, self.m - self.p):
-                for j in range(self.p, self.n - self.p):
-                    d0 = self.dist_field[i, j]
-                    zo_distances = np.inf * np.ones(N_OFFSETS, dtype=np.float64)
-                    for c in range(N_OFFSETS):
-                        oi, oj = OFFSETS[c]
-                        ni, nj = i + oi, j + oj
-                        di, dj = self.vect_field[ni, nj]
-                        if self.is_in_inner_image(ni, nj) and self.is_in_inner_image(i + di, j + dj):
-                            zo_distances[c] = self.dist(i, j, i + di, j + dj)
-                    fo_distances = np.inf * np.ones(N_OFFSETS, dtype=np.float64)
-                    for c in range(N_OFFSETS):
-                        oi, oj = OFFSETS[c]
-                        n1 = (i + oi, j + oj)
-                        n2 = (i + 2 * oi, j + 2 * oj)
-                        di, dj = 2 * self.vect_field[n1] - self.vect_field[n2]
-                        if self.is_in_inner_image(n2[0], n2[1]) and self.is_in_inner_image(i + di, j + dj) and self.test_min_separation(di, dj):
-                            fo_distances[c] = self.dist(i, j, i + di, j + dj)
-                    all_distances = np.concatenate((zo_distances, fo_distances))
-                    idx = np.argmin(all_distances)
-                    dmin = all_distances[idx]
-                    if dmin < d0:
-                        self.dist_field[i, j] = dmin
-                        self.n_propagations[self.n_performed_iterations] += 1
-                        oi, oj = OFFSETS[idx % N_OFFSETS]
-                        if idx < N_OFFSETS:
-                            self.vect_field[i, j] = self.vect_field[i + oi, j + oj]
-                        else:
-                            self.vect_field[i, j] = 2 * self.vect_field[i + oi, j + oj] - self.vect_field[i + 2 * oi, j + 2 * oj]
+    def scan(self):
+        for i in range(self.p, self.m - self.p):
+            for j in range(self.p, self.n - self.p):
+                d0 = float(self.dist_field[i, j])
+                zo_distances = np.inf * np.ones(N_OFFSETS, dtype=np.float64)
+                zo_vectors = np.zeros((N_OFFSETS, 2), dtype=np.int64)
+                for c in range(N_OFFSETS):
+                    oi, oj = int(OFFSETS[c, 0]), int(OFFSETS[c, 1])
+                    ni, nj = i + oi, j + oj
+                    if not self.is_in_inner_image(ni, nj):
+                        continue
+                    di, dj = int(self.vect_field[ni, nj, 0]), int(self.vect_field[ni, nj, 1])
+                    if self.is_in_inner_image(i + di, j + dj):
+                        zo_distances[c] = self.dist(i, j, i + di, j + dj)
+                        zo_vectors[c, 0] = di
+                        zo_vectors[c, 1] = dj
+                fo_distances = np.inf * np.ones(N_OFFSETS, dtype=np.float64)
+                fo_vectors = np.zeros((N_OFFSETS, 2), dtype=np.int64)
+                for c in range(N_OFFSETS):
+                    oi, oj = int(OFFSETS[c, 0]), int(OFFSETS[c, 1])
+                    n1i, n1j = i + oi, j + oj
+                    n2i, n2j = i + 2 * oi, j + 2 * oj
+                    if not self.is_in_inner_image(n2i, n2j):
+                        continue
+                    di = int(2 * self.vect_field[n1i, n1j, 0] - self.vect_field[n2i, n2j, 0])
+                    dj = int(2 * self.vect_field[n1i, n1j, 1] - self.vect_field[n2i, n2j, 1])
+                    if self.is_in_inner_image(i + di, j + dj) and self.test_min_separation(di, dj):
+                        fo_distances[c] = self.dist(i, j, i + di, j + dj)
+                        fo_vectors[c, 0] = di
+                        fo_vectors[c, 1] = dj
+                all_distances = np.concatenate((zo_distances, fo_distances))
+                idx = int(np.argmin(all_distances))
+                dmin = float(all_distances[idx])
+                if dmin < d0:
+                    self.dist_field[i, j] = dmin
+                    self.n_propagations[self.n_performed_iterations] += 1
+                    if idx < N_OFFSETS:
+                        self.vect_field[i, j, 0] = zo_vectors[idx, 0]
+                        self.vect_field[i, j, 1] = zo_vectors[idx, 1]
+                    else:
+                        self.vect_field[i, j, 0] = fo_vectors[idx - N_OFFSETS, 0]
+                        self.vect_field[i, j, 1] = fo_vectors[idx - N_OFFSETS, 1]
 
-        def random_search(self):
-            for i in range(self.p, self.m - self.p):
-                for j in range(self.p, self.n - self.p):
-                    for k in range(self.n_rs_candidates):
-                        di, dj = self.vect_field[i, j]
-                        low_i = max(i + di - 2 ** k, self.p) - i
-                        high_i = min(i + di + 2 ** k + 1, self.m - self.p) - i
-                        low_j = max(j + dj - 2 ** k, self.p) - j
-                        high_j = min(j + dj + 2 ** k + 1, self.n - self.p) - j
-                        if low_i >= high_i or low_j >= high_j:
-                            continue
-                        di_ = np.random.randint(low_i, high_i)
-                        dj_ = np.random.randint(low_j, high_j)
-                        if self.test_min_separation(di_, dj_):
-                            d_test = self.dist(i, j, i + di_, j + dj_)
-                            if d_test < self.dist_field[i, j]:
-                                self.n_propagations[self.n_performed_iterations] += 1
-                                self.vect_field[i, j] = np.array([di_, dj_])
-                                self.dist_field[i, j] = d_test
+    def random_search_vetorizado(self):
+        atualizacoes_total = 0
+        ys, xs = self._roi_y, self._roi_x
+        dist_roi = self.dist_field[self._roi]
+        vf_roi = self.vect_field[self._roi]
+        for k in range(self.n_rs_candidates):
+            raio = 2 ** k
+            di_atual = vf_roi[..., 0]
+            dj_atual = vf_roi[..., 1]
+            low_i = np.maximum(ys + di_atual - raio, self.p) - ys
+            high_i = np.minimum(ys + di_atual + raio + 1, self.m - self.p) - ys
+            low_j = np.maximum(xs + dj_atual - raio, self.p) - xs
+            high_j = np.minimum(xs + dj_atual + raio + 1, self.n - self.p) - xs
+            span_i = high_i - low_i
+            span_j = high_j - low_j
+            valid_span = (span_i > 0) & (span_j > 0)
+            if not np.any(valid_span):
+                continue
+            di_cand = low_i + (np.random.random(size=span_i.shape) * span_i).astype(np.int64)
+            dj_cand = low_j + (np.random.random(size=span_j.shape) * span_j).astype(np.int64)
+            min_sep = (np.abs(di_cand) >= self.min_dn) | (np.abs(dj_cand) >= self.min_dn)
+            valid = valid_span & min_sep
+            if not np.any(valid):
+                continue
+            yd = ys + di_cand
+            xd = xs + dj_cand
+            diff = self.zernike_moments[ys, xs] - self.zernike_moments[yd, xd]
+            dist_cand = np.sqrt(np.sum(diff * diff, axis=-1)).astype(np.float32)
+            melhor = valid & (dist_cand < dist_roi)
+            qtd = int(np.count_nonzero(melhor))
+            if qtd <= 0:
+                continue
+            vf_roi[..., 0][melhor] = di_cand[melhor]
+            vf_roi[..., 1][melhor] = dj_cand[melhor]
+            dist_roi[melhor] = dist_cand[melhor]
+            atualizacoes_total += qtd
+        self.n_propagations[self.n_performed_iterations] += atualizacoes_total
 
-        def symmetry(self):
-            for i in range(self.p, self.m - self.p):
-                for j in range(self.p, self.n - self.p):
-                    di, dj = self.vect_field[i, j]
-                    if self.dist_field[i + di, j + dj] > self.dist_field[i, j]:
-                        self.n_propagations[self.n_performed_iterations] += 1
-                        self.vect_field[i + di, j + dj] = -self.vect_field[i, j]
-                        self.dist_field[i + di, j + dj] = self.dist_field[i, j]
+    def symmetry(self):
+        for i in range(self.p, self.m - self.p):
+            for j in range(self.p, self.n - self.p):
+                di = int(self.vect_field[i, j, 0])
+                dj = int(self.vect_field[i, j, 1])
+                if self.dist_field[i + di, j + dj] > self.dist_field[i, j]:
+                    self.n_propagations[self.n_performed_iterations] += 1
+                    self.vect_field[i + di, j + dj, 0] = -di
+                    self.vect_field[i + di, j + dj, 1] = -dj
+                    self.dist_field[i + di, j + dj] = self.dist_field[i, j]
 
-        def flip(self):
-            self.im = self.im[::-1, ::-1]
-            self.vect_field = -self.vect_field[::-1, ::-1]
-            self.dist_field = self.dist_field[::-1, ::-1]
-            self.zernike_moments = self.zernike_moments[::-1, ::-1]
+    def flip(self):
+        self.im = self.im[::-1, ::-1]
+        self.vect_field = -self.vect_field[::-1, ::-1]
+        self.dist_field = self.dist_field[::-1, ::-1]
+        self.zernike_moments = self.zernike_moments[::-1, ::-1]
+        self._roi_y, self._roi_x = np.mgrid[self.p:self.m - self.p, self.p:self.n - self.p]
+        self._roi = (slice(self.p, self.m - self.p), slice(self.p, self.n - self.p))
 
-        def iterate(self):
-            for _ in range(2):
-                self.scan()
-                self.random_search()
-                self.symmetry()
-                self.flip()
-            self.n_performed_iterations += 1
-            self.update_sum_of_distances()
+    def iterate(self):
+        for _ in range(2):
+            self.scan()
+            self.random_search_vetorizado()
+            self.symmetry()
+            self.flip()
+        self.n_performed_iterations += 1
+        self.update_sum_of_distances()
 
 # ============================================================
 # Máscara inicial e utilitários de visualização
@@ -478,17 +529,6 @@ def _abrir_imagem_rgb(caminho_imagem: str) -> np.ndarray:
 
 def _salvar_rgb(caminho_saida: str, imagem_rgb: np.ndarray) -> None:
     Image.fromarray(imagem_rgb.astype(np.uint8), mode="RGB").save(caminho_saida)
-
-
-def _executar_patchmatch(image_float: np.ndarray, p: int, min_dn: int, n_rs_candidates: int, n_iter: int):
-    _status_etapa(4, 12, "Preparando filtros de Zernike.")
-    zernike_filters = _obter_zernike_filters_cache(p, MAX_ZRD)
-    _status_etapa(5, 12, "Inicializando PatchMatch e calculando momentos de Zernike.")
-    pm = PatchMatch(image_float, p=p, max_zrd=MAX_ZRD, min_dn=min_dn, n_rs_candidates=n_rs_candidates, zernike_filters=zernike_filters)
-    for i in range(n_iter):
-        _status_etapa(6, 12, f"Executando PatchMatch: iteração {i + 1}/{n_iter}.")
-        pm.iterate()
-    return pm
 
 
 def _gerar_cores_distintas(n: int):
@@ -1010,7 +1050,7 @@ def _criar_candidatos_relacoes(labels, imagem_rgb, vect_field, destino_label_por
     return candidatos
 
 # ============================================================
-# Visualização
+# Visualização original restaurada
 # ============================================================
 
 def _colorir_componentes_mascara(imagem_rgb, mask, vect_field, p, min_dn, alpha=ALPHA_REGIAO):
@@ -1083,6 +1123,39 @@ def _criar_imagem_resultado(imagem_rgb, mask, vect_field, p, min_dn):
 # Pipeline
 # ============================================================
 
+def _redimensionar_para_patchmatch(imagem_rgb: np.ndarray, max_lado: int):
+    hgt, wid = imagem_rgb.shape[:2]
+    escala = min(1.0, float(max_lado) / float(max(hgt, wid)))
+    if escala >= 1.0:
+        return imagem_rgb, 1.0
+    nova_largura = max(1, int(round(wid * escala)))
+    nova_altura = max(1, int(round(hgt * escala)))
+    imagem_proc = cv.resize(imagem_rgb, (nova_largura, nova_altura), interpolation=cv.INTER_AREA)
+    return imagem_proc, escala
+
+
+def _executar_patchmatch(image_float: np.ndarray, p: int, min_dn: int, n_rs_candidates: int, n_iter: int, zernike_threads: int):
+    zernike_filters, cache_hit = _obter_zernike_filters_cache(p, MAX_ZRD)
+    if cache_hit:
+        _status_etapa(4, 12, f"Reutilizando filtros de Zernike do cache (p={p}, max_zrd={MAX_ZRD}).")
+    else:
+        _status_etapa(4, 12, f"Calculando filtros de Zernike e armazenando no cache (p={p}, max_zrd={MAX_ZRD}).")
+    _status_etapa(5, 12, f"Inicializando PatchMatch e calculando momentos de Zernike ({zernike_threads} thread(s)).")
+    pm = PatchMatch(
+        image_float,
+        p=p,
+        max_zrd=MAX_ZRD,
+        min_dn=min_dn,
+        n_rs_candidates=n_rs_candidates,
+        zernike_filters=zernike_filters,
+        zernike_threads=zernike_threads,
+    )
+    for i in range(n_iter):
+        _status_etapa(6, 12, f"Executando PatchMatch: iteração {i + 1}/{n_iter}.")
+        pm.iterate()
+    return pm
+
+
 def _processar_imagem(caminho_imagem: str, pasta_saida: str, controls: Dict[str, Any]):
     caminho = Path(caminho_imagem)
     nome_base = caminho.stem
@@ -1093,18 +1166,34 @@ def _processar_imagem(caminho_imagem: str, pasta_saida: str, controls: Dict[str,
     p = _get_int(controls, "p", P_PADRAO, 2, 20)
     n_rs_candidates = _get_int(controls, "n_rs_candidates", N_RS_CANDIDATES_PADRAO, 1, 20)
     n_iter = _get_int(controls, "n_iter", N_ITER_PADRAO, 1, MAX_N_ITERATIONS)
-    min_dn = estima_min_dn(wid, hgt)
-    min_region = estima_min_region_size(wid, hgt)
-    if min(hgt, wid) < 2 * p + 1:
+    max_lado = _get_int(controls, "max_lado_patchmatch", MAX_LADO_PATCHMATCH_PADRAO, 600, 6000)
+    zernike_threads = _get_int(controls, "zernike_threads", ZERNIKE_THREADS_PADRAO, 1, max(1, os.cpu_count() or 1))
+
+    imagem_proc, escala = _redimensionar_para_patchmatch(imagem_rgb, max_lado)
+    hgt_proc, wid_proc = imagem_proc.shape[:2]
+    min_dn = estima_min_dn(wid_proc, hgt_proc)
+    min_region = estima_min_region_size(wid_proc, hgt_proc)
+
+    if escala < 1.0:
+        _status_etapa(3, 12, f"{caminho.name}: redimensionando para {wid_proc}x{hgt_proc} antes do PatchMatch (escala={escala:.3f}).")
+    else:
+        _status_etapa(3, 12, f"{caminho.name}: usando resolução original {wid_proc}x{hgt_proc} no PatchMatch.")
+
+    if min(hgt_proc, wid_proc) < 2 * p + 1:
         _status(f"{caminho.name}: imagem muito pequena para p={p}. Salvando imagem original.")
         resultado = imagem_rgb.copy()
     else:
-        _status_etapa(3, 12, f"{caminho.name}: preparando imagem RGB e descritores PatchMatch/Zernike (p={p}, n_rs_candidates={n_rs_candidates}, n_iter={n_iter}).")
-        pm = _executar_patchmatch(imagem_rgb.astype("double"), p, min_dn, n_rs_candidates, n_iter)
+        _status(f"{caminho.name}: PatchMatch sem Numba (p={p}, n_rs_candidates={n_rs_candidates}, n_iter={n_iter}, max_lado={max_lado}).")
+        pm = _executar_patchmatch(imagem_proc.astype(np.float32), p, min_dn, n_rs_candidates, n_iter, zernike_threads)
         _status_etapa(7, 12, "Calculando máscara inicial pela coerência do campo de deslocamentos.")
         mask = compute_mask_1(pm.vect_field, pm.m, pm.n, pm.p, min_region).astype(bool)
         _status_etapa(8, 12, "Gerando visualização por famílias origem/destino.")
-        resultado = _criar_imagem_resultado(imagem_rgb, mask, pm.vect_field, pm.p, min_dn)
+        resultado_proc = _criar_imagem_resultado(imagem_proc, mask, pm.vect_field, pm.p, min_dn)
+        if escala < 1.0:
+            resultado = cv.resize(resultado_proc, (wid, hgt), interpolation=cv.INTER_LINEAR)
+        else:
+            resultado = resultado_proc
+
     tmp = os.path.join(os.getenv("TEMP") or pasta_saida, f"{PREFIXO_SAIDA}PatchMatch_{nome_base}.tmp.{EXTENSAO_SAIDA}")
     final = os.path.join(pasta_saida, f"{PREFIXO_SAIDA}PatchMatch_{nome_base}.{EXTENSAO_SAIDA}")
     _status_etapa(12, 12, f"{caminho.name}: salvando imagem de resultado.")
@@ -1119,10 +1208,6 @@ def _processar_imagem(caminho_imagem: str, pasta_saida: str, controls: Dict[str,
 def executar(arquivos, controls, pasta_saida):
     if controls is None:
         controls = {}
-    if _IMPORT_ERROR is not None:
-        _status(f"Dependências ausentes para PatchMatch: {_IMPORT_ERROR}")
-        _progress(100)
-        return
     imagens = selecionar_arquivos(arquivos, "imagem")
     imagens = filtrar_arquivos(imagens, prefixo=PREFIXO_SAIDA, extensao=EXTENSAO_SAIDA)
     if not imagens:
@@ -1152,11 +1237,23 @@ def executar(arquivos, controls, pasta_saida):
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Detector copy-paste PatchMatch/Zernike DLF-like - PeriTASK")
+    parser = argparse.ArgumentParser(description="Detector copy-paste PatchMatch/Zernike DLF-like sem Numba - PeriTASK")
     parser.add_argument("imagens", nargs="+", help="Imagem(ns) de entrada")
     parser.add_argument("--saida", default=".", help="Pasta de saída")
     parser.add_argument("--p", default=str(P_PADRAO), help="Raio do patch. Default: 5")
     parser.add_argument("--n-rs-candidates", default=str(N_RS_CANDIDATES_PADRAO), help="Candidatos na busca aleatória. Default: 5")
     parser.add_argument("--n-iter", default=str(N_ITER_PADRAO), help="Número de iterações. Default: 5")
+    parser.add_argument("--max-lado-patchmatch", default=str(MAX_LADO_PATCHMATCH_PADRAO), help="Maior lado usado internamente no PatchMatch. Default: 1400")
+    parser.add_argument("--zernike-threads", default=str(ZERNIKE_THREADS_PADRAO), help="Threads para convoluções Zernike. Default: até 4")
     args = parser.parse_args()
-    executar(args.imagens, {"p": args.p, "n_rs_candidates": args.n_rs_candidates, "n_iter": args.n_iter}, args.saida)
+    executar(
+        args.imagens,
+        {
+            "p": args.p,
+            "n_rs_candidates": args.n_rs_candidates,
+            "n_iter": args.n_iter,
+            "max_lado_patchmatch": args.max_lado_patchmatch,
+            "zernike_threads": args.zernike_threads,
+        },
+        args.saida,
+    )

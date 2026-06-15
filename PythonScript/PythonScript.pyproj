@@ -33,6 +33,7 @@
     <Compile Include="comandos\espectrograma.py" />
     <Compile Include="comandos\mp4_atoms.py" />
     <Compile Include="comandos\videos_csv.py" />
+    <Compile Include="comandos\wavelet_noise_residue.py" />
     <Compile Include="pytest\gerar_comparacao.py" />
     <Compile Include="pytest\teste_app_exe.py" />
     <Compile Include="pytest\teste_benchmark_app_exe.py" />
